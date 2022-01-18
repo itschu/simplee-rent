@@ -1,16 +1,19 @@
 import styled from "styled-components";
-import a from "next/link";
 
 export const Wrapper = styled.div`
     background-color: red;
-    width: 60vw;
+    display: ${({stateStatus}) => stateStatus ? "block" : "none"};
+    width: 70vw;
     height: 100vh;
     position: fixed;
+    z-index: 11;
     background-color: #023047;
     margin-top: 4.1em;
     box-shadow: 0px 20px 20px rgba(0, 0, 0, 0.15);
-    @media screen and (min-width: 580px){
+    transition: 2s;
+    @media screen and (min-width: 600px){
         width: 17vw;
+        display: block;
     }
 `;
 

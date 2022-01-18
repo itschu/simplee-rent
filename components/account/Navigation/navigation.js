@@ -2,10 +2,12 @@ import {Wrapper, UnOrderedList, ListItem, Anchor} from "./style";
 import {navItems} from "../../../data";
 import Image from "next/image";
 import Link from "next/link";
+import {useMenuState} from "../../../context";
 
 const Navigation = ({page}) => {
+    const {State} = useMenuState();
     return(
-        <Wrapper>
+        <Wrapper stateStatus={State}>
             <UnOrderedList>
                 {navItems.map((el, i) => {
                     const status = (page == el.alias) ? true : false;

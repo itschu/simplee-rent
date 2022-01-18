@@ -14,7 +14,9 @@ const Dash = ({page}) => {
                                 <H2>{el.title}</H2>
                                 <H4>{el.tempStat}</H4>
                             </div>
-                            <Image width={el.width} height={el.height} src={el.image} alt={`${el.title} image`} />
+                            <div>
+                                <Image width={el.width} height={el.height} src={el.image} alt={`${el.title} image`} />
+                            </div>
                         </Stats>
                     })
                 }

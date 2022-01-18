@@ -1,8 +1,11 @@
 import styled from "styled-components";
 
 export const Wrapper = styled.section`
-    margin-left: 17vw;
-    padding: 6.5em 4em;
+    padding: 4em 2.5em;
+    @media screen and (min-width: 600px){
+        margin-left: 17vw;
+        padding: 6.5em 4em;
+    }
 `;
 
 export const H1 = styled.h1`
@@ -22,7 +25,7 @@ export const H3 = styled.h3`
 `;
 
 export const H4 = styled.h4`
-    margin-top: 0em;;
+    margin: 0em;;
     font-size: 2.6rem;
     font-weight: 700;
 `;
@@ -34,14 +37,17 @@ export const Stats = styled.div`
     border-radius: 15px;
     display: flex;
     justify-content: space-between;
-    padding: 1.2em 1.6em;
-    padding-right: 2.5em;
+    padding: 0.5em 0.5em;  
+    padding-right: 0em;
 `;
 
 export const StatsWrapper = styled.div`
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 2.5em;
+    display: flex;
+    flex-wrap: wrap;
+    & div{
+        flex: 1 1 300px;
+        margin: 1em;
+    }
 `;
 
 export const News =  styled.div`
@@ -50,7 +56,10 @@ export const News =  styled.div`
     text-align: center;
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
     border-radius: 15px;
-    width: 50vw;
+    width: 100%;
+    @media screen and (min-width: 600px){
+        width: 50vw;
+    }
 `;
 
 export const NewsWrapper =  styled.div`
