@@ -1,47 +1,45 @@
-import {H1, Wrapper} from '../DashSect/style';
-import {H2, InputSeparator, Input, AddProp, PropCards, PropCardWrapper, Span, P, AddItemOverlay, EditWrapper, CloseBtn, Label, UploadContainer, Button, ImgContainer} from './style';
+import { H1, Wrapper } from '../DashSect/style';
+import { AddProp, PropCards, PropCardWrapper, Span, P, AddItemOverlay } from './style';
 import addImg from '../../../public/images/add.png';
 import Image from 'next/image';
-import {propertiesPlaceHolder} from '../../../data';
+import { template } from '../../../data';
 import { useState, useReducer } from 'react';
-
-const initialState = {
-    title : "",
-    name : "",
-    street : "",
-    units : 0,
-    city : "",
-    country : "",
-    img : "",
-}
-
-const reducer = (state, action) => {
-    switch (action.type) {
-        case 'changename':
-            return {...state, name: action.payload};
-        case 'changestreet':
-            return {...state, street: action.payload};
-        case 'changeunits':
-            return {...state, units: action.payload};
-        case 'changecity':
-            return {...state, city: action.payload};
-        case 'changecountry':
-            return {...state, country: action.payload};
-        case 'changeimg':
-            return {...state, img: action.payload};
-        case 'changetitle':
-            return {...state, title: action.payload};
-        default:
-            throw new Error();
-    }
-}
-
-const processInformation = (e) => {
-    e.preventDefault();
-}
-
+import EditWrapper from './EditWrapper';
+import reducer, { initialState } from './reducer';
+import { News, NewsWrapper } from '../DashSect/style';
+import { usePropertiesContext } from '../../../context';
+ 
 const Prop = ({page}) => {
+
     const [showOverlay, setShowOverlay] = useState(false);
+    const {allProps, setAllProps} = usePropertiesContext();
+    
+    const processInformation = (e) => {
+        e.preventDefault();
+        console.log(e);
+        const newList = allProps.map(el => {
+            return propertyState.id == el.id ? {...el, ...propertyState} : el
+        } );
+        setAllProps([...newList]);
+        closeOverlay();
+    }
+
+    const deleteItem = (e) => {
+        e.preventDefault();
+        const prompt = window.confirm('Are you sure you want to delete this property and all Showings connected to this property?');
+        if(prompt){
+            const newList = allProps.filter(el => propertyState.id !== el.id  );
+            setAllProps([...newList]);
+            closeOverlay();
+        }
+    }
+
+    const newProp = (e) => {
+        e.preventDefault();
+        setAllProps([...allProps, {...propertyState, id: allProps.length+1, title: propertyState.name}]);
+        closeOverlay();
+    }
+
     const toggleOverlay = (propname=null) => {
         dispatch({type: "changetitle", payload: propname});
         setShowOverlay(!showOverlay);
@@ -59,6 +57,7 @@ const Prop = ({page}) => {
         dispatch({type: "changecity", payload: obj.city});
         dispatch({type: "changecountry", payload: obj.country});
         dispatch({type: "changeimg", payload: obj.fileName});
+        dispatch({type: "changeid", payload: obj.id});
         toggleOverlay(proptitle);
     }
     const imgSrc = `/images/${propertyState.img}`;
@@ -67,69 +66,31 @@ const Prop = ({page}) => {
             <H1>My {page}. </H1>
             <AddItemOverlay show={showOverlay} >
                 <form onSubmit={processInformation}>
-                <EditWrapper>
-                    <div>
-                        <CloseBtn onClick={()=>closeOverlay()}/>
-
-                        <H2>{propertyState.title}</H2>
-
-                        <InputSeparator>
-                            <Label>Name</Label>
-                            <Input type={"text"} value={propertyState.name} onChange={(e)=> dispatch({type: "changename", payload:e.target.value})} />
-                        </InputSeparator>
-
-                        <InputSeparator dg={true}>
-                            <div>
-                                <Label>Street</Label>
-                                <Input type={"text"} value={propertyState.street} onChange={(e)=> dispatch({type: "changestreet", payload:e.target.value})} />
-                            </div>
-                            
-                            <div>
-                                <Label>Units</Label>
-                                <Input type={"number"} min={0} value={propertyState.units} onChange={(e)=> dispatch({type: "changeunits", payload:e.target.value})} />
-                            </div>
-                        </InputSeparator>
-
-                        <InputSeparator>
-                            <Label>City</Label>
-                            <Input type={"text"} value={propertyState.city} onChange={(e)=> dispatch({type: "changecity", payload:e.target.value})}/>
-                        </InputSeparator>
-
-                        <InputSeparator>
-                            <Label>Country</Label>
-                            <Input type={"text"} value={propertyState.country} onChange={(e)=> dispatch({type: "changecountry", payload:e.target.value})}/>
-                        </InputSeparator>
-                    </div>
-                    
-                    <UploadContainer>
-                        <ImgContainer background={propertyState.img !=='' ? imgSrc : "/images/imageimg-icon.png"}/>
-                        <Input type={"file"} size="sm" aria-label="File browser"/>
-                        <br/>
-                        <div>
-                            <Button type='save'>
-                                Save
-                            </Button>
-                            <Button type='delete' prompt="Are yoy">
-                                Delete  
-                            </Button>
-                        </div>
-                    </UploadContainer   >
-                </EditWrapper>
+                    <EditWrapper propState={propertyState} close={closeOverlay} img={imgSrc} fn={dispatch} del={deleteItem}add={newProp}/>
                 </form>
             </AddItemOverlay>
-
+            
             <PropCardWrapper>
                 {
-                    propertiesPlaceHolder.map((el, i)=> {
+                    allProps.length > 0 
+                    ?
+                    allProps.map((el, i)=> {
                         return <PropCards key={i} bgImg={el.src} onClick={()=>  setDetails(el, el.title)}>
                            <P> {el.title} </P>
                            <Span> {el.units} units available </Span>
                         </PropCards>
-                    })
+                    }) 
+                    :
+                    <NewsWrapper>
+                        {/* <H3>Upcoming Showing</H3> */}
+                        <News>
+                            <p><b>You haven't added any property yet!! </b></p>
+                        </News>
+                    </NewsWrapper>
                 }
             </PropCardWrapper>
 
-            <AddProp onClick={()=>toggleOverlay("Add New Property")}>
+            <AddProp onClick={()=>setDetails({...template},"Add New Property")}>
                 <Image src={addImg} alt='add more properties' />
             </AddProp>
         </Wrapper>

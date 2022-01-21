@@ -20,7 +20,18 @@ export const statistics = [
 ];
 
 export const propertiesPlaceHolder = [
-    {title:"Property One", units: 1, src: "/images/home1.jpg", fileName: "home1.jpg"},
-    {title:"Property Two", units: 4, src: "/images/home2.jpg", fileName: "home2.jpg"},
-    {title:"Property Three", units: 5, src: "/images/home3.jpg", fileName: "home3.jpg"},
+    {id: 1, title:"Property One", units: 1, src: "/images/home1.jpg", fileName: "home1.jpg", name: "prop1", street: "line2", city: "abj", country: "9ja"},
+    {id: 2, title:"Property Two", units: 4, src: "/images/home2.jpg", fileName: "home2.jpg", name: "prop2", street: "line3", city: "lag", country: "UK"},
+    {id: 3, title:"Property Three", units: 5, src: "/images/home3.jpg", fileName: "home3.jpg", name: "prop3", street: "line4", city: "ph", country: "ghana"},
+];
+
+export const template = {
+    id: 0, title:"", units: 0, src: "", fileName: "", name: "", street: "", city: "", country: ""
+};
+
+export const showingsTemplate = [
+    {id: 1, property: "Full name of property", time:"12pm - 3pm 4/9/22", link:"http://google.com"},
+    {id: 2, property: "Full name of property", time:"12pm - 3pm 4/9/22", link:"http://google.com"},
+    {id: 3, property: "Full name of property", time:"12pm - 3pm 4/9/22", link:"http://google.com"},
+    {id: 4, property: "Full name of property", time:"12pm - 3pm 4/9/22", link:"http://google.com"},
 ];

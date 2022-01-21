@@ -52,7 +52,7 @@ export const StatsWrapper = styled.div`
 
 export const News =  styled.div`
     background: #FFFFFF;
-    padding: .7em;
+    padding: .7em 1.3em;
     text-align: center;
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
     border-radius: 15px;

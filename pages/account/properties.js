@@ -14,4 +14,4 @@ export default function Properties() {
 			<PropSect page={pg} />
 		</MenuState>
 	)
-};
+};  
