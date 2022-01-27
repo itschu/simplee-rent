@@ -167,6 +167,7 @@ export const Input = styled.input`
 	border-radius: 5px;
 	padding-left: 10px;
 	border: 1px solid #8b8b8b;
+    font-family: 'Montserrat', sans-serif;
 	/* outline: 1px solid #023047; */
 	${({ type }) => (type == "file" ? uploadInput : "")}
 	@media screen and (min-width: 600px) {

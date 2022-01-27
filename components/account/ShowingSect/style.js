@@ -1,4 +1,7 @@
 import styled from "styled-components";
+import { Input } from "../PropSect/style";
+import { BiPlusMedical } from "react-icons/bi";
+import { FaMinus } from "react-icons/fa";
 
 export const Container = styled.table`
 	background: #219ebc;
@@ -84,7 +87,8 @@ export const Time = styled.div`
 	justify-content: center;
 	cursor: pointer;
 	text-transform: lowercase;
-	&:hover, &:focus{
+	&:hover,
+	&:focus {
 		background: #dcdc;
 		color: #000;
 	}
@@ -97,14 +101,93 @@ export const GoUp = styled.div`
 	display: flex;
 	justify-content: center;
 	cursor: pointer;
-	& > div{
+	& > div {
 		width: 1.35em;
 		transform: rotate(180deg);
 	}
 `;
 
 export const GoDown = styled(GoUp)`
-	& > div{
+	& > div {
 		transform: rotate(0deg);
 	}
+`;
+
+export const CalendarDiv = styled.div`
+	display: flex;
+	position: relative;
+	flex-direction: column;
+	& > div:last-child {
+		margin-top: 1em;
+	}
+	@media screen and (min-width: 600px) {
+		flex-direction: row;
+		& > div:last-child {
+			align-self: center;
+			padding: 0 4em;
+		}
+
+		& > div:last-child > div:last-child {
+			position: relative;
+		}
+	}
+`;
+
+export const TimeWrapper = styled.div`
+	display: flex;
+	align-items: center;
+
+	& > div {
+		font-weight: 600;
+		font-size: 0.9em;
+		margin: 0 1em;
+	}
+`;
+
+export const TimeInput = styled(Input)`
+	text-align: center;
+	display: inline-block;
+	width: 100%;
+	margin: 0.7em 0;
+`;
+
+export const ConfirmButton = styled.button`
+	background: #0069ff;
+    min-height: 44px;
+    padding: 0px 20px;
+    font-size: 14px;
+    border: 1px solid transparent;
+    border-radius: 40px;
+    font-family: 'Montserrat', sans-serif;
+	font-weight: 600;
+	color: #fff;
+	margin-top: .6em;
+	cursor: pointer;
+`;
+
+const buttonStyle = `
+	color: #219ebc;
+	font-size: 1em;
+	cursor: pointer;
+	margin-left: 1.2em;
+`;
+
+export const AddTime = styled(BiPlusMedical)`
+	${buttonStyle}
+	${({ see }) => (see == "hidden" ? "color: #000" : "color: #219ebc;")};
+`;
+
+export const RemoveTime = styled(FaMinus)`
+	${buttonStyle}
+	color: #000;
+	&:hover {
+		color: red;
+	}
+`;
+
+export const Wrap = styled.div`
+	position: relative;
+	align-items: center;
+	display: flex;
+	margin-bottom: 0.9em;
 `;

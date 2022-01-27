@@ -131,3 +131,15 @@ span,
 	background-color: #006edc !important;
 	color: #fff !important;
 }
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+input[type="number"] {
+	font-family: "Montserrat", sans-serif;
+	-moz-appearance: textfield;
+}
+
