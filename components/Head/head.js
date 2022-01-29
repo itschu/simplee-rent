@@ -8,7 +8,7 @@ const HtmlHead = ({ currentPage }) => {
 				{project.title} | {currentPage}
 			</title>
 			<meta name="description" content={project.descContent} />
-			<link rel="icon" href="images/logo-icon.png" type="image/x-icon" />
+			<link rel="icon" href="/images/logo-icon.png" type="image/x-icon" />
 		</Head>
 	);
 };

@@ -46,6 +46,7 @@ export const BurgerMenu = styled(GoThreeBars)`
 
 export const Logo = styled.div`
 	width: 8em;
+	cursor: pointer;
 	/* height: 65px; */
 	/* background: #fff; */
 	@media screen and (min-width: 600px) {

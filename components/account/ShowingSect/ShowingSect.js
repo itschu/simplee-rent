@@ -18,7 +18,7 @@ import { useShowingsContext, usePropertiesContext } from "../../../context";
 import ShowingModal from "./ShowingModal";
 
 const ShowingSect = ({ page }) => {
-	const [showOverlay, setShowOverlay] = useState(false); 
+	const [showOverlay, setShowOverlay] = useState(false);
 	const [displayNotify, setDisplayNotify] = useState(false);
 	const { showings, setShowings } = useShowingsContext();
 	const { allProps } = usePropertiesContext();
@@ -39,16 +39,14 @@ const ShowingSect = ({ page }) => {
 
 	const openModal = () => {
 		if (allProps.length < 1) {
-			alert('Please add a property before creating a showing')
-		}else{
+			alert("Please add a property before creating a showing");
+		} else {
 			setShowOverlay(!showOverlay);
 		}
-	}
+	};
 
 	useEffect(() => {
-		showings.map(()=>{
-
-		});
+		showings.map(() => {});
 		setTimeout(() => {
 			setDisplayNotify(false);
 		}, 1500);
@@ -73,7 +71,7 @@ const ShowingSect = ({ page }) => {
 									<b>{i + 1}.</b>
 								</td>
 								<td>{el.property}</td>
-								<td>{el.time}</td>
+								<td>{el.display_time}</td>
 								<td>
 									<BtnWrapper>
 										<ActionBtns>
@@ -124,7 +122,13 @@ const ShowingSect = ({ page }) => {
 				</Notification>
 			)}
 
-			<ShowingModal displayOverlay={showOverlay} close={closeOverlay} allProps={allProps} />
+			<ShowingModal
+				displayOverlay={showOverlay}
+				close={closeOverlay}
+				allProps={allProps}
+				list={showings}
+				editList={setShowings}
+			/>
 		</Wrapper>
 	);
 };

@@ -28,6 +28,7 @@ const Prop = ({ page }) => {
 		});
 		setAllProps([...newList]);
 		closeOverlay();
+		newProp();
 	};
 
 	const deleteItem = (e) => {
@@ -46,8 +47,7 @@ const Prop = ({ page }) => {
 		}
 	};
 
-	const newProp = (e) => {
-		e.preventDefault();
+	const newProp = () => {
 		let rand = (Math.random() + 1).toString(36).substring(7);
 		setAllProps([
 			...allProps,
@@ -58,7 +58,6 @@ const Prop = ({ page }) => {
 				unique: `0x${rand}${0}`,
 			},
 		]);
-		closeOverlay();
 	};
 
 	const toggleOverlay = (propname = null) => {

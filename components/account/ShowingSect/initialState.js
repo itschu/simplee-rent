@@ -1,29 +1,24 @@
+import { formatTime } from "../TimePicker";
+
 export const template = [
-    {
-        id: 0,
-        property: "default",
-        duration: 15,
-        date: null,
-        time: [],
-    }    
+	{
+		id: 0,
+		property: "default",
+		duration: 15,
+		date: null,
+		time: [],
+		display_time: null,
+	},
 ];
 
-export const timeTemp = [
-    {
-        id: 1,
-        hour: null,
-        minutes: null,
-    },
-    {
-        id: 2,
-        hour: null,
-        minutes: null,
-        status: null,
-    },
-    {
-        id: 3,
-        hour: null,
-        minutes: null,
-        status: null,
-    }
-];
+let d = new Date();
+export const selectTimeTemp = {
+	from: {
+		firstHr: formatTime(d.getHours()),
+		firstMin: formatTime(d.getMinutes()),
+	},
+	to: {
+		firstHr: formatTime(d.getHours() + 2),
+		firstMin: formatTime(d.getMinutes()),
+	},
+};

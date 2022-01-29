@@ -17,7 +17,7 @@ const Main = ({ propState, close, img, fn, del, add }) => {
 				<CloseBtn onClick={() => close()} />
 
 				<H2>{propState.title}</H2>
-				<br/>	
+				<br />
 				<InputSeparator>
 					<Label>Name</Label>
 					<Input
@@ -26,6 +26,7 @@ const Main = ({ propState, close, img, fn, del, add }) => {
 						onChange={(e) =>
 							fn({ type: "changename", payload: e.target.value })
 						}
+						required={true}
 					/>
 				</InputSeparator>
 
@@ -41,6 +42,7 @@ const Main = ({ propState, close, img, fn, del, add }) => {
 									payload: e.target.value,
 								})
 							}
+							required={true}
 						/>
 					</div>
 
@@ -56,6 +58,7 @@ const Main = ({ propState, close, img, fn, del, add }) => {
 									payload: e.target.value,
 								})
 							}
+							required={true}
 						/>
 					</div>
 				</InputSeparator>
@@ -68,6 +71,7 @@ const Main = ({ propState, close, img, fn, del, add }) => {
 						onChange={(e) =>
 							fn({ type: "changecity", payload: e.target.value })
 						}
+						required={true}
 					/>
 				</InputSeparator>
 
@@ -82,17 +86,14 @@ const Main = ({ propState, close, img, fn, del, add }) => {
 								payload: e.target.value,
 							})
 						}
+						required={true}
 					/>
 				</InputSeparator>
 			</div>
 
 			<UploadContainer>
 				<ImgContainer
-					background={
-						propState.img !== ''
-							? img
-							: "/images/img.png"
-					}
+					background={propState.img !== "" ? img : "/images/img.png"}
 				/>
 				<Input type={"file"} size="sm" aria-label="File browser" />
 				<br />
@@ -109,7 +110,7 @@ const Main = ({ propState, close, img, fn, del, add }) => {
 						</Button>
 					</div>
 				) : (
-					<Button type="save" onClick={(e) => add(e)}>
+					<Button type="save">
 						Add
 					</Button>
 				)}

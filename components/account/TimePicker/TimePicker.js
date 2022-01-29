@@ -9,15 +9,29 @@ export const formatTime = (time) => {
 	return time;
 };
 
-const TimePicker = ({hr, min, setHr, setMin, hour, minute, id, fn}) => {
-    
-    useEffect(() => {
-        fn(id, hr, min);
-    }, [hr, min]);
-    
+const TimePicker = ({
+	hr,
+	min,
+	stateFn,
+	state,
+	hour,
+	minute,
+	id,
+	fn,
+	types,
+}) => {
+	useEffect(() => {
+		fn(id, state);
+	}, [hr, min]);
+
 	const set = () => {
-		setHr(formatTime(hour));
-		setMin(formatTime(minute));
+		stateFn({
+			...state,
+			[types]: {
+				firstHr: formatTime(hour),
+				firstMin: formatTime(minute),
+			},
+		});
 	};
 
 	const setTime = (type) => {
@@ -71,15 +85,31 @@ const TimePicker = ({hr, min, setHr, setMin, hour, minute, id, fn}) => {
 						s = s.substring(1);
 					}
 					changed = true;
-					setMin(formatTime(s));
+					stateFn({
+						...state,
+						[types]: { firstHr: hour, firstMin: formatTime(s) },
+					});
+					// setMin(formatTime(s));
 				}
 			}
 
 			if (e.target.value == "" || minute == "00") {
 				minute = "00";
-				setMin(minute);
+				stateFn({
+					...state,
+					[types]: { firstHr: hour, firstMin: minute },
+				});
+				// setMin(minute);
 			} else {
-				changed || setMin(formatTime(parseInt(minute)));
+				changed ||
+					stateFn({
+						...state,
+						[types]: {
+							firstHr: hour,
+							firstMin: formatTime(parseInt(minute)),
+						},
+					});
+				// changed || setMin(formatTime(parseInt(minute)));
 			}
 		}
 
@@ -97,38 +127,59 @@ const TimePicker = ({hr, min, setHr, setMin, hour, minute, id, fn}) => {
 						s = s.substring(1);
 					}
 					changed = true;
-					setHr(formatTime(s));
+					stateFn({
+						...state,
+						[types]: { firstHr: formatTime(s), firstMin: minute },
+					});
+					// setHr(formatTime(s));
 				}
 			}
 
 			if (e.target.value == "" || hour == "00") {
 				hour = "00";
-				setHr(hour);
+				stateFn({
+					...state,
+					[types]: { firstHr: hour, firstMin: minute },
+				});
+				// setHr(hour);
 			} else {
-				changed || setHr(formatTime(parseInt(hour)));
+				changed ||
+					stateFn({
+						...state,
+						[types]: {
+							firstHr: formatTime(parseInt(hour)),
+							firstMin: minute,
+						},
+					});
 			}
 		}
 	};
 	return (
 		<Wrapper>
 			<div>
-				<Nav go={"up"} onClick={() => setTime("hr-up")} />
+				{/* <Nav go={"up"} onClick={() => setTime("hr-up")} /> */}
 				<Input
 					type={"number"}
 					value={hr}
-					onChange={(e) => {time_change(e, "hr-change"); fn(id, hr, min)}}
+					onChange={(e) => {
+						time_change(e, "hr-change");
+						fn(id, state);
+					}}
 				/>
-				<Nav go={"down"} onClick={() => setTime("hr-down")} />
+				{/* <Nav go={"down"} onClick={() => setTime("hr-down")} /> */}
 			</div>
 			<Separate>:</Separate>
 			<div>
-				<Nav go={"up"} onClick={() => setTime("min-up")} />
+				{/* <Nav go={"up"} onClick={() => setTime("min-up")} /> */}
 				<Input
 					type={"number"}
 					value={min}
-					onChange={(e) => {time_change(e, "min-change"); ; fn(id, hr, min)}}
+					onChange={(e) => {
+						time_change(e, "min-change");
+						fn(id, state);
+					}}
 				/>
-				<Nav go={"down"} onClick={() => setTime("min-down")} />
+				{/* <Nav go={"down"} onClick={() => setTime("min-down")} /> */}
 			</div>
 		</Wrapper>
 	);

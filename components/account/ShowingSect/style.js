@@ -153,23 +153,23 @@ export const TimeInput = styled(Input)`
 
 export const ConfirmButton = styled.button`
 	background: #0069ff;
-    min-height: 44px;
-    padding: 0px 20px;
-    font-size: 14px;
-    border: 1px solid transparent;
-    border-radius: 40px;
-    font-family: 'Montserrat', sans-serif;
+	min-height: 44px;
+	padding: 0px 20px;
+	font-size: 14px;
+	border: 1px solid transparent;
+	border-radius: 40px;
+	font-family: "Montserrat", sans-serif;
 	font-weight: 600;
 	color: #fff;
-	margin-top: .6em;
+	margin-top: 0.6em;
 	cursor: pointer;
 `;
 
 const buttonStyle = `
 	color: #219ebc;
-	font-size: 1em;
+	font-size: 2.3em;
 	cursor: pointer;
-	margin-left: 1.2em;
+	margin-left:.2em;
 `;
 
 export const AddTime = styled(BiPlusMedical)`

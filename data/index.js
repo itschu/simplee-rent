@@ -1,8 +1,3 @@
-/** @format */
-
-import home_one from "../public/images/home1.jpg";
-import home_two from "../public/images/home2.jpg";
-import home_three from "../public/images/home3.jpg";
 
 export const project = {
 	title: "Simplee Rent",
@@ -50,7 +45,7 @@ export const propertiesPlaceHolder = [
 		street: "line2",
 		city: "abj",
 		country: "9ja",
-		unique: "0xo0G68n"
+		unique: "0xo0G68n",
 	},
 	{
 		id: 2,
@@ -58,11 +53,11 @@ export const propertiesPlaceHolder = [
 		units: 4,
 		src: "/images/home2.jpg",
 		fileName: "home2.jpg",
-		name: "prop2", 
+		name: "prop2",
 		street: "line3",
 		city: "lag",
 		country: "UK",
-		unique: "0oKi0G68"
+		unique: "0oKi0G68",
 	},
 	{
 		id: 3,
@@ -74,7 +69,7 @@ export const propertiesPlaceHolder = [
 		street: "line4",
 		city: "ph",
 		country: "ghana",
-		unique: "0o0G68"
+		unique: "0o0G68",
 	},
 ];
 
@@ -94,29 +89,29 @@ export const showingsTemplate = [
 	{
 		id: 1,
 		property: "Full name of property",
-		time: "12pm - 3pm 4/9/22",
+		display_time: "12pm - 3pm 4/9/22",
 		link: "http://google.com",
-		unique: "0o0G68"
+		unique: "0o0G68",
 	},
 	{
 		id: 2,
 		property: "Full name of property",
-		time: "12pm - 3pm 4/9/22",
+		display_time: "12pm - 3pm 4/9/22",
 		link: "http://google.com",
-		unique: "0o0G68"
+		unique: "0o0G68",
 	},
 	{
 		id: 3,
 		property: "Full name of property",
-		time: "12pm - 3pm 4/9/22",
+		display_time: "12pm - 3pm 4/9/22",
 		link: "http://google.com",
-		unique: "0o0G68"
+		unique: "0o0G68",
 	},
 	{
 		id: 4,
 		property: "Full name of property",
-		time: "12pm - 3pm 4/9/22",
+		display_time: "12pm - 3pm 4/9/22",
 		link: "http://google.com",
-		unique: "0oKi0G68"
+		unique: "0oKi0G68",
 	},
 ];

@@ -12,6 +12,7 @@ export const Wrapper = styled.div`
 	box-shadow: 0px 20px 20px rgba(0, 0, 0, 0.15);
 	transition: 2s;
 	@media screen and (min-width: 600px) {
+		transition: 0s;
 		width: 17vw;
 		display: block;
 	}

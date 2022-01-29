@@ -7,19 +7,20 @@ export const Wrapper = styled.div`
 	width: 100%;
 	max-width: 200px;
 	margin: 0 auto;
-	padding: 10px 0;
-	/* background-color: #F3F3F3; */
+	padding: 0px 0;
+	background-color: #f7f7f7;
 	border-radius: 8px;
 	/* box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.2); */
     border: 1px solid #838383;
 	color: #53565A;
-	font-size: 32px;
+	font-size: 12px;
 	font-weight: 700;
 	user-select: none;
+    margin: 0 .7em;
 
     & > div{
         position: relative;
-        min-width: 60px;
+        max-width: 40px;
         text-align: center;
         display: flex;
         justify-content: stretch;
@@ -50,7 +51,7 @@ export const Separate = styled.span``;
 
 export const Input = styled.input`
     background: none;
-	font-size: 13px;
+	font-size: 15px;
 	appearance: none;
 	border: none;
 	outline: none;

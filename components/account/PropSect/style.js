@@ -116,7 +116,9 @@ export const EditWrapper = styled.div`
 		& > div {
 			flex: 1 1 450px;
 		}
-
+		& > form {
+			flex: 1 1 450px;
+		}
 	}
 `;
 
@@ -167,7 +169,7 @@ export const Input = styled.input`
 	border-radius: 5px;
 	padding-left: 10px;
 	border: 1px solid #8b8b8b;
-    font-family: 'Montserrat', sans-serif;
+	font-family: "Montserrat", sans-serif;
 	/* outline: 1px solid #023047; */
 	${({ type }) => (type == "file" ? uploadInput : "")}
 	@media screen and (min-width: 600px) {
@@ -194,7 +196,7 @@ export const InputSeparator = styled.div`
 		}
 	}};
 	@media screen and (min-width: 600px) {
-		${({ dg,separate }) => {
+		${({ dg, separate }) => {
 			if (dg) {
 				return `
                     display: grid;
@@ -245,13 +247,12 @@ export const ImgContainer = styled.div`
 	border-radius: 10px;
 `;
 
-
 export const Select = styled.select`
 	height: 3em;
 	width: 100%;
 	border-radius: 5px;
 	padding-left: 10px;
-    font-family: 'Montserrat', sans-serif;
+	font-family: "Montserrat", sans-serif;
 	border: 1px solid #8b8b8b;
 	/* outline: 1px solid #023047; */
 	${({ type }) => (type == "file" ? uploadInput : "")}
@@ -261,5 +262,5 @@ export const Select = styled.select`
 `;
 
 export const Option = styled.option`
-    font-family: 'Montserrat', sans-serif;
+	font-family: "Montserrat", sans-serif;
 `;
