@@ -1,11 +1,16 @@
 import { Wrapper } from "./style";
 import Nav from "../Nav/";
 import Button from "../Button";
+import { useState } from "react";
+import DropDown from "../DropDown/DropDown";
 
 const Hero = () => {
+	const [isOpen, setIsOpen] = useState(false);
+	const toggle = () => setIsOpen(!isOpen);
 	return (
 		<>
-			<Nav />
+			<Nav toggle={toggle} />
+			<DropDown status={isOpen} toggle={toggle} />
 			<Wrapper>
 				<div>
 					<h1>

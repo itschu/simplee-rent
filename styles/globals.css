@@ -13,6 +13,7 @@ body {
     /* font-family: 'Poppins', sans-serif; */
     scroll-behavior: smooth;
     scroll-padding: 3em;
+		font-size: clamp(13.5px, 1.1vw, 15px);
 }
 
 a {

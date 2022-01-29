@@ -23,8 +23,17 @@ export const Wrapper = styled.div`
 
 	& p {
 		text-align: center;
-		width: 36ch;
 		line-height: 150.5%;
+		@media screen and (min-width: 600px) {
+			width: 36ch;
+		}
+	}
+
+	& span {
+		margin-bottom: 2.5em;
+		@media screen and (min-width: 600px) {
+			margin: 0;
+		}
 	}
 
 	@media screen and (min-width: 600px) {

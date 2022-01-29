@@ -106,7 +106,7 @@ export const EditWrapper = styled.div`
 	position: relative;
 	padding: 1em 2.5em;
 	padding-bottom: 2em;
-	margin-top: 28em;
+	margin-top: 10em;
 	@media screen and (min-width: 600px) {
 		margin-top: 0;
 		width: 60vw;
@@ -146,7 +146,6 @@ export const Button = styled.button`
 	margin-right: 0.9em;
 	bottom: 0.5em;
 	right: 0.5em;
-	font-size: 20px;
 	padding: 0.8em 1.5em;
 	background: ${({ type }) => (type == "save" ? "#023047" : "red")};
 	outline: none;
@@ -157,7 +156,6 @@ export const Button = styled.button`
 	@media screen and (min-width: 600px) {
 		bottom: 2.3em;
 		right: 4em;
-		font-size: 14px;
 	}
 `;
 

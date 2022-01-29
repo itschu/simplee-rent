@@ -1,16 +1,17 @@
 import { Navigation } from "./style";
 import Image from "next/image";
 import logo from "../../../public/images/logo-icon.png";
-import Button from "../Button/";
+import Button from "../Button/";	
 import Link from "next/link";
+import { BurgerMenu } from "../../account/Header/style";
 
-const Nav = () => {
+const Nav = ({ toggle }) => {
 	return (
 		<Navigation>
 			<div>
-				<a>
+				<Link href={"/"}>
 					<Image src={logo} />
-				</a>
+				</Link>
 			</div>
 			<ul>
 				<li>
@@ -32,6 +33,7 @@ const Nav = () => {
 					<Button text={"sign up"} />
 				</li>
 			</ul>
+			<BurgerMenu onClick={toggle} />
 		</Navigation>
 	);
 };

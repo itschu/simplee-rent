@@ -5,21 +5,28 @@ export const Wrapper = styled.section`
 	/* display: flex; */
 	/* flex-direction: column; */
 	/* justify-content: center; */
-    margin-bottom: 5em;
+	margin-bottom: 5em;
 
 	& > div {
 		display: flex;
 		align-items: center;
 		padding: 0 3em;
 		justify-content: space-around;
+		flex-direction: column;
+		@media screen and (min-width: 600px) {
+			flex-direction: row;
+		}
 	}
 
 	& > h2,
 	p {
 		text-align: center;
 		margin-top: 2em;
-		width: 15ch;
 		font-weight: 600;
+		/* width: 20ch; */
+		@media screen and (min-width: 600px) {
+			width: 15ch;
+		}
 	}
 
 	& > h2 {

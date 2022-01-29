@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const Wrapper = styled.section`
 	height: 18em;
 	width: 100%;
-	background: red;
+	/* background: red; */
 	background-image: url("/images/cta-bg.png");
 	background-size: cover;
 	background-position: center center;

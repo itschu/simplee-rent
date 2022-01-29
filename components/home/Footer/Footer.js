@@ -8,6 +8,7 @@ import phone from "../../../public/images/icon-phone.png";
 import tweet from "../../../public/images/icon-twitter.png";
 
 const Footer = () => {
+	const year = new Date();
 	return (
 		<Wrapper>
 			<div>
@@ -44,29 +45,34 @@ const Footer = () => {
 							<Img width={"1.2em"}>
 								<Image src={phone} />
 							</Img>
-							+1 (613) 720-2190
+							<a href="tel:+1(613)720-2190">+1 (613) 720-2190</a>
 						</li>
 						<li>
 							<Img width={"1.2em"}>
 								<Image src={mail} />
 							</Img>
-							support@simpleerent.com
+							<a href="mailto:support@simpleerent.com">
+								support@simpleerent.com
+							</a>
 						</li>
 					</ul>
 					<div>
-						<Img width={"2em"}>
+						<Img width={"1.6em"}>
 							<Image src={fb} />
 						</Img>
-						<Img width={"2em"}>
+						<Img width={"1.6em"}>
 							<Image src={tweet} />
 						</Img>
-						<Img width={"2em"}>
+						<Img width={"1.6em"}>
 							<Image src={ig} />
 						</Img>
 					</div>
 				</div>
 			</div>
-			<span>&copy; simpleerent.com 2022 | All rights reserved. </span>
+			<span>
+				&copy; simpleerent.com {year.getUTCFullYear()} | All rights
+				reserved.
+			</span>
 		</Wrapper>
 	);
 };

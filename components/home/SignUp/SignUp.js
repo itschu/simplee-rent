@@ -1,11 +1,16 @@
 import Nav from "../Nav";
 import { Wrapper } from "../SignIn/style";
+import { useState } from "react";
+import DropDown from "../DropDown/DropDown";
 
 const SignUp = () => {
+	const [isOpen, setIsOpen] = useState(false);
+	const toggle = () => setIsOpen(!isOpen);
 	return (
 		<Wrapper addMargin={true}>
 			<div>
-				<Nav />
+				<Nav toggle={toggle} />
+				<DropDown status={isOpen} toggle={toggle} />
 			</div>
 			<div>
 				<h2>Create A Landlord Account</h2>
