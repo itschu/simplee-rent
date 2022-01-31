@@ -1,11 +1,13 @@
 import { Navigation } from "./style";
 import Image from "next/image";
 import logo from "../../../public/images/logo-icon.png";
-import Button from "../Button/";	
+import Button from "../Button/";
 import Link from "next/link";
 import { BurgerMenu } from "../../account/Header/style";
+import { useSession } from "next-auth/react";
 
 const Nav = ({ toggle }) => {
+	const { data: session } = useSession();
 	return (
 		<Navigation>
 			<div>
@@ -26,12 +28,22 @@ const Nav = ({ toggle }) => {
 				<li>
 					<Link href={"/#testimonial-section"}>testimonial</Link>
 				</li>
-				<li>
-					<Link href={"signin"}>sign in</Link>
-				</li>
-				<li>
-					<Button text={"sign up"} />
-				</li>
+				{!session && (
+					<>
+						<li >
+							<Link href={"signin"}>sign in</Link>
+						</li>
+						<li>
+							<Button text={"sign up"} />
+						</li>
+					</>
+				)}
+
+				{session && (
+					<li>
+						<Button text={"My Account"} />
+					</li>
+				)}
 			</ul>
 			<BurgerMenu onClick={toggle} />
 		</Navigation>

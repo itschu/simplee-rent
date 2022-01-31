@@ -12,4 +12,10 @@ export const Btn = styled.button`
     color: #fff;
     font-weight: 600;
     cursor: pointer;
+    transition: 0.3s ease-in-out;
+
+    &:hover{
+        transform: scale(1.1);
+        box-shadow: 0px 5px 10px #34343469;
+    }
 `;

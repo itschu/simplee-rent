@@ -2,9 +2,10 @@ import Head from "../components/Head";
 import Hero from "../components/home/Hero";
 import How from "../components/home/How";
 import About from "../components/home/About";
-import Testimonial from "../components/home/Testimonial/Testimonial";
-import CTA from "../components/home/CTA/CTA";
-import Footer from "../components/home/Footer/Footer";
+import Testimonial from "../components/home/Testimonial";
+import CTA from "../components/home/CTA";
+import Footer from "../components/home/Footer";
+import { getSession } from "next-auth/react";
 
 export default function Home() {
 	return (
@@ -19,3 +20,4 @@ export default function Home() {
 		</>
 	);
 }
+

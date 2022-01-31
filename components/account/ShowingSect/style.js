@@ -121,10 +121,9 @@ export const CalendarDiv = styled.div`
 		margin-top: 1em;
 	}
 	@media screen and (min-width: 600px) {
-		flex-direction: row;
+		flex-direction: column;
 		& > div:last-child {
-			align-self: center;
-			padding: 0 4em;
+			align-self: flex-start;
 		}
 
 		& > div:last-child > div:last-child {
@@ -169,7 +168,7 @@ const buttonStyle = `
 	color: #219ebc;
 	font-size: 2.3em;
 	cursor: pointer;
-	margin-left:.2em;
+	margin-left:.4em;
 `;
 
 export const AddTime = styled(BiPlusMedical)`
@@ -190,4 +189,8 @@ export const Wrap = styled.div`
 	align-items: center;
 	display: flex;
 	margin-bottom: 0.9em;
+`;
+
+export const Separate = styled.span`
+	margin: 0 10px;
 `;

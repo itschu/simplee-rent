@@ -1,8 +1,11 @@
 import Button from "../Button/";
 import Link from "next/link";
 import { Wrapper, Icon } from "./style";
+import { useSession } from "next-auth/react";
 
 const DropDown = ({ status, toggle }) => {
+	const { data: session } = useSession();
+
 	return (
 		<Wrapper show={status}>
 			<div>
@@ -11,38 +14,48 @@ const DropDown = ({ status, toggle }) => {
 			<div>
 				<ul>
 					<li>
-						<a onClick={toggle}>
+						<span onClick={toggle}>
 							<Link href={"/"}>home</Link>
-						</a>
+						</span>
 					</li>
 					<li>
-						<a onClick={toggle}>
+						<span onClick={toggle}>
 							<Link href={"/#how-section"}>how does it work</Link>
-						</a>
+						</span>
 					</li>
 					<li>
-						<a onClick={toggle}>
+						<span onClick={toggle}>
 							<Link href={"/#about-section"}>about</Link>
-						</a>
+						</span>
 					</li>
 					<li>
-						<a onClick={toggle}>
+						<span onClick={toggle}>
 							<Link href={"/#testimonial-section"}>
 								testimonial
 							</Link>
-						</a>
+						</span>
 					</li>
-					<li>
-						<a onClick={toggle}>
-							<Link href={"signin"}>sign in</Link>
-						</a>
-					</li>
+					{!session && (
+						<li>
+							<span onClick={toggle}>
+								<Link href={"signin"}>sign in</Link>
+							</span>
+						</li>
+					)}
+
+					{session && (
+						<li>
+							<Button text={"My Account"} />
+						</li>
+					)}
 				</ul>
-				<div>
-					<a onClick={toggle}>
-						<Button text={"sign up"} />
-					</a>
-				</div>
+				{!session && (
+					<div>
+						<span onClick={toggle}>
+							<Button text={"sign up"} />
+						</span>
+					</div>
+				)}
 			</div>
 		</Wrapper>
 	);

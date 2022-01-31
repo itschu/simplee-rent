@@ -143,3 +143,14 @@ input[type="number"] {
 	-moz-appearance: textfield;
 }
 
+.date-iput{
+	height: 3em !important;
+	width: 100% !important;
+	border-radius: 5px;
+	padding-left: 10px;
+	border: 1px solid #8b8b8b;
+	font-family: "Montserrat", sans-serif;
+	@media screen and (min-width: 600px) {
+		
+	}
+}

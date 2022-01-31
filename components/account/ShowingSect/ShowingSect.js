@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { H1, Wrapper } from "../DashSect/style";
 import { AddProp } from "../PropSect/style";
 import {
@@ -16,8 +16,48 @@ import edit from "../../../public/images/edit.png";
 import del from "../../../public/images/delete.png";
 import { useShowingsContext, usePropertiesContext } from "../../../context";
 import ShowingModal from "./ShowingModal";
+import FullCalendar from "@fullcalendar/react";
+import interactionPlugin from "@fullcalendar/interaction";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import listPlugin from '@fullcalendar/list';
+
+const convertDate = (inputFormat) => {
+	function pad(s) {
+		return s < 10 ? "0" + s : s;
+	}
+	var d = new Date(inputFormat);
+	return [d.getFullYear(), pad(d.getMonth() + 1), pad(d.getDate()), ].join("-");
+}
+
+const handleDateClicked = (args) => {
+	console.log(args.event.title);
+}
 
 const ShowingSect = ({ page }) => {
+	const [value] = useState(new Date());
+	const [events, setEvents] = useState([
+		{ title: "event 1", date: "2022-02-01" },
+		{ title: "event 2", date: "2022-02-02" },
+	]);
+
+	const calendarRef = useRef();
+	let newArr = [];
+	const handleDateClick = (arg) => {
+		if (Array.isArray(value)) {
+			value.map((el, i) => {
+				let it = { title: `event ${i + 10}`, date: convertDate(new Date(el)) };
+				newArr.push(it);
+			});
+			// setEvents([...events, ...newArr]);
+		} else {
+			let it = { title: `event ${101}`, date: convertDate(new Date(value)) };
+			// setEvents([...events, it]);
+		}
+	};
+
+
+
 	const [showOverlay, setShowOverlay] = useState(false);
 	const [displayNotify, setDisplayNotify] = useState(false);
 	const { showings, setShowings } = useShowingsContext();
@@ -54,59 +94,20 @@ const ShowingSect = ({ page }) => {
 	return (
 		<Wrapper>
 			<H1>All {page}. </H1>
-			<Container cellspacing="0" cellpadding="0">
-				<thead>
-					<tr>
-						<HData>SN</HData>
-						<HData>Property</HData>
-						<HData>Time</HData>
-						<HData>Action</HData>
-					</tr>
-				</thead>
-				<tbody>
-					{showings.length > 0 ? (
-						showings.map((el, i) => (
-							<Data key={el.id}>
-								<td>
-									<b>{i + 1}.</b>
-								</td>
-								<td>{el.property}</td>
-								<td>{el.display_time}</td>
-								<td>
-									<BtnWrapper>
-										<ActionBtns>
-											<Image
-												src={copy}
-												alt="add more properties"
-												onClick={() =>
-													copyText(el.link)
-												}
-											/>
-										</ActionBtns>
-										<ActionBtns>
-											<Image
-												src={edit}
-												alt="add more properties"
-											/>
-										</ActionBtns>
-										<ActionBtns>
-											<Image
-												src={del}
-												alt="add more properties"
-												onClick={() => delItem(el.id)}
-											/>
-										</ActionBtns>
-									</BtnWrapper>
-								</td>
-							</Data>
-						))
-					) : (
-						<Data>
-							<td colSpan={4}>No data found!</td>
-						</Data>
-					)}
-				</tbody>
-			</Container>
+			<FullCalendar
+				ref={calendarRef}
+				plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin ]}
+				initialView="dayGridMonth"
+				editable
+				selectable
+				events={events}
+				dateClick={handleDateClick}
+				eventClick={handleDateClicked}
+				nowIndicator={true}
+				editable={true}
+				height={450}
+				validRange={{start: new Date(), end: '2025-06-01'}}
+			/>
 
 			<AddProp>
 				<Image

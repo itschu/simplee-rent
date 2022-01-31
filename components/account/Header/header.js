@@ -2,17 +2,17 @@ import { Wrapper, UserPic, BurgerMenu, Logo, Div } from "./style";
 import { useMenuState } from "../../../context";
 import Image from "next/image";
 import logoImg from "../../../public/images/logo.png";
-// import Link from "next/link";
+import Link from "next/link";
 
 const Header = () => {
 	const { State, toggleSate } = useMenuState();
 	return (
 		<Wrapper>
-			<a href={'/'}>
+			<Link href={'/'}>
 				<Logo>
 					<Image src={logoImg} />
 				</Logo>
-			</a>
+			</Link>
 			<Div>
 				<UserPic imgSrc={"fritz.jpg"} />
 				<BurgerMenu onClick={toggleSate} />

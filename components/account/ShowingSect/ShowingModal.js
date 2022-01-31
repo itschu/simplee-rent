@@ -6,20 +6,30 @@ import {
 	InputSeparator,
 	Label,
 	Select,
+	PickDate,
 	Option,
 } from "../PropSect/style";
-import { CalendarDiv, ConfirmButton, AddTime, RemoveTime, Wrap } from "./style";
+import {
+	CalendarDiv,
+	ConfirmButton,
+	AddTime,
+	RemoveTime,
+	Wrap,
+	Separate,
+} from "./style";
 import { useState, useRef, useEffect } from "react";
-import Calendar from "react-calendar";
 import TimePicker from "../TimePicker";
 import { template, selectTimeTemp } from "./initialState";
 import { useShowingsContext } from "../../../context";
+import DatePicker from "react-multi-date-picker";
+import NewTimePicker from "../TimePicker/NewTimePicker";
 
 let setVisibility = "visible";
 
 const ShowingModal = ({ displayOverlay, close, allProps }) => {
 	const { showings, setShowings } = useShowingsContext();
 	const thisProp = useRef(null);
+	const mm = useRef(null);
 	const [value, setValue] = useState(new Date());
 	const getToday = new Date();
 	const show = getToday.toLocaleString("en-US", {
@@ -27,6 +37,9 @@ const ShowingModal = ({ displayOverlay, close, allProps }) => {
 		minute: "numeric",
 		hour12: false,
 	});
+	if (mm.current) {
+		mm.current.children[0].classList.add("date-iput");
+	}
 	const maxDay = new Date();
 	maxDay.setDate(maxDay.getDate() + 90);
 	const [selectValue, setSelectValue] = useState("");
@@ -54,17 +67,18 @@ const ShowingModal = ({ displayOverlay, close, allProps }) => {
 		: (setVisibility = "visible");
 
 	const changeTimeArray = (id, time_state) => {
+		console.log(time_state);
 		const new_time = time.filter((el, i) => i + 1 != id);
 		const newObj = {
 			id: id,
-			from: `${time_state.from.firstHr} : ${time_state.from.firstMin}`,
-			to: `${time_state.to.firstHr} : ${time_state.to.firstMin}`,
+			from: time_state.from,
+			to: time_state.to,
 			status: true,
 		};
 		setTime([newObj, ...new_time]);
 	};
-
 	useEffect(() => {
+
 		time.map((el, id) => {
 			id += 1;
 			if (id == 2) {
@@ -87,9 +101,7 @@ const ShowingModal = ({ displayOverlay, close, allProps }) => {
 			unique: thisProp.current,
 			link: null,
 		});
-
 	}, [thisProp.current, selectValue, value, time, showings]);
-
 	const addShowing = (e) => {
 		e.preventDefault();
 		const get_current_title = allProps.filter(
@@ -153,12 +165,12 @@ const ShowingModal = ({ displayOverlay, close, allProps }) => {
 					<CalendarDiv>
 						<div>
 							<Label>Select A Date</Label>
-							<Calendar
-								onChange={setValue}
+							<DatePicker
 								value={value}
-								minDate={getToday}
-								maxDate={maxDay}
-								selectRange={true}
+								ref={mm}
+								onChange={setValue}
+								multiple={true}
+								format="YYYY-MM-DD"
 							/>
 						</div>
 
@@ -167,28 +179,23 @@ const ShowingModal = ({ displayOverlay, close, allProps }) => {
 							<br />
 							<div>
 								<Wrap>
-									<TimePicker
-										min={time_one.from.firstMin}
-										hr={time_one.from.firstHr}
+									<NewTimePicker
+										stp={selectValue}
 										types={"from"}
-										stateFn={set_time_one}
-										state={time_one}
-										hour={time_one.from.firstHr}
-										minute={time_one.from.firstMin}
 										id={1}
 										fn={changeTimeArray}
+										stateFn={set_time_one}
+										state={time_one}
 									/>
-									<div>-</div>
-									<TimePicker
-										min={time_one.to.firstMin}
-										hr={time_one.to.firstHr}
+									<Separate>-</Separate>
+									<NewTimePicker
+										stp={selectValue}
 										types={"to"}
-										stateFn={set_time_one}
-										state={time_one}
-										hour={time_one.to.firstHr}
-										minute={time_one.to.firstMin}
 										id={1}
 										fn={changeTimeArray}
+										stateFn={set_time_one}
+										state={time_one}
+										begin={time_one.from}
 									/>
 									<AddTime
 										onClick={moreTime}
@@ -198,28 +205,23 @@ const ShowingModal = ({ displayOverlay, close, allProps }) => {
 
 								{showSec && (
 									<Wrap>
-										<TimePicker
-											min={time_two.from.firstMin}
-											hr={time_two.from.firstHr}
+										<NewTimePicker
+											stp={selectValue}
 											types={"from"}
-											stateFn={set_time_two}
-											state={time_two}
-											hour={time_two.from.firstHr}
-											minute={time_two.from.firstMin}
 											id={2}
 											fn={changeTimeArray}
+											stateFn={set_time_two}
+											state={time_two}
 										/>
-										<div>-</div>
-										<TimePicker
-											min={time_two.to.firstMin}
-											hr={time_two.to.firstHr}
+										<Separate>-</Separate>
+										<NewTimePicker
+											stp={selectValue}
 											types={"to"}
-											stateFn={set_time_two}
-											state={time_two}
-											hour={time_two.to.firstHr}
-											minute={time_two.to.firstMin}
 											id={2}
 											fn={changeTimeArray}
+											stateFn={set_time_two}
+											state={time_two}
+											begin={time_two.from}
 										/>
 										<RemoveTime
 											onClick={() => setShowSec(!showSec)}
@@ -229,28 +231,23 @@ const ShowingModal = ({ displayOverlay, close, allProps }) => {
 
 								{showThird && (
 									<Wrap>
-										<TimePicker
-											min={time_three.from.firstMin}
-											hr={time_three.from.firstHr}
+										<NewTimePicker
+											stp={selectValue}
 											types={"from"}
-											stateFn={set_time_three}
-											state={time_three}
-											hour={time_three.from.firstHr}
-											minute={time_three.from.firstMin}
 											id={3}
 											fn={changeTimeArray}
+											stateFn={set_time_three}
+											state={time_three}
 										/>
-										<div>-</div>
-										<TimePicker
-											min={time_three.to.firstMin}
-											hr={time_three.to.firstHr}
+										<Separate>-</Separate>
+										<NewTimePicker
+											stp={selectValue}
 											types={"to"}
-											stateFn={set_time_three}
-											state={time_three}
-											hour={time_three.to.firstHr}
-											minute={time_three.to.firstMin}
 											id={3}
 											fn={changeTimeArray}
+											stateFn={set_time_three}
+											state={time_three}
+											begin={time_three.from}
 										/>
 										<RemoveTime
 											onClick={() =>

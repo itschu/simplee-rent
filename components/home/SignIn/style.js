@@ -57,11 +57,22 @@ export const Wrapper = styled.section`
 
 	& form button {
 		background: #023047;
-		border: none;
+		/* border: none; */
+		border: 1px solid #023047;
 		border-radius: 5px;
 		color: #fff;
 		padding: 10px 80px;
 		margin-top: 1em;
+		transition: 0.2s ease-in-out;
+		box-sizing: border-box;
+	}
+
+	& form button:hover {
+		background: transparent;
+		color: #023047;
+		box-sizing: border-box;	
+		cursor: pointer;
+		font-weight: 700;
 	}
 
 	& h2 {

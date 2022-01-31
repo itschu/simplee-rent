@@ -4,6 +4,7 @@ import { useState } from "react";
 import DropDown from "../DropDown/DropDown";
 
 const SignUp = () => {
+	
 	const [isOpen, setIsOpen] = useState(false);
 	const toggle = () => setIsOpen(!isOpen);
 	return (
@@ -16,22 +17,26 @@ const SignUp = () => {
 				<h2>Create A Landlord Account</h2>
 				<form>
 					<div>
-						<label>Name</label>
-						<input />
+						<label>Firstname</label>
+						<input name="first_name" type={"text"}/>
+					</div>
+					<div>
+						<label>Lsstname</label>
+						<input name="last_name" type={"text"}/>
 					</div>
 					<div>
 						<label>Email</label>
-						<input />
+						<input name="email" type={"text"}/>
 					</div>
 					<div>
 						<label>Password</label>
-						<input />
+						<input name="password" type={"password"} />
 					</div>
 					<div>
 						<label>Re-Type Password</label>
-						<input />
+						<input name="password" type={"password"} />
 					</div>
-					<button>Login</button>
+					<button>Register</button>
 				</form>
 			</div>
 		</Wrapper>

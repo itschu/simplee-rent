@@ -3,9 +3,13 @@ import Header from "../../components/account/Header";
 import Navigation from "../../components/account/Navigation";
 import DashSect from "../../components/account/DashSect";
 import { MenuState } from "../../context";
+import { getSession, useSession } from "next-auth/react";
+import { useEffect } from "react";
 
-export default function Dashboard() {
+export default () => {
+
 	const pg = "Dashboard";
+
 	return (
 		<MenuState>
 			<Head currentPage={pg} />
@@ -14,4 +18,19 @@ export default function Dashboard() {
 			<DashSect page={pg} />
 		</MenuState>
 	);
-}
+};
+
+export const getServerSideProps = async (context) => {
+	const session = await getSession(context);
+	if (!session) {
+		return {
+			redirect: {
+				destination: "/signin",
+				permanent: false,
+			},
+		};
+	}
+	return {
+		props: {},
+	};
+};

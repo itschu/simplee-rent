@@ -34,5 +34,33 @@ export const Navigation = styled.nav`
 		font-weight: 600;
 		cursor: pointer;
 		text-transform: capitalize;
+		position: relative;
+		&::after {
+			transition: 0.9s ease-in-out;
+		}
+
+		&::after {
+			content: "";
+			position: absolute;
+			left: 0;
+			bottom: -10px;
+			background-color: #fb8500;
+			height: 2px;
+			box-sizing: border-box;
+			width: 0px;
+			opacity: 0;
+			transition: width 0.4s ease-in-out;
+		}
+
+		&:hover::after {
+			opacity: 1;
+			width: 50px;
+		}
+	}
+	& > ul > li:last-child {
+		&::after {
+			content: none;
+		}
+	
 	}
 `;

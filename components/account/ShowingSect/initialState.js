@@ -13,6 +13,11 @@ export const template = [
 
 let d = new Date();
 export const selectTimeTemp = {
+	from: "",
+	to: "",
+};
+
+export const old_selectTimeTemp = {
 	from: {
 		firstHr: formatTime(d.getHours()),
 		firstMin: formatTime(d.getMinutes()),

@@ -1,15 +1,17 @@
 import "../styles/globals.css";
 import "../styles/styles.css";
 import { PropContext, AllShowingsContext } from "../context";
+import { SessionProvider } from "next-auth/react";
+import "../styles/calendar.css";
 
-function MyApp({ Component, pageProps }) {
+export default ({ Component, pageProps: { session, ...pageProps } }) => {
 	return (
-		<AllShowingsContext>
-			<PropContext>
-				<Component {...pageProps} />
-			</PropContext>
-		</AllShowingsContext>
+		<SessionProvider session={session}>
+			<AllShowingsContext>
+				<PropContext>
+					<Component {...pageProps} />
+				</PropContext>
+			</AllShowingsContext>
+		</SessionProvider>
 	);
-}
-
-export default MyApp;
+};

@@ -13,7 +13,7 @@ export const AddProp = styled.div`
 	right: 0.75em;
 	@media screen and (min-width: 600px) {
 		bottom: 2.5em;
-		right: 2.5em;
+		right: 1em;
 		width: 40px;
 		height: 40px;
 	}
