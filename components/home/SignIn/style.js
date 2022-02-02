@@ -60,9 +60,6 @@ export const Wrapper = styled.section`
 		margin-top: ${({ addMargin }) => (addMargin ? "3em" : "auto")};
 	}
 
-	${() => {
-		return;
-	}}
 `;
 
 export const Google = styled.button`

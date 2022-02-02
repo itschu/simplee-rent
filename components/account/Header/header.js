@@ -4,17 +4,17 @@ import Image from "next/image";
 import logoImg from "../../../public/images/logo.png";
 import Link from "next/link";
 
-const Header = () => {
+const Header = ({ userAvatar }) => {
 	const { State, toggleSate } = useMenuState();
 	return (
 		<Wrapper>
-			<Link href={'/'}>
+			<Link href={"/"}>
 				<Logo>
 					<Image src={logoImg} priority />
 				</Logo>
 			</Link>
 			<Div>
-				<UserPic imgSrc={"fritz.jpg"} />
+				<UserPic imgSrc={userAvatar} />
 				<BurgerMenu onClick={toggleSate} />
 			</Div>
 		</Wrapper>

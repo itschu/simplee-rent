@@ -26,9 +26,10 @@ export const UserPic = styled.div`
 	background-position: center;
 	display: inline-block;
 	background-size: contain;
+	
 	${({ imgSrc }) => {
 		return `
-            background-image: url(/images/${imgSrc});
+            background-image: url(${imgSrc});
         `;
 	}}
 `;

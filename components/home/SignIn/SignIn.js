@@ -16,7 +16,7 @@ const SignIn = () => {
 		e.preventDefault();
 		//const user = await axios.post("api/auth/login", details);
 		//console.log(user);
-		// signIn();
+		signIn("github");
 	};
 	return (
 		<Wrapper>
@@ -58,10 +58,7 @@ const SignIn = () => {
 					</div>
 					<div>
 						<FormBtn type="submit">Login</FormBtn>
-						<Google
-							type="button"
-							onClick={() => signIn("google")}
-						>
+						<Google type="button" onClick={() => signIn("google")}>
 							Login with Google
 						</Google>
 					</div>

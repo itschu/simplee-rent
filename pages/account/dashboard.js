@@ -3,17 +3,15 @@ import Header from "../../components/account/Header";
 import Navigation from "../../components/account/Navigation";
 import DashSect from "../../components/account/DashSect";
 import { MenuState } from "../../context";
-import { getSession, useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { getSession } from "next-auth/react";
 
-export default () => {
-
+export default ({ data }) => {
+	const { user } = data;
 	const pg = "Dashboard";
-
 	return (
 		<MenuState>
 			<Head currentPage={pg} />
-			<Header />
+			<Header userAvatar={user.image} />
 			<Navigation page={pg.toLowerCase()} />
 			<DashSect page={pg} />
 		</MenuState>
@@ -31,6 +29,8 @@ export const getServerSideProps = async (context) => {
 		};
 	}
 	return {
-		props: {},
+		props: {
+			data: session,
+		},
 	};
 };
