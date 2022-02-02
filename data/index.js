@@ -89,29 +89,47 @@ export const showingsTemplate = [
 	{
 		id: 1,
 		property: "Full name of property",
-		display_time: "12pm - 3pm 4/9/22",
+		date: "2022-02-04",
 		link: "http://google.com",
 		unique: "0o0G68",
 	},
 	{
 		id: 2,
 		property: "Full name of property",
-		display_time: "12pm - 3pm 4/9/22",
+		date: "2022-02-04",
 		link: "http://google.com",
 		unique: "0o0G68",
 	},
 	{
 		id: 3,
 		property: "Full name of property",
-		display_time: "12pm - 3pm 4/9/22",
+		date: "2022-02-04",
 		link: "http://google.com",
 		unique: "0o0G68",
 	},
 	{
 		id: 4,
 		property: "Full name of property",
-		display_time: "12pm - 3pm 4/9/22",
+		date: "2022-02-04",
 		link: "http://google.com",
 		unique: "0oKi0G68",
 	},
 ];
+
+export const formatDate = (td) => {
+	var today = new Date(td);
+	var dd = String(today.getDate()).padStart(2, "0");
+	var mm = String(today.getMonth() + 1).padStart(2, "0");
+	var yyyy = today.getFullYear();
+
+	today = yyyy + "-" + mm + "-" + dd;
+	return today;
+};
+
+export const convertDate = (inputFormat) => {
+	function pad(s) {
+		return s < 10 ? "0" + s : s;
+	}
+	var d = new Date(inputFormat);
+	return [d.getFullYear(), pad(d.getMonth() + 1), pad(d.getDate())].join("-");
+};

@@ -4,7 +4,6 @@ import Navigation from "../../components/account/Navigation";
 import { MenuState } from "../../context";
 import ShowingSect from "../../components/account/ShowingSect";
 import { getSession, useSession } from "next-auth/react";
-import { useEffect } from "react";
 
 export default function Showings() {
 	const { data: session } = useSession();

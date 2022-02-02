@@ -1,4 +1,4 @@
-import React from "react";
+import {useEffect} from "react";
 import moment from "moment";
 import { Select } from "./style";
 
@@ -27,12 +27,16 @@ const NewTimePicker = ({
 	const newFn = (s, t, v) => {
 		stateFn({ ...s, [t]: v });
 	};
+	useEffect(() => {
+		fn(id);
+	}, [state]);
+	
 	let timeValue = begin || "12:00AM";
 	let lastValue;
 	const endLimit = end || "11:59PM";
 	const step = stp || 15;
 	const options = [];
-	console.log(state);
+	// console.log(state);
 	options.push(timeValue);
 	while (isEarlierThanEndLimit(timeValue, endLimit, lastValue)) {
 		lastValue = timeValue;
@@ -45,8 +49,7 @@ const NewTimePicker = ({
 		<Select
 			defaultValue={defaultValue}
 			onChange={(e) => {
-				newFn();
-				fn(id, state);
+				newFn(state, types, e.target.value);
 			}}
 			name={name}
 			value={state[types]}

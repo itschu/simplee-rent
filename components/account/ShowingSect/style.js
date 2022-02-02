@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { Input } from "../PropSect/style";
 import { BiPlusMedical } from "react-icons/bi";
 import { FaMinus } from "react-icons/fa";
+import { VscClose } from "react-icons/vsc";
 
 export const Container = styled.table`
 	background: #219ebc;
@@ -152,13 +153,12 @@ export const TimeInput = styled(Input)`
 
 export const ConfirmButton = styled.button`
 	background: #0069ff;
-	min-height: 44px;
+	min-height: 40px;
 	padding: 0px 20px;
-	font-size: 14px;
 	border: 1px solid transparent;
-	border-radius: 40px;
+	border-radius: 20px;
 	font-family: "Montserrat", sans-serif;
-	font-weight: 600;
+	font-weight: 500;
 	color: #fff;
 	margin-top: 0.6em;
 	cursor: pointer;
@@ -193,4 +193,24 @@ export const Wrap = styled.div`
 
 export const Separate = styled.span`
 	margin: 0 10px;
+`;
+
+export const Error = styled.div`
+	background: #cf0000;
+	text-align: center;
+	padding: 10px 10px;
+	font-size: 11px;
+	margin-top: 15px;
+	border-radius: 7px;
+	color: #fff;
+	display: flex;
+	justify-content: center;
+	transition: 0.9s;
+`;
+
+export const CloseError = styled(VscClose)`
+	font-size: 14px;
+	margin-left: 15px;
+	font-weight: bold;
+	cursor: pointer;
 `;

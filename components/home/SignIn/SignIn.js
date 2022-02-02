@@ -1,5 +1,5 @@
 import Nav from "../Nav";
-import { Wrapper } from "./style";
+import { Wrapper, Google, FormBtn } from "./style";
 import { useState } from "react";
 import DropDown from "../DropDown/DropDown";
 import { signIn } from "next-auth/react";
@@ -16,7 +16,7 @@ const SignIn = () => {
 		e.preventDefault();
 		//const user = await axios.post("api/auth/login", details);
 		//console.log(user);
-		signIn();
+		// signIn();
 	};
 	return (
 		<Wrapper>
@@ -56,7 +56,15 @@ const SignIn = () => {
 							}
 						/>
 					</div>
-					<button>Login</button>
+					<div>
+						<FormBtn type="submit">Login</FormBtn>
+						<Google
+							type="button"
+							onClick={() => signIn("google")}
+						>
+							Login with Google
+						</Google>
+					</div>
 				</form>
 			</div>
 		</Wrapper>

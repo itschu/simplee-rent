@@ -1,10 +1,11 @@
 import Nav from "../Nav";
 import { Wrapper } from "../SignIn/style";
 import { useState } from "react";
+import {Google, FormBtn} from '../SignIn/style'
 import DropDown from "../DropDown/DropDown";
+import { signIn } from "next-auth/react";
 
 const SignUp = () => {
-	
 	const [isOpen, setIsOpen] = useState(false);
 	const toggle = () => setIsOpen(!isOpen);
 	return (
@@ -18,15 +19,15 @@ const SignUp = () => {
 				<form>
 					<div>
 						<label>Firstname</label>
-						<input name="first_name" type={"text"}/>
+						<input name="first_name" type={"text"} />
 					</div>
 					<div>
 						<label>Lsstname</label>
-						<input name="last_name" type={"text"}/>
+						<input name="last_name" type={"text"} />
 					</div>
 					<div>
 						<label>Email</label>
-						<input name="email" type={"text"}/>
+						<input name="email" type={"text"} />
 					</div>
 					<div>
 						<label>Password</label>
@@ -36,7 +37,15 @@ const SignUp = () => {
 						<label>Re-Type Password</label>
 						<input name="password" type={"password"} />
 					</div>
-					<button>Register</button>
+					<div>
+						<FormBtn type="submit">Sign Up</FormBtn>
+						<Google
+							type="button"
+							onClick={() => signIn("google")}
+						>
+							Login with Google
+						</Google>
+					</div>
 				</form>
 			</div>
 		</Wrapper>

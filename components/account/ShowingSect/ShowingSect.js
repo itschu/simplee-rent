@@ -1,14 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { H1, Wrapper } from "../DashSect/style";
 import { AddProp } from "../PropSect/style";
-import {
-	Container,
-	Data,
-	ActionBtns,
-	HData,
-	BtnWrapper,
-	Notification,
-} from "./style";
+import { Notification } from "./style";
 import Image from "next/image";
 import addImg from "../../../public/images/add.png";
 import copy from "../../../public/images/copy.png";
@@ -20,48 +13,51 @@ import FullCalendar from "@fullcalendar/react";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import listPlugin from '@fullcalendar/list';
-
-const convertDate = (inputFormat) => {
-	function pad(s) {
-		return s < 10 ? "0" + s : s;
-	}
-	var d = new Date(inputFormat);
-	return [d.getFullYear(), pad(d.getMonth() + 1), pad(d.getDate()), ].join("-");
-}
+import listPlugin from "@fullcalendar/list";
+import { formatDate, convertDate } from "../../../data";
 
 const handleDateClicked = (args) => {
-	console.log(args.event.title);
-}
+	console.log(args.event);
+};
 
 const ShowingSect = ({ page }) => {
-	const [value] = useState(new Date());
-	const [events, setEvents] = useState([
-		{ title: "event 1", date: "2022-02-01" },
-		{ title: "event 2", date: "2022-02-02" },
-	]);
-
-	const calendarRef = useRef();
-	let newArr = [];
-	const handleDateClick = (arg) => {
-		if (Array.isArray(value)) {
-			value.map((el, i) => {
-				let it = { title: `event ${i + 10}`, date: convertDate(new Date(el)) };
-				newArr.push(it);
-			});
-			// setEvents([...events, ...newArr]);
-		} else {
-			let it = { title: `event ${101}`, date: convertDate(new Date(value)) };
-			// setEvents([...events, it]);
-		}
-	};
-
-
-
+	// const [value] = useState(new Date());
+	const [currentModal, setCurrentModal] = useState([]);
 	const [showOverlay, setShowOverlay] = useState(false);
 	const [displayNotify, setDisplayNotify] = useState(false);
 	const { showings, setShowings } = useShowingsContext();
 	const { allProps } = usePropertiesContext();
+
+	let itm = "";
+	let allShowing = [];
+	let newShowing = showings.map((el) => {
+		if (Array.isArray(el.date)) {
+			return (itm = el.date.map((elem) => {
+				return {
+					groupId: (Math.random() + 1)
+						.toString(60)
+						.substring(allProps.length + 5),
+					title: `${el.property} ${el.duration} mins showing`,
+					date: formatDate(elem),
+				};
+			}));
+		} else {
+			return {
+				title: `${el.property} showing`,
+				date: formatDate(el.date),
+			};
+		}
+	});
+	if (itm !== "") {
+		allShowing = [...itm];
+	} else {
+		allShowing = [...newShowing];
+	}
+
+	const [events, setEvents] = useState(allShowing);
+
+	const calendarRef = useRef();
+	const handleDateClick = (arg) => {};
 
 	const copyText = (value) => {
 		navigator.clipboard.writeText(value);
@@ -85,28 +81,27 @@ const ShowingSect = ({ page }) => {
 		}
 	};
 
-	useEffect(() => {
-		showings.map(() => {});
-		setTimeout(() => {
-			setDisplayNotify(false);
-		}, 1500);
-	});
 	return (
 		<Wrapper>
 			<H1>All {page}. </H1>
 			<FullCalendar
 				ref={calendarRef}
-				plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin ]}
+				plugins={[
+					dayGridPlugin,
+					interactionPlugin,
+					timeGridPlugin,
+					listPlugin,
+				]}
 				initialView="dayGridMonth"
 				editable
 				selectable
 				events={events}
-				dateClick={handleDateClick}
-				eventClick={handleDateClicked}
+				// dateClick={handleDateClick}
+				// eventClick={handleDateClicked}
 				nowIndicator={true}
 				editable={true}
 				height={450}
-				validRange={{start: new Date(), end: '2025-06-01'}}
+				validRange={{ start: new Date(), end: "2025-06-01" }}
 			/>
 
 			<AddProp>
@@ -129,6 +124,9 @@ const ShowingSect = ({ page }) => {
 				allProps={allProps}
 				list={showings}
 				editList={setShowings}
+				curr={currentModal}
+				setCurr={setCurrentModal}
+				chngEvnt={setEvents}
 			/>
 		</Wrapper>
 	);

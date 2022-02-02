@@ -10,7 +10,7 @@ const Header = () => {
 		<Wrapper>
 			<Link href={'/'}>
 				<Logo>
-					<Image src={logoImg} />
+					<Image src={logoImg} priority />
 				</Logo>
 			</Link>
 			<Div>
