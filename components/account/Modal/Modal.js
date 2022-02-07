@@ -7,6 +7,7 @@ import {
 	GoUp,
 	GoDown,
 } from "../ShowingSect/style";
+import { Label } from "../PropSect/style";
 
 const Modal = () => {
 	<TimePickerWrapper>

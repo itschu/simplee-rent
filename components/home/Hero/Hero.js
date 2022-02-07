@@ -1,5 +1,5 @@
 import { Wrapper } from "./style";
-import Nav from "../Nav/";
+import Nav from "../Nav";
 import Button from "../Button";
 import { useState } from "react";
 import DropDown from "../DropDown/DropDown";

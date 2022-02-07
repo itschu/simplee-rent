@@ -14,7 +14,7 @@ const Footer = () => {
 			<div>
 				<div>
 					<div>
-						<Image src={black_logo} />
+						<Image src={black_logo} alt="Simplee rent logo" />
 					</div>
 					<p>Rent with Ease</p>
 				</div>
@@ -43,13 +43,13 @@ const Footer = () => {
 					<ul>
 						<li>
 							<Img width={"1.2em"}>
-								<Image src={phone} />
+								<Image src={phone} alt="phone icon" />
 							</Img>
 							<a href="tel:+1(613)720-2190">+1 (613) 720-2190</a>
 						</li>
 						<li>
 							<Img width={"1.2em"}>
-								<Image src={mail} />
+								<Image src={mail} alt="email icon"/>
 							</Img>
 							<a href="mailto:support@simpleerent.com">
 								support@simpleerent.com
@@ -58,13 +58,13 @@ const Footer = () => {
 					</ul>
 					<div>
 						<Img width={"1.6em"}>
-							<Image src={fb} />
+							<Image src={fb} alt="facebook icon"/>
 						</Img>
 						<Img width={"1.6em"}>
-							<Image src={tweet} />
+							<Image src={tweet} alt="twitter icon"/>
 						</Img>
 						<Img width={"1.6em"}>
-							<Image src={ig} />
+							<Image src={ig} alt="instagram icon"/>
 						</Img>
 					</div>
 				</div>

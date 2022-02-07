@@ -26,7 +26,7 @@ export const UserPic = styled.div`
 	background-position: center;
 	display: inline-block;
 	background-size: contain;
-	
+
 	${({ imgSrc }) => {
 		return `
             background-image: url(${imgSrc});
@@ -56,6 +56,37 @@ export const Logo = styled.div`
 `;
 
 export const Div = styled.div`
-	display: flex;
-	align-items: center;
+	/* display: flex; */
+	overflow: hidden;
+
+	.dropdown-content {
+		display: none;
+		position: absolute;
+		padding: 10px 0;
+		background-color: #f9f9f9;
+		min-width: 160px;
+		/* display: flex; */
+		top: 3.6em;
+		right: 1em;
+		flex-direction: column;
+		box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+		z-index: 1;
+	}
+
+	.dropdown-content a {
+		float: none;
+		color: black;
+		padding: 12px 16px;
+		text-decoration: none;
+		cursor: pointer;
+		display: block;
+		text-align: left;
+	}
+	.dropdown-content a:hover {
+		background-color: #ddd;
+	}
+
+	&:hover .dropdown-content {
+		display: flex;
+	}
 `;

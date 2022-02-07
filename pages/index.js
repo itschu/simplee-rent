@@ -5,7 +5,6 @@ import About from "../components/home/About";
 import Testimonial from "../components/home/Testimonial";
 import CTA from "../components/home/CTA";
 import Footer from "../components/home/Footer";
-import { getSession } from "next-auth/react";
 
 export default function Home() {
 	return (

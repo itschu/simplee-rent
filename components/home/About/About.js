@@ -18,7 +18,7 @@ const About = () => {
 			</div>
 
 			<div>
-				<Image src={bg} />
+				<Image src={bg} alt="about Simplee rent"/>
 			</div>
 		</Wrapper>
 	);

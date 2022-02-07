@@ -12,25 +12,25 @@ const How = () => {
 			<div>
 				<div>
 					<Img>
-						<Image src={property} />
+						<Image src={property} alt="add property"/>
 					</Img>
 					<p>Add property</p>
 				</div>
 				<div>
-					<Image src={arrow} />
+					<Image src={arrow} alt="nest step"/>
 				</div>
 				<div>
 					<Img>
-						<Image src={showing} />
+						<Image src={showing} alt="create availability"/>
 					</Img>
 					<p>Create showing availabilities</p>
 				</div>
 				<div>
-					<Image src={arrow} />
+					<Image src={arrow} alt="next step"/>
 				</div>
 				<div>
 					<Img>
-						<Image src={link} />
+						<Image src={link} alt="share showing link"/>
 					</Img>
 					<p>Share showing link with tenants</p>
 				</div>

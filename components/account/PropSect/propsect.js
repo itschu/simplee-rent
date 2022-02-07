@@ -14,12 +14,12 @@ import { useState, useReducer } from "react";
 import EditWrapper from "./EditWrapper";
 import reducer, { initialState } from "./reducer";
 import { News, NewsWrapper } from "../DashSect/style";
-import { usePropertiesContext, useShowingsContext } from "../../../context";
+import { usePropertiesContext, useAvailabilityContext } from "../../../context";
 
 const Prop = ({ page }) => {
 	const [showOverlay, setShowOverlay] = useState(false);
 	const { allProps, setAllProps } = usePropertiesContext();
-	const { showings, setShowings } = useShowingsContext();
+	const { availability, setAvailability } = useAvailabilityContext();
 
 	const processInformation = (e) => {
 		e.preventDefault();
@@ -38,11 +38,11 @@ const Prop = ({ page }) => {
 		);
 		if (prompt) {
 			const newList = allProps.filter((el) => propertyState.id !== el.id);
-			const newShowingList = showings.filter(
+			const new_availability_list = availability.filter(
 				(el) => propertyState.unique !== el.unique
 			);
 			setAllProps([...newList]);
-			setShowings([...newShowingList]);
+			setAvailability([...new_availability_list]);
 			closeOverlay();
 		}
 	};
@@ -114,11 +114,8 @@ const Prop = ({ page }) => {
 					})
 				) : (
 					<NewsWrapper>
-						{/* <H3>Upcoming Showing</H3> */}
 						<News>
-							<p>
-								<>You haven't added any property yet!! </>
-							</p>
+							<p>You haven&apos;t added any property yet!!</p>
 						</News>
 					</NewsWrapper>
 				)}

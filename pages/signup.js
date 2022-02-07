@@ -3,7 +3,7 @@ import Footer from "../components/home/Footer";
 import SignUp from "../components/home/SignUp";
 import { getSession, useSession } from "next-auth/react";
 
-const signup = () => {
+const Signup = () => {
 	const {data: session} = useSession();
 	if(session){
 		console.log(true);
@@ -18,7 +18,7 @@ const signup = () => {
 	);
 };
 
-export default signup;
+export default Signup;
 
 export const getServerSideProps = async (context) => {
 	const session = await getSession(context);

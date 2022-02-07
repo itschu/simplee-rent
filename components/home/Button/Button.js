@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const Button = ({ text }) => {
 	return (
-		<Link href={"/signup"}>
+		<Link href={"/signup"} passHref>
 			<Btn>{text}</Btn>
 		</Link>
 	);

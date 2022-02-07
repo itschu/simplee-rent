@@ -22,7 +22,7 @@ const NewTimePicker = ({
 	fn,
 	types,
 	stateFn,
-	state,
+	state, 
 }) => {
 	const newFn = (s, t, v) => {
 		stateFn({ ...s, [t]: v });

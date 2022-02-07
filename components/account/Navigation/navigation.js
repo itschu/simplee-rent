@@ -13,7 +13,7 @@ const Navigation = ({ page }) => {
 					const status = page == el.alias ? true : false;
 					return (
 						<ListItem key={i} active={status}>
-							<Link href={`/account/${el.alias}`}>
+							<Link href={`/account/${el.alias}`} passHref>
 								<Anchor>
 									<Image
 										width={20}

@@ -20,9 +20,9 @@ const TimePicker = ({
 	fn,
 	types,
 }) => {
-	useEffect(() => {
-		fn(id, state);
-	}, [hr, min]);
+	// useEffect(() => {
+	// 	fn(id, state);
+	// }, [hr, min]);
 
 	const set = () => {
 		stateFn({
@@ -185,4 +185,4 @@ const TimePicker = ({
 	);
 };
 
-export default TimePicker;
+// export default TimePicker;

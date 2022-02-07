@@ -1,4 +1,3 @@
-
 export const project = {
 	title: "Simplee Rent",
 	descContent: "seo description content",
@@ -7,6 +6,11 @@ export const project = {
 export const navItems = [
 	{ title: "Dashboard", alias: "dashboard", icon: "/images/layout.png" },
 	{ title: "My Properties", alias: "properties", icon: "/images/house.png" },
+	{
+		title: "Availability",
+		alias: "availability",
+		icon: "/images/calendar.png",
+	},
 	{ title: "Showings", alias: "showings", icon: "/images/calendar.png" },
 ];
 
@@ -86,12 +90,14 @@ export const template = {
 };
 
 export const showingsTemplate = [
+	/**
 	{
 		id: 1,
 		property: "Full name of property",
 		date: "2022-02-04",
 		link: "http://google.com",
 		unique: "0o0G68",
+		duration: [15, 60, 120],
 	},
 	{
 		id: 2,
@@ -99,6 +105,7 @@ export const showingsTemplate = [
 		date: "2022-02-04",
 		link: "http://google.com",
 		unique: "0o0G68",
+		duration: [15, 120],
 	},
 	{
 		id: 3,
@@ -106,6 +113,7 @@ export const showingsTemplate = [
 		date: "2022-02-04",
 		link: "http://google.com",
 		unique: "0o0G68",
+		duration: [15, 60],
 	},
 	{
 		id: 4,
@@ -113,7 +121,9 @@ export const showingsTemplate = [
 		date: "2022-02-04",
 		link: "http://google.com",
 		unique: "0oKi0G68",
+		duration: [120],
 	},
+	*/
 ];
 
 export const formatDate = (td) => {

@@ -1,3 +1,4 @@
+"use strict";
 import {
 	EditWrapper,
 	AddItemOverlay,
@@ -18,24 +19,20 @@ import {
 	CloseError,
 	Separate,
 } from "./style";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, memo } from "react";
 import { selectTimeTemp } from "./initialState";
-import { useShowingsContext } from "../../../context";
+import { useAvailabilityContext } from "../../../context";
 import DatePicker from "react-multi-date-picker";
 import NewTimePicker from "../TimePicker/NewTimePicker";
 import { formatDate } from "../../../data";
+import { useSession } from "next-auth/react";
 
 let setVisibility = "visible";
 
-const ShowingModal = ({
-	displayOverlay,
-	close,
-	allProps,
-	curr,
-	setCurr,
-	chngEvnt,
-}) => {
-	const { showings, setShowings } = useShowingsContext();
+const ShowingModal = ({ displayOverlay, close, allProps, chngEvnt }) => {
+	const { data: session } = useSession();
+
+	const { availability, setAvailability } = useAvailabilityContext();
 	const [thisProp, set_thisProp] = useState("");
 	const mm = useRef(null);
 	const [value, setValue] = useState(new Date());
@@ -59,6 +56,7 @@ const ShowingModal = ({
 	const [showThird, setShowThird] = useState(false);
 	const [time, setTime] = useState([]);
 	const [errorMsg, set_errorMsg] = useState("");
+	let filteredProps;
 
 	const moreTime = () => {
 		if (!showSec) {
@@ -69,6 +67,17 @@ const ShowingModal = ({
 			}
 		}
 	};
+
+	if (availability.length > 0) {
+		filteredProps = allProps.filter(
+			(elem) => !availability.find(({ unique }) => elem.unique === unique)
+		);
+	} else {
+		// console.log(false);
+		filteredProps = allProps;
+	}
+
+	// console.log(filteredProps);
 
 	showSec == true && showThird == true
 		? (setVisibility = "hidden")
@@ -116,23 +125,27 @@ const ShowingModal = ({
 				return el;
 			}
 		});
+		const userLink = `${window.location.origin}/showings/${session.user.email}`;
+		const randomId = (Math.random() + 1)
+			.toString(36)
+			.substring(availability.length + 1);
 
 		let addItem = {
-			id: (Math.random() + 1).toString(36).substring(showings.length + 1),
+			id: randomId,
 			property: "",
-			duration: selectValue,
+			duration: [selectValue],
 			date: value,
 			time: newTimeArr,
 			display_time: null,
 			unique: thisProp,
-			link: null,
+			link: `${userLink}/${randomId}`,
 		};
 
 		const get_current_title = allProps.filter(
 			(el) => el.unique == addItem.unique
 		)[0].title;
 		addItem = { ...addItem, property: get_current_title };
-		//const oldShowings = showings.filter(el => el.unique !== addItem.unique);
+		//const oldShowings = availability.filter(el => el.unique !== addItem.unique);
 
 		let set = true;
 		time.map((el) => {
@@ -174,7 +187,7 @@ const ShowingModal = ({
 			} else {
 				chngEvnt((old) => [...old, ...newShowing]);
 			}
-			setShowings([...showings, addItem]);
+			setAvailability([...availability, addItem]);
 			// setCurr([addItem]);
 			reset();
 		}
@@ -210,7 +223,7 @@ const ShowingModal = ({
 								<Option value={""}>
 									----- Select a property -----
 								</Option>
-								{allProps.map((el, i) => (
+								{filteredProps.map((el, i) => (
 									<Option value={el.unique} key={i}>
 										{el.title}
 									</Option>
@@ -351,4 +364,4 @@ const ShowingModal = ({
 	);
 };
 
-export default ShowingModal;
+export default memo(ShowingModal);

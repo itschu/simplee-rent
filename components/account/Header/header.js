@@ -3,20 +3,29 @@ import { useMenuState } from "../../../context";
 import Image from "next/image";
 import logoImg from "../../../public/images/logo.png";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
 
-const Header = ({ userAvatar }) => {
+const Header = ({ userAvatar, noProfile }) => {
 	const { State, toggleSate } = useMenuState();
 	return (
 		<Wrapper>
-			<Link href={"/"}>
+			<Link href={"/"} passHref>
 				<Logo>
-					<Image src={logoImg} priority />
+					<Image src={logoImg} priority alt="SImplee Rent logo" />
 				</Logo>
 			</Link>
-			<Div>
-				<UserPic imgSrc={userAvatar} />
-				<BurgerMenu onClick={toggleSate} />
-			</Div>
+			{noProfile == undefined && (
+				<Div>
+					<UserPic imgSrc={userAvatar} />
+					<BurgerMenu onClick={toggleSate} alt="burger muenu" />
+					<div className="dropdown-content">
+						<a href="#">Profile</a>
+						<a href="#" onClick={() => signOut()}>
+							Logout
+						</a>
+					</div>
+				</Div>
+			)}
 		</Wrapper>
 	);
 };

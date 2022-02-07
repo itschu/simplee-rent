@@ -17,12 +17,13 @@ export default NextAuth({
 				"https://accounts.google.com/o/oauth2/v2/auth?prompt=consent&access_type=offline&response_type=code",
 		}),
 	],
+	secret: process.env.NEXTAUTH_SECRET,
 	// database: process.env.DB_URL,
 	session: {
 		jwt: true,
 	},
 	jwt: {
-		secret: process.env.SECRET,
+		secret: process.env.NEXTAUTH_SECRET,
 	},
 	adapter: MongoDBAdapter(clientPromise),
 	callbacks: {

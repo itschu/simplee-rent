@@ -11,7 +11,6 @@ export default function Showings({ data }) {
 	return (
 		<MenuState>
 			<Head currentPage={pg} />
-			<Header />
 			<Header userAvatar={user.image} />
 			<Navigation page={pg.toLowerCase()} />
 			<ShowingSect page={pg} />

@@ -1,22 +1,24 @@
 import Head from "../../components/Head";
 import Header from "../../components/account/Header";
 import Navigation from "../../components/account/Navigation";
-import DashSect from "../../components/account/DashSect";
 import { MenuState } from "../../context";
+import AvailSect from "../../components/account/AvailSect";
 import { getSession } from "next-auth/react";
 
-const Dash =  ({ data }) => {
+const Availability = ({ data }) => {
 	const { user } = data;
-	const pg = "Dashboard";
+	const pg = "Availability";
 	return (
 		<MenuState>
 			<Head currentPage={pg} />
 			<Header userAvatar={user.image} />
 			<Navigation page={pg.toLowerCase()} />
-			<DashSect page={pg} />
+			<AvailSect page={pg} />
 		</MenuState>
 	);
 };
+
+export default Availability;
 
 export const getServerSideProps = async (context) => {
 	const session = await getSession(context);
@@ -34,5 +36,3 @@ export const getServerSideProps = async (context) => {
 		},
 	};
 };
-
-export default Dash;

@@ -11,8 +11,8 @@ const Nav = ({ toggle }) => {
 	return (
 		<Navigation>
 			<div>
-				<Link href={"/"}>
-					<Image src={logo} />
+				<Link href={"/"} passHref>
+					<Image src={logo} alt="Simplee Rent logo"/>
 				</Link>
 			</div>
 			<ul>
