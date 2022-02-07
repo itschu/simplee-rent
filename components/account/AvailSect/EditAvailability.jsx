@@ -6,54 +6,53 @@ import {
 	H2,
 	InputSeparator,
 	Label,
-	Select,
-	Option,
+	Input,
 } from "../PropSect/style";
 import {
 	CalendarDiv,
-	ConfirmButton,
-	AddTime,
-	Error,
-	RemoveTime,
 	Wrap,
-	CloseError,
 	Separate,
-} from "./style";
-import { useState, useRef, memo } from "react";
-import { selectTimeTemp } from "./initialState";
+	AddTime,
+	RemoveTime,
+	ConfirmButton,
+} from "../ShowingSect/style";
 import { useAvailabilityContext } from "../../../context";
 import DatePicker from "react-multi-date-picker";
+import { useState, useRef, useEffect } from "react";
+import { selectTimeTemp } from "../ShowingSect/initialState";
 import NewTimePicker from "../TimePicker/NewTimePicker";
-import { formatDate } from "../../../data";
 
 let setVisibility = "visible";
 
-const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
+const EditAvailability = ({ displayEdit, close, currentProp }) => {
 	const { availability, setAvailability } = useAvailabilityContext();
-	const [thisProp, set_thisProp] = useState("");
+	const [current] = availability.filter((el) => el.id == currentProp);
+	const [value, setValue] = useState();
+	const [showSec, setShowSec] = useState(false);
+	const [showThird, setShowThird] = useState(false);
+	const [errorMsg, set_errorMsg] = useState("");
+	const [time, setTime] = useState([]);
+
+	const [time_one, set_time_one] = useState(current.time[0]);
+	const [time_two, set_time_two] = useState(
+		current.time[1] || { ...selectTimeTemp }
+	);
+	const [time_three, set_time_three] = useState(
+		current.time[2] || { ...selectTimeTemp }
+	);
+	// console.log(time_one, time_two, time_three);
+
 	const mm = useRef(null);
-	const [value, setValue] = useState(new Date());
-	const getToday = new Date();
-	const show = getToday.toLocaleString("en-US", {
-		hour: "numeric",
-		minute: "numeric",
-		hour12: false,
-	});
 	if (mm.current) {
 		mm.current.children[0].classList.add("date-iput");
 	}
-	const maxDay = new Date();
-	maxDay.setDate(maxDay.getDate() + 90);
-	const [selectValue, setSelectValue] = useState("");
-	const [time_one, set_time_one] = useState({ ...selectTimeTemp });
-	const [time_two, set_time_two] = useState({ ...selectTimeTemp });
-	const [time_three, set_time_three] = useState({ ...selectTimeTemp });
-
-	const [showSec, setShowSec] = useState(false);
-	const [showThird, setShowThird] = useState(false);
-	const [time, setTime] = useState([]);
-	const [errorMsg, set_errorMsg] = useState("");
-	let filteredProps;
+	useEffect(() => {
+		if (Array.isArray(current.date)) {
+			setValue([...current.date]);
+		} else {
+			setValue([current.date]);
+		}
+	}, []);
 
 	const moreTime = () => {
 		if (!showSec) {
@@ -64,21 +63,6 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 			}
 		}
 	};
-
-	if (availability.length > 0) {
-		filteredProps = allProps.filter(
-			(elem) => !availability.find(({ unique }) => elem.unique === unique)
-		);
-	} else {
-		// console.log(false);
-		filteredProps = allProps;
-	}
-
-	// console.log(filteredProps);
-
-	showSec == true && showThird == true
-		? (setVisibility = "hidden")
-		: (setVisibility = "visible");
 
 	const changeTimeArray = (id) => {
 		let newArray;
@@ -111,8 +95,14 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 		setTime(newArray);
 	};
 
+	const reset = () => {
+		set_errorMsg("");
+		close();
+	};
+
 	const addShowing = (e) => {
 		e.preventDefault();
+        console.log(e);
 		let newTimeArr = time.map((el) => {
 			if (el.id == 2) {
 				return { ...el, status: showSec };
@@ -122,30 +112,9 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 				return el;
 			}
 		});
-		const userLink = `${window.location.origin}/showings/${session.email}`;
-		const randomId = (Math.random() + 1)
-			.toString(36)
-			.substring(availability.length + 1);
-
-		let addItem = {
-			id: randomId,
-			property: "",
-			duration: [selectValue],
-			date: value,
-			time: newTimeArr,
-			display_time: null,
-			unique: thisProp,
-			link: `${userLink}/${randomId}`,
-		};
-
-		const get_current_title = allProps.filter(
-			(el) => el.unique == addItem.unique
-		)[0].title;
-		addItem = { ...addItem, property: get_current_title };
-		//const oldShowings = availability.filter(el => el.unique !== addItem.unique);
 
 		let set = true;
-		time.map((el) => {
+		newTimeArr.map((el) => {
 			//add another condition to check if time is past and turn 12:00 from ''
 			if (el.from == el.to && el.id == 1) {
 				set_errorMsg(`The start and end time cannot be the same`);
@@ -161,91 +130,61 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 			}
 		});
 		if (set) {
-			let itm = "";
-			let newShowing = [addItem].map((el) => {
-				if (Array.isArray(el.date)) {
-					itm = el.date.map((elem) => {
-						return {
-							title: `${el.property} ${el.duration} mins showing`,
-							date: formatDate(elem),
-						};
-					});
-					return;
-				} else {
-					return {
-						title: `${el.property} showing`,
-						date: formatDate(el.date),
-					};
-				}
-			});
-
-			setAvailability([...availability, addItem]);
+			const oldAvailability = availability.filter(
+				(el) => el.id !== current.id
+			);
+			current.date = value;
+			current.time = time;
+			setAvailability([...oldAvailability, current]);
 			reset();
 		}
 	};
 
-	const reset = () => {
-		set_thisProp("");
-		set_time_one({ ...selectTimeTemp });
-		set_time_two({ ...selectTimeTemp });
-		set_time_three({ ...selectTimeTemp });
-		setValue(new Date());
-		setSelectValue("");
-		set_errorMsg("");
-		close();
-	};
-
+    const checkDuration = (time) => current.duration.includes(time);
 	return (
-		<AddItemOverlay show={displayOverlay}>
+		<AddItemOverlay show={displayEdit}>
 			<EditWrapper>
 				<form onSubmit={(e) => addShowing(e)}>
 					<CloseBtn onClick={() => reset()} />
+					<H2>{`Edit ${current.property} Availability`}</H2>
 
-					<H2>{`Add Showing`}</H2>
-					{/* <br/> */}
-					<InputSeparator separate={true}>
+					<InputSeparator checkbox={true}>
 						<div>
-							<Label>Select Property</Label>
-							<Select
-								onChange={(e) => set_thisProp(e.target.value)}
-								value={thisProp}
-								required={true}
-							>
-								<Option value={""}>
-									----- Select a property -----
-								</Option>
-								{filteredProps.map((el, i) => (
-									<Option value={el.unique} key={i}>
-										{el.title}
-									</Option>
-								))}
-							</Select>
+							<Label>Property</Label>
+							<Input value={current.property} disabled />
 						</div>
-
+						<br />
 						<div>
 							<Label>Duration</Label>
-							<Select
-								// defaultValue={current.duration}
-								onChange={(e) =>
-									setSelectValue(parseInt(e.target.value))
-								}
-								value={selectValue}
-								required={true}
-							>
-								<Option value={""} disabled>
-									----- Select a duration -----
-								</Option>
-								<Option value={15}>15 minutes</Option>
-								<Option value={30}>30 minutes</Option>
-								<Option value={60}>1 hour</Option>
-								<Option value={120}>2 hours</Option>
-							</Select>
+
+							<div>
+								<input
+									type="checkbox"
+									defaultChecked={checkDuration(15)}
+								/>
+								15 mins &nbsp;&nbsp;
+								<input
+									type="checkbox"
+									defaultChecked={checkDuration(30)}
+								/>
+								30 mins &nbsp;&nbsp;
+								<input
+									type="checkbox"
+									defaultChecked={checkDuration(60)}
+								/>
+								1 hr &nbsp;&nbsp;
+								<input
+									type="checkbox"
+									defaultChecked={checkDuration(120)}
+								/>
+								2 hrs &nbsp;&nbsp;
+							</div>
 						</div>
 					</InputSeparator>
 
 					<CalendarDiv>
 						<div>
-							<Label>Select Date</Label>
+							<Label>Date</Label>
 							<DatePicker
 								value={value}
 								ref={mm}
@@ -256,7 +195,8 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 						</div>
 
 						<div>
-							<Label>Select Time</Label>
+							<Label>Time</Label>
+
 							{errorMsg !== "" && (
 								<Error>
 									{errorMsg}
@@ -269,7 +209,7 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 							<div>
 								<Wrap>
 									<NewTimePicker
-										stp={selectValue}
+										stp={current.duration[0]}
 										types={"from"}
 										id={1}
 										fn={changeTimeArray}
@@ -278,7 +218,7 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 									/>
 									<Separate>-</Separate>
 									<NewTimePicker
-										stp={selectValue}
+										stp={current.duration[0]}
 										types={"to"}
 										id={1}
 										fn={changeTimeArray}
@@ -295,7 +235,7 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 								{showSec && (
 									<Wrap>
 										<NewTimePicker
-											stp={selectValue}
+											stp={current.duration[0]}
 											types={"from"}
 											id={2}
 											fn={changeTimeArray}
@@ -304,7 +244,7 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 										/>
 										<Separate>-</Separate>
 										<NewTimePicker
-											stp={selectValue}
+											stp={current.duration[0]}
 											types={"to"}
 											id={2}
 											fn={changeTimeArray}
@@ -321,7 +261,7 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 								{showThird && (
 									<Wrap>
 										<NewTimePicker
-											stp={selectValue}
+											stp={current.duration[0]}
 											types={"from"}
 											id={3}
 											fn={changeTimeArray}
@@ -330,7 +270,7 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 										/>
 										<Separate>-</Separate>
 										<NewTimePicker
-											stp={selectValue}
+											stp={current.duration[0]}
 											types={"to"}
 											id={3}
 											fn={changeTimeArray}
@@ -345,7 +285,7 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 										/>
 									</Wrap>
 								)}
-								<ConfirmButton>Confirm</ConfirmButton>
+								<ConfirmButton>Save</ConfirmButton>
 							</div>
 						</div>
 					</CalendarDiv>
@@ -355,4 +295,4 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 	);
 };
 
-export default memo(ShowingModal);
+export default EditAvailability;

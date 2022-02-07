@@ -194,7 +194,7 @@ export const InputSeparator = styled.div`
 		}
 	}};
 	@media screen and (min-width: 600px) {
-		${({ dg, separate }) => {
+		${({ dg, separate, checkbox }) => {
 			if (dg) {
 				return `
                     display: grid;
@@ -208,6 +208,15 @@ export const InputSeparator = styled.div`
                     grid-template-columns: 1fr 1fr;
                     gap: 1em;
 					margin: 2em 0;
+					align-items: center;
+                `;
+			}
+
+			if (checkbox) {
+				return `
+					display: flex;
+					justify-content: flex-start;
+					flex-direction: column;
                 `;
 			}
 		}};

@@ -13,7 +13,7 @@ const Availability = ({ data }) => {
 			<Head currentPage={pg} />
 			<Header userAvatar={user.image} />
 			<Navigation page={pg.toLowerCase()} />
-			<AvailSect page={pg} />
+			<AvailSect page={pg} session={user} />
 		</MenuState>
 	);
 };

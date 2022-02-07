@@ -7,14 +7,16 @@ import ShowingModal from "../ShowingSect/ShowingModal";
 import { useAvailabilityContext, usePropertiesContext } from "../../../context";
 import { NewsWrapper, News } from "../DashSect/style";
 import { Notification } from "../ShowingSect/style";
+import EditAvailability from "./EditAvailability";
 
-const AvailSect = ({ page }) => {
+const AvailSect = ({ page, session }) => {
 	const { availability, setAvailability } = useAvailabilityContext();
 	const { allProps } = usePropertiesContext();
 	const [currentModal, setCurrentModal] = useState([]);
 	const [showOverlay, setShowOverlay] = useState(false);
 	const [displayNotify, setDisplayNotify] = useState(false);
-	const [events, setEvents] = useState(availability);
+	const [edit, setEdit] = useState(false);
+	const [editProp, setEditProp] = useState("");
 
 	const filteredProps = allProps.filter(
 		(elem) => !availability.find(({ unique }) => elem.unique === unique)
@@ -55,6 +57,16 @@ const AvailSect = ({ page }) => {
 		setShowOverlay(!showOverlay);
 	};
 
+	const closeEdit = () => {
+		setEditProp("");
+		setEdit(!edit);
+	};
+
+	const openEdit = (id) => {
+		setEditProp(id);
+		setEdit(!edit);
+	};
+
 	return (
 		<Wrapper>
 			<H1> {page}. </H1>
@@ -80,7 +92,10 @@ const AvailSect = ({ page }) => {
 								&nbsp;Copy Link
 							</p>
 							<div className="actions">
-								<button className="button">
+								<button
+									className="button"
+									onClick={() => openEdit(el.id)}
+								>
 									<Edit />
 								</button>
 								&nbsp; &nbsp;
@@ -112,8 +127,16 @@ const AvailSect = ({ page }) => {
 				editList={setAvailability}
 				curr={currentModal}
 				setCurr={setCurrentModal}
-				chngEvnt={setEvents}
+				session={session}
 			/>
+
+			{edit && (
+				<EditAvailability
+					displayEdit={edit}
+					close={closeEdit}
+					currentProp={editProp}
+				/>
+			)}
 
 			{displayNotify && (
 				<Notification>
