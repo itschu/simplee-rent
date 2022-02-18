@@ -1,5 +1,7 @@
 import "../styles/globals.css";
 import "../styles/styles.css";
+import "react-day-picker/lib/style.css";
+
 import {
 	PropContext,
 	AllShowingsContext,

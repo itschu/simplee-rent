@@ -11,6 +11,7 @@ import {
 } from "./style";
 
 const Main = ({ propState, close, img, fn, del, add }) => {
+	// console.log(propState);
 	return (
 		<EditWrapper>
 			<div>
@@ -22,6 +23,7 @@ const Main = ({ propState, close, img, fn, del, add }) => {
 					<Label>Name</Label>
 					<Input
 						type={"text"}
+						name="property name"
 						value={propState.name}
 						onChange={(e) =>
 							fn({ type: "changename", payload: e.target.value })
@@ -36,6 +38,7 @@ const Main = ({ propState, close, img, fn, del, add }) => {
 						<Input
 							type={"text"}
 							value={propState.street}
+							name="street"
 							onChange={(e) =>
 								fn({
 									type: "changestreet",
@@ -51,6 +54,7 @@ const Main = ({ propState, close, img, fn, del, add }) => {
 						<Input
 							type={"number"}
 							min={0}
+							name="units"
 							value={propState.units}
 							onChange={(e) =>
 								fn({
@@ -68,6 +72,7 @@ const Main = ({ propState, close, img, fn, del, add }) => {
 					<Input
 						type={"text"}
 						value={propState.city}
+						name="city"
 						onChange={(e) =>
 							fn({ type: "changecity", payload: e.target.value })
 						}
@@ -80,6 +85,7 @@ const Main = ({ propState, close, img, fn, del, add }) => {
 					<Input
 						type={"text"}
 						value={propState.country}
+						name="country"
 						onChange={(e) =>
 							fn({
 								type: "changecountry",
@@ -93,24 +99,40 @@ const Main = ({ propState, close, img, fn, del, add }) => {
 
 			<UploadContainer>
 				<ImgContainer
-					background={propState.img !== "" ? img : "/images/img.png"}
+					background={
+						propState.fileName
+							? `${img}/${propState.fileName}`
+							: "/images/img.png"
+					}
 				/>
-				<Input type={"file"} size="sm" aria-label="File browser" />
+				<Input
+					type={"file"}
+					size="sm"
+					aria-label="File browser"
+					onChange={(e) =>
+						fn({
+							type: "changesrc",
+							payload: e.target.files[0],
+						})
+					}
+				/>
 				<br />
 
 				{propState.title !== "Add New Property" ? (
 					<div>
-						<Button type="save">Save</Button>
 						<Button
-							type="delete"
-							prompt="Are yoy"
-							onClick={(e) => del(e)}
+							btn_for="save"
+							type="button"
+							onClick={() => add(propState)}
 						>
+							Save
+						</Button>
+						<Button btn_for="delete" onClick={(e) => del(e)}>
 							Delete
 						</Button>
 					</div>
 				) : (
-					<Button type="save">
+					<Button btn_for="save" type="submit">
 						Add
 					</Button>
 				)}

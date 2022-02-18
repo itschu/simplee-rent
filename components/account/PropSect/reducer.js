@@ -11,13 +11,17 @@ const reducer = (state, action) => {
 		case "changecountry":
 			return { ...state, country: action.payload };
 		case "changeimg":
-			return { ...state, img: action.payload };
+			return { ...state, fileName: action.payload };
+		case "changesrc":
+			return { ...state, src: action.payload };
 		case "changetitle":
 			return { ...state, title: action.payload };
 		case "changeid":
 			return { ...state, id: action.payload };
 		case "changeunique":
 			return { ...state, unique: action.payload };
+		case "changeowner":
+			return { ...state, owner: action.payload };
 		default:
 			throw new Error();
 	}

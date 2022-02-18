@@ -40,4 +40,7 @@ export default NextAuth({
 			return Promise.resolve("/account/");
 		},
 	},
+	pages: {
+		signIn: "signin",
+	},
 });

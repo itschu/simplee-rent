@@ -15,8 +15,92 @@ import EditWrapper from "./EditWrapper";
 import reducer, { initialState } from "./reducer";
 import { News, NewsWrapper } from "../DashSect/style";
 import { usePropertiesContext, useAvailabilityContext } from "../../../context";
+import axios from "axios";
 
-const Prop = ({ page }) => {
+const addProperty = async (request) => {
+	try {
+		const res = await fetch(`/api/properties`, {
+			method: "POST",
+			headers: {
+				Accept: "application/json",
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(request.data),
+		});
+
+		if (res.ok) {
+			axios
+				.post("/api/properties/upload", request.fd, {
+					headers: {
+						Accept: "application/json",
+						"Content-Type": "multipart/form-data",
+					},
+				})
+				.then((res) => {
+					if (res.statusText == "ok") {
+						return true;
+					}
+					return false;
+				});
+		}
+		return true;
+	} catch (error) {
+		return false;
+	}
+};
+
+const removeProp = async (id) => {
+	try {
+		const res = await fetch(`/api/properties/${id}`, {
+			method: "DELETE",
+			headers: {
+				Accept: "application/json",
+				"Content-Type": "application/json",
+			},
+		});
+
+		if (res.ok) {
+			// delete image from server
+		}
+		return true;
+	} catch (error) {
+		return false;
+	}
+};
+
+const updateProperty = async (request, id) => {
+	try {
+		const res = await fetch(`/api/properties/${id}`, {
+			method: "PUT",
+			headers: {
+				Accept: "application/json",
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(request.data),
+		});
+
+		if (res.ok) {
+			axios
+				.post("/api/properties/upload", request.fd, {
+					headers: {
+						Accept: "application/json",
+						"Content-Type": "multipart/form-data",
+					},
+				})
+				.then((res) => {
+					if (res.statusText == "ok") {
+						return true;
+					}
+					return false;
+				});
+		}
+		return true;
+	} catch (error) {
+		return false;
+	}
+};
+
+const Prop = ({ page, user }) => {
 	const [showOverlay, setShowOverlay] = useState(false);
 	const { allProps, setAllProps } = usePropertiesContext();
 	const { availability, setAvailability } = useAvailabilityContext();
@@ -31,33 +115,72 @@ const Prop = ({ page }) => {
 		newProp();
 	};
 
-	const deleteItem = (e) => {
+	const deleteItem = async (e) => {
 		e.preventDefault();
 		const prompt = window.confirm(
 			"Are you sure you want to delete this property and all Showings connected to this property?"
 		);
 		if (prompt) {
-			const newList = allProps.filter((el) => propertyState.id !== el.id);
+			const newList = allProps.filter(
+				(el) => propertyState.id !== el._id
+			);
 			const new_availability_list = availability.filter(
 				(el) => propertyState.unique !== el.unique
 			);
+			await removeProp(propertyState.id);
 			setAllProps([...newList]);
 			setAvailability([...new_availability_list]);
 			closeOverlay();
 		}
 	};
 
-	const newProp = () => {
+	const newProp = async () => {
 		let rand = (Math.random() + 1).toString(36).substring(7);
-		setAllProps([
-			...allProps,
-			{
-				...propertyState,
-				id: allProps.length + 1,
-				title: propertyState.name,
-				unique: `0x${rand}${0}`,
-			},
-		]);
+		let formData;
+		if (propertyState.src) {
+			formData = new FormData();
+			formData.append("file", propertyState.src, propertyState.src?.name);
+			propertyState.fileName = propertyState.src?.name;
+		} else {
+			formData = new FormData();
+		}
+		let add = {
+			...propertyState,
+			id: allProps.length + 1,
+			title: propertyState.name,
+			unique: `0x${rand}${0}`,
+			owner: user.email,
+			src: null,
+		};
+		const add_to_database = await addProperty({ data: add, fd: formData });
+		add_to_database && setAllProps([add, ...allProps]);
+	};
+
+	const editProps = async (form_obj) => {
+		// const oldProperties = allProps.filter((el) => el._id !== form_obj.id);
+		let formData;
+		if (form_obj.src) {
+			formData = new FormData();
+			formData.append("file", form_obj.src, form_obj.src?.name);
+			form_obj.fileName = form_obj.src?.name;
+		} else {
+			formData = new FormData();
+		}
+		const newData = { ...form_obj, src: null };
+		await updateProperty(
+			{ data: { ...newData }, fd: formData },
+			form_obj.id
+		);
+
+		const keep_old = allProps.filter((el) => {
+			if (el._id) {
+				return el._id !== form_obj.id;
+			} else {
+				return el.id !== form_obj.id;
+			}
+		});
+		setAllProps([...keep_old, newData]);
+		closeOverlay();
 	};
 
 	const toggleOverlay = (propname = null) => {
@@ -77,11 +200,12 @@ const Prop = ({ page }) => {
 		dispatch({ type: "changecity", payload: obj.city });
 		dispatch({ type: "changecountry", payload: obj.country });
 		dispatch({ type: "changeimg", payload: obj.fileName });
-		dispatch({ type: "changeid", payload: obj.id });
+		dispatch({ type: "changesrc", payload: obj.src });
+		dispatch({ type: "changeid", payload: obj._id || obj.id });
 		dispatch({ type: "changeunique", payload: obj.unique });
 		toggleOverlay(proptitle);
 	};
-	const imgSrc = `/images/${propertyState.img}`;
+	const imgSrc = `/images/properties/${user.email}`;
 	return (
 		<Wrapper>
 			<H1>My {page}. </H1>
@@ -93,7 +217,7 @@ const Prop = ({ page }) => {
 						img={imgSrc}
 						fn={dispatch}
 						del={deleteItem}
-						add={newProp}
+						add={editProps}
 					/>
 				</form>
 			</AddItemOverlay>
@@ -104,7 +228,7 @@ const Prop = ({ page }) => {
 						return (
 							<PropCards
 								key={i}
-								bgImg={el.src}
+								bgImg={`/images/properties/${user.email}/${el.fileName}`}
 								onClick={() => setDetails(el, el.title)}
 							>
 								<P> {el.title} </P>
@@ -120,7 +244,6 @@ const Prop = ({ page }) => {
 					</NewsWrapper>
 				)}
 			</PropCardWrapper>
-
 			<AddProp
 				onClick={() => setDetails({ ...template }, "Add New Property")}
 			>

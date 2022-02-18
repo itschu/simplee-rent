@@ -23,14 +23,14 @@ export const statistics = [
 		height: 126,
 	},
 	{
-		title: "All Showing",
+		title: "Availability",
 		image: "/images/cal.png",
 		tempStat: "4",
 		width: 89,
 		height: 123,
 	},
 	{
-		title: "Booked Showing",
+		title: "Showings",
 		image: "/images/show.png",
 		tempStat: "2",
 		width: 126,
@@ -88,6 +88,13 @@ export const template = {
 	city: "",
 	country: "",
 };
+
+export const durationTemp = [
+	{ title: "15 mins", value: 15, index: 0 },
+	{ title: "30 mins", value: 30, index: 1 },
+	{ title: "1 hr", value: 60, index: 2 },
+	{ title: "2 hrs", value: 120, index: 3 },
+];
 
 export const showingsTemplate = [
 	/**

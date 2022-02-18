@@ -28,6 +28,21 @@ import { formatDate } from "../../../data";
 
 let setVisibility = "visible";
 
+const addAvailability = async (request) => {
+	try {
+		const res = await fetch(`/api/availability`, {
+			method: "POST",
+			headers: {
+				Accept: "application/json",
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(request),
+		});
+	} catch (error) {
+		return false;
+	}
+};
+
 const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 	const { availability, setAvailability } = useAvailabilityContext();
 	const [thisProp, set_thisProp] = useState("");
@@ -70,11 +85,8 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 			(elem) => !availability.find(({ unique }) => elem.unique === unique)
 		);
 	} else {
-		// console.log(false);
 		filteredProps = allProps;
 	}
-
-	// console.log(filteredProps);
 
 	showSec == true && showThird == true
 		? (setVisibility = "hidden")
@@ -111,7 +123,7 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 		setTime(newArray);
 	};
 
-	const addShowing = (e) => {
+	const addShowing = async (e) => {
 		e.preventDefault();
 		let newTimeArr = time.map((el) => {
 			if (el.id == 2) {
@@ -131,11 +143,12 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 			id: randomId,
 			property: "",
 			duration: [selectValue],
-			date: value,
+			date: Array.isArray(value) ? value : [value],
 			time: newTimeArr,
 			display_time: null,
 			unique: thisProp,
 			link: `${userLink}/${randomId}`,
+			owner: session.email,
 		};
 
 		const get_current_title = allProps.filter(
@@ -178,7 +191,7 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 					};
 				}
 			});
-
+			await addAvailability(addItem);
 			setAvailability([...availability, addItem]);
 			reset();
 		}
@@ -192,8 +205,12 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 		setValue(new Date());
 		setSelectValue("");
 		set_errorMsg("");
+		setShowSec(false);
+		setShowThird(false);
 		close();
 	};
+
+	// console.log(availability);
 
 	return (
 		<AddItemOverlay show={displayOverlay}>

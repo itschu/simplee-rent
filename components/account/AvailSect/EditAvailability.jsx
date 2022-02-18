@@ -15,43 +15,81 @@ import {
 	AddTime,
 	RemoveTime,
 	ConfirmButton,
+	CloseError,
+	Error,
 } from "../ShowingSect/style";
 import { useAvailabilityContext } from "../../../context";
 import DatePicker from "react-multi-date-picker";
 import { useState, useRef, useEffect } from "react";
 import { selectTimeTemp } from "../ShowingSect/initialState";
 import NewTimePicker from "../TimePicker/NewTimePicker";
+import { durationTemp } from "../../../data";
 
 let setVisibility = "visible";
 
-const EditAvailability = ({ displayEdit, close, currentProp }) => {
+const updateAvailability = async (request, id) => {
+	try {
+		const res = await fetch(`/api/availability/${id}`, {
+			method: "PUT",
+			headers: {
+				Accept: "application/json",
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(request),
+		});
+		return true;
+	} catch (error) {
+		return false;
+	}
+};
+
+const EditAvailability = ({ displayEdit, close, currentProp, session }) => {
+	const [checkedState, setCheckedState] = useState(new Array(4).fill(false));
+
 	const { availability, setAvailability } = useAvailabilityContext();
 	const [current] = availability.filter((el) => el.id == currentProp);
 	const [value, setValue] = useState();
-	const [showSec, setShowSec] = useState(false);
-	const [showThird, setShowThird] = useState(false);
+	const [showSec, setShowSec] = useState(current?.time[1]?.status || false);
+	const [showThird, setShowThird] = useState(
+		current?.time[2]?.status || false
+	);
 	const [errorMsg, set_errorMsg] = useState("");
 	const [time, setTime] = useState([]);
 
-	const [time_one, set_time_one] = useState(current.time[0]);
+	const [time_one, set_time_one] = useState(current?.time[0]);
 	const [time_two, set_time_two] = useState(
-		current.time[1] || { ...selectTimeTemp }
+		current?.time[1] || { ...selectTimeTemp }
 	);
 	const [time_three, set_time_three] = useState(
-		current.time[2] || { ...selectTimeTemp }
+		current?.time[2] || { ...selectTimeTemp }
 	);
-	// console.log(time_one, time_two, time_three);
 
 	const mm = useRef(null);
 	if (mm.current) {
 		mm.current.children[0].classList.add("date-iput");
 	}
 	useEffect(() => {
+		let updateDuration = checkedState;
+
 		if (Array.isArray(current.date)) {
 			setValue([...current.date]);
 		} else {
 			setValue([current.date]);
 		}
+
+		current.duration.map((el) => {
+			let [getTime] = durationTemp.filter(({ value, index }) => {
+				return value == el;
+			});
+
+			((position) => {
+				const updatedCheckedState = updateDuration.map((item, index) =>
+					index === position ? !item : item
+				);
+				updateDuration = updatedCheckedState;
+			})(getTime.index);
+		});
+		setCheckedState(updateDuration);
 	}, []);
 
 	const moreTime = () => {
@@ -100,9 +138,21 @@ const EditAvailability = ({ displayEdit, close, currentProp }) => {
 		close();
 	};
 
-	const addShowing = (e) => {
+	const checkBoxFn = (position) => {
+		const updatedCheckedState = checkedState.map((item, index) =>
+			index === position ? !item : item
+		);
+		setCheckedState(updatedCheckedState);
+	};
+
+	const addShowing = async (e) => {
 		e.preventDefault();
-        console.log(e);
+
+		if (Array.isArray(current.date)) {
+			setValue([...current.date]);
+		} else {
+			setValue([current.date]);
+		}
 		let newTimeArr = time.map((el) => {
 			if (el.id == 2) {
 				return { ...el, status: showSec };
@@ -129,24 +179,35 @@ const EditAvailability = ({ displayEdit, close, currentProp }) => {
 				set = false;
 			}
 		});
+
 		if (set) {
+			const newDuration = [];
+			durationTemp.map(({ index, value }) => {
+				if (checkedState[index]) {
+					newDuration.push(value);
+				}
+			});
 			const oldAvailability = availability.filter(
 				(el) => el.id !== current.id
 			);
 			current.date = value;
 			current.time = time;
+			current.owner = session.email;
+			current.duration = newDuration;
+
+			await updateAvailability(current, current._id);
 			setAvailability([...oldAvailability, current]);
 			reset();
 		}
 	};
 
-    const checkDuration = (time) => current.duration.includes(time);
+	// const checkDuration = (time) => current.duration.includes(time);
 	return (
 		<AddItemOverlay show={displayEdit}>
 			<EditWrapper>
 				<form onSubmit={(e) => addShowing(e)}>
 					<CloseBtn onClick={() => reset()} />
-					<H2>{`Edit ${current.property} Availability`}</H2>
+					<H2>{`Edit ${current?.property} Availability`}</H2>
 
 					<InputSeparator checkbox={true}>
 						<div>
@@ -158,26 +219,18 @@ const EditAvailability = ({ displayEdit, close, currentProp }) => {
 							<Label>Duration</Label>
 
 							<div>
-								<input
-									type="checkbox"
-									defaultChecked={checkDuration(15)}
-								/>
-								15 mins &nbsp;&nbsp;
-								<input
-									type="checkbox"
-									defaultChecked={checkDuration(30)}
-								/>
-								30 mins &nbsp;&nbsp;
-								<input
-									type="checkbox"
-									defaultChecked={checkDuration(60)}
-								/>
-								1 hr &nbsp;&nbsp;
-								<input
-									type="checkbox"
-									defaultChecked={checkDuration(120)}
-								/>
-								2 hrs &nbsp;&nbsp;
+								{durationTemp.map((el, i) => (
+									<span key={i}>
+										<input
+											type="checkbox"
+											onChange={(e) =>
+												checkBoxFn(el.index)
+											}
+											checked={checkedState[el.index]}
+										/>
+										<label>{el.title} &nbsp;&nbsp;</label>
+									</span>
+								))}
 							</div>
 						</div>
 					</InputSeparator>

@@ -38,7 +38,7 @@ const DropDown = ({ status, toggle }) => {
 					{!session && (
 						<li>
 							<span onClick={toggle}>
-								<Link href={"signin"}>sign in</Link>
+								<Link href={"/signin"}>sign in</Link>
 							</span>
 						</li>
 					)}

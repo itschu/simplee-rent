@@ -1,11 +1,11 @@
 import React, { useContext, useState } from "react";
-import { propertiesPlaceHolder } from "../data";
+// import { propertiesPlaceHolder } from "../data";
 
 const PropertiesContext = React.createContext();
 
 const PropContext = ({ children }) => {
-	const [allProps, setAllProps] = useState([...propertiesPlaceHolder]);
-
+	const [allProps, setAllProps] = useState([]);
+	
 	return (
 		<PropertiesContext.Provider value={{ allProps, setAllProps }}>
 			{children}

@@ -147,7 +147,7 @@ export const Button = styled.button`
 	bottom: 0.5em;
 	right: 0.5em;
 	padding: 0.8em 1.5em;
-	background: ${({ type }) => (type == "save" ? "#023047" : "red")};
+	background: ${({ btn_for }) => (btn_for == "save" ? "#023047" : "red")};
 	outline: none;
 	border: none;
 	color: #fff;

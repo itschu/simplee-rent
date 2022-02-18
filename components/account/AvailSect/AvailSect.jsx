@@ -9,6 +9,23 @@ import { NewsWrapper, News } from "../DashSect/style";
 import { Notification } from "../ShowingSect/style";
 import EditAvailability from "./EditAvailability";
 
+const deleteAvailability = async (id) => {
+	try {
+		const res = await fetch(`/api/availability/${id}`, {
+			method: "DELETE",
+			headers: {
+				Accept: "application/json",
+				"Content-Type": "application/json",
+			},
+		});
+		if (res.ok) {
+		}
+		return true;
+	} catch (error) {
+		return false;
+	}
+};
+
 const AvailSect = ({ page, session }) => {
 	const { availability, setAvailability } = useAvailabilityContext();
 	const { allProps } = usePropertiesContext();
@@ -17,6 +34,9 @@ const AvailSect = ({ page, session }) => {
 	const [displayNotify, setDisplayNotify] = useState(false);
 	const [edit, setEdit] = useState(false);
 	const [editProp, setEditProp] = useState("");
+	const [showLoading, setShowLoading] = useState(false);
+
+	// console.log(availability);
 
 	const filteredProps = allProps.filter(
 		(elem) => !availability.find(({ unique }) => elem.unique === unique)
@@ -48,8 +68,11 @@ const AvailSect = ({ page, session }) => {
 		setDisplayNotify(!displayNotify);
 	};
 
-	const delItem = (id) => {
-		const list = availability.filter((el) => el.id !== id);
+	const delItem = async (id) => {
+		setShowLoading(true);
+		const list = availability.filter((el) => el._id !== id);
+		await deleteAvailability(id);
+		setShowLoading(false);
 		setAvailability([...list]);
 	};
 
@@ -58,7 +81,7 @@ const AvailSect = ({ page, session }) => {
 	};
 
 	const closeEdit = () => {
-		setEditProp("");
+		// setEditProp("");
 		setEdit(!edit);
 	};
 
@@ -69,6 +92,11 @@ const AvailSect = ({ page, session }) => {
 
 	return (
 		<Wrapper>
+			{showLoading && (
+				<div className="loading">
+					<div className="loader"></div>
+				</div>
+			)}
 			<H1> {page}. </H1>
 
 			{availability.length < 1 && (
@@ -84,7 +112,7 @@ const AvailSect = ({ page, session }) => {
 					<div className="availability-card" key={i}>
 						{/* <Setting /> */}
 						<h3>{el.property}</h3>
-						<p>{el.duration.map((el) => `${el} min, `)}</p>
+						<p>{el.duration.map((el) => `${el} min(s), `)}</p>
 						<hr />
 						<div className="link">
 							<p onClick={() => copyText(el.link, el.property)}>
@@ -101,7 +129,7 @@ const AvailSect = ({ page, session }) => {
 								&nbsp; &nbsp;
 								<button
 									className="color button"
-									onClick={() => delItem(el.id)}
+									onClick={() => delItem(el._id)}
 								>
 									<Del />
 								</button>
@@ -134,6 +162,7 @@ const AvailSect = ({ page, session }) => {
 				<EditAvailability
 					displayEdit={edit}
 					close={closeEdit}
+					session={session}
 					currentProp={editProp}
 				/>
 			)}

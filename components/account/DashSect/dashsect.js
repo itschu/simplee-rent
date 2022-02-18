@@ -1,5 +1,3 @@
-/** @format */
-
 import {
 	Wrapper,
 	H1,
@@ -12,13 +10,18 @@ import {
 	News,
 } from "./style";
 import { statistics } from "../../../data";
-import { usePropertiesContext, useShowingsContext } from "../../../context";
+import {
+	usePropertiesContext,
+	useShowingsContext,
+	useAvailabilityContext,
+} from "../../../context";
 import Image from "next/image";
 
 const Dash = ({ page }) => {
-  
 	const { allProps } = usePropertiesContext();
 	const { showings } = useShowingsContext();
+	const { availability } = useAvailabilityContext();
+
 	return (
 		<Wrapper>
 			<H1> {page}. </H1>
@@ -31,9 +34,11 @@ const Dash = ({ page }) => {
 								<H4>
 									{el.title == "All Properties"
 										? allProps.length
-										: el.title == "All Showing"
+										: el.title == "Availability"
+										? availability.length
+										: el.title == "Showings"
 										? showings.length
-										: el.tempStat}
+										: 0}
 								</H4>
 							</div>
 							<div>

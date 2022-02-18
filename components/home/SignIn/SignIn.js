@@ -5,7 +5,7 @@ import DropDown from "../DropDown/DropDown";
 import { signIn } from "next-auth/react";
 
 const SignIn = () => {
-	const [isOpen, setIsOpen] = useState(false);
+	const [isOpen, setIsOpen] = useState(false);	
 	const [formInput, setFormInput] = useState({ email: "", password: "" });
 	const toggle = () => setIsOpen(!isOpen);
 	const details = {
@@ -14,8 +14,6 @@ const SignIn = () => {
 	};
 	const action = async (e) => {
 		e.preventDefault();
-		//const user = await axios.post("api/auth/login", details);
-		//console.log(user);
 		signIn("github");
 	};
 	return (

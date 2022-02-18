@@ -12,7 +12,9 @@ const Nav = ({ toggle }) => {
 		<Navigation>
 			<div>
 				<Link href={"/"} passHref>
-					<Image src={logo} alt="Simplee Rent logo"/>
+					<a>
+						<Image src={logo} alt="Simplee Rent logo" />
+					</a>
 				</Link>
 			</div>
 			<ul>
@@ -30,8 +32,8 @@ const Nav = ({ toggle }) => {
 				</li>
 				{!session && (
 					<>
-						<li >
-							<Link href={"signin"}>sign in</Link>
+						<li>
+							<Link href={"/signin"}>sign in</Link>
 						</li>
 						<li>
 							<Button text={"sign up"} />

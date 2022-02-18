@@ -1,6 +1,5 @@
-import { useEffect } from "react";
-import { Wrapper, Nav, Separate, Input } from "./style";
-// import { useEffect } from "react";
+import { Wrapper, Input } from "./style";
+import { Separate } from "../ShowingSect/style";
 
 export const formatTime = (time) => {
 	if (time < 10) {
