@@ -81,7 +81,7 @@ export const Wrapper = styled.section`
 		top: 0;
 		z-index: 9;
 		height: 100vh;
-		opacity: .75;
+		opacity: 0.75;
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -131,6 +131,7 @@ export const Wrapper = styled.section`
 
 	.actions {
 		display: flex;
+		z-index: 3;
 		align-items: center;
 	}
 

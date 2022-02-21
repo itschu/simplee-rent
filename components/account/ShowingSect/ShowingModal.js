@@ -25,6 +25,7 @@ import { useAvailabilityContext } from "../../../context";
 import DatePicker from "react-multi-date-picker";
 import NewTimePicker from "../TimePicker/NewTimePicker";
 import { formatDate } from "../../../data";
+import moment from "moment";
 
 let setVisibility = "visible";
 
@@ -38,6 +39,11 @@ const addAvailability = async (request) => {
 			},
 			body: JSON.stringify(request),
 		});
+		if (res.ok) {
+			return true;
+		} else {
+			return false;
+		}
 	} catch (error) {
 		return false;
 	}
@@ -160,16 +166,67 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 		let set = true;
 		time.map((el) => {
 			//add another condition to check if time is past and turn 12:00 from ''
-			if (el.from == el.to && el.id == 1) {
-				set_errorMsg(`The start and end time cannot be the same`);
+			if (
+				(moment(el.from, ["h:mm A"]).format("HH:mm") >
+					moment(el.to, ["h:mm A"]).format("HH:mm") ||
+					moment(el.to, ["h:mm A"]).format("HH:mm") == "23:59") &&
+				el.id == 1
+			) {
+				set_errorMsg(`The start and end time cannot be equal`);
 				set = false;
 			}
-			if (el.from == el.to && el.id == 2 && showSec == true) {
-				set_errorMsg(`The start and end time cannot be the same`);
+			if (
+				(moment(el.from, ["h:mm A"]).format("HH:mm") >
+					moment(el.to, ["h:mm A"]).format("HH:mm") ||
+					moment(el.to, ["h:mm A"]).format("HH:mm") == "23:59") &&
+				el.id == 2 &&
+				showSec == true
+			) {
+				set_errorMsg(`The start and end time cannot be equal`);
 				set = false;
 			}
-			if (el.from == el.to && el.id == 3 && showThird == true) {
-				set_errorMsg(`The start and end time cannot be the same`);
+			if (
+				(moment(el.from, ["h:mm A"]).format("HH:mm") >
+					moment(el.to, ["h:mm A"]).format("HH:mm") ||
+					moment(el.to, ["h:mm A"]).format("HH:mm") == "23:59") &&
+				el.id == 3 &&
+				showThird == true
+			) {
+				set_errorMsg(`The start and end time cannot be equal`);
+				set = false;
+			}
+
+			//check if start time is greater than end time
+			if (
+				moment(el.from, ["h:mm A"]).format("HH:mm") >
+					moment(el.to, ["h:mm A"]).format("HH:mm") &&
+				el.id == 1
+			) {
+				set_errorMsg(
+					`The start time cannot be greater than the end time or equal`
+				);
+				set = false;
+			}
+			if (
+				moment(el.from, ["h:mm A"]).format("HH:mm") >
+					moment(el.to, ["h:mm A"]).format("HH:mm") &&
+				el.id == 2 &&
+				showSec == true
+			) {
+				set_errorMsg(
+					`The start time cannot be greater than the end time or equal`
+				);
+				set = false;
+			}
+			if (
+				moment(el.from, ["h:mm A"]).format("HH:mm") >
+					moment(el.to, ["h:mm A"]).format("HH:mm") &&
+				el.id == 3 &&
+				showThird == true
+			) {
+				set_errorMsg(
+					`The start time cannot be greater than the end time or equal`
+				);
 				set = false;
 			}
 		});

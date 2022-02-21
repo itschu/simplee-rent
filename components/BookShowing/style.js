@@ -9,22 +9,30 @@ export const Wrap = styled.div`
 		padding: 7em 9.5em;
 		padding-bottom: 4em;
 	}
-
-	& .duration {
-		/* background-color: red; */
+	& h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		text-align: center;
+		color: #670013;
+	}
+	& .duration h3 {
+		text-align: left;
 	}
 
 	& .date {
-		/* background-color: green; */
+		/* background-color: aqua; */
+		border-left: 1px solid #e7e7e7;
+		border-right: 1px solid #e7e7e7;
 	}
 
 	& .time {
-		/* background-color: aqua; */
 	}
 
 	& .timeConainer {
 		width: 100%;
-		height: 216px;
+		max-height: 216px;
 		overflow-y: scroll;
 		scrollbar-width: thin;
 		scrollbar-color: blue #dcdcdc;
@@ -69,7 +77,8 @@ export const Wrap = styled.div`
 		justify-content: center;
 	}
 
-	& > form > P, h2{
+	& > form > P,
+	h2 {
 		text-align: center;
 	}
 `;

@@ -13,8 +13,8 @@ export const template = [
 
 let d = new Date();
 export const selectTimeTemp = {
-	from: "",
-	to: "",
+	from: "12:00AM",
+	to: "11:59PM",
 };
 
 export const old_selectTimeTemp = {

@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const project = {
 	title: "Simplee Rent",
 	descContent: "seo description content",
@@ -132,14 +134,38 @@ export const showingsTemplate = [
 	},
 	*/
 ];
+const month = [
+	"January",
+	"February",
+	"March",
+	"April",
+	"May",
+	"June",
+	"July",
+	"August",
+	"September",
+	"October",
+	"November",
+	"December",
+];
 
-export const formatDate = (td) => {
-	var today = new Date(td);
-	var dd = String(today.getDate()).padStart(2, "0");
-	var mm = String(today.getMonth() + 1).padStart(2, "0");
-	var yyyy = today.getFullYear();
+export const formatDate = (td, getFulldate = false) => {
+	let today, dd, mm, yyyy, seperator;
+	if (getFulldate) {
+		today = new Date(td);
+		dd = String(today.getDate()).padStart(2, "0");
+		mm = month[today.getMonth()];
+		yyyy = today.getFullYear();
+		seperator = " - ";
+	} else {
+		today = new Date(td);
+		dd = String(today.getDate()).padStart(2, "0");
+		mm = String(today.getMonth() + 1).padStart(2, "0");
+		yyyy = today.getFullYear();
+		seperator = "-";
+	}
 
-	today = yyyy + "-" + mm + "-" + dd;
+	today = `${yyyy}${seperator}${mm}${seperator}${dd}`;
 	return today;
 };
 
@@ -147,6 +173,27 @@ export const convertDate = (inputFormat) => {
 	function pad(s) {
 		return s < 10 ? "0" + s : s;
 	}
-	var d = new Date(inputFormat);
+	let d = new Date(inputFormat);
 	return [d.getFullYear(), pad(d.getMonth() + 1), pad(d.getDate())].join("-");
+};
+
+export const get12hrs = (dt) => moment(dt, ["h:mm A"]).format("HH:mm");
+
+export const mergeDate = (arrOne, arrTwo = null, arrThree = null) => {
+	let sec, secTo, third, thirdTo;
+	const set_value = [];
+	let first = get12hrs(arrOne.from);
+	let firstTo = get12hrs(arrOne.to);
+	if (arrTwo) {
+		sec = get12hrs(arrTwo.from);
+		secTo = get12hrs(arrTwo.to);
+	}
+	if (arrThree) {
+		third = get12hrs(arrThree.from);
+		thirdTo = get12hrs(arrThree.to);
+	}
+	new Set([first, firstTo, sec, secTo, third, thirdTo]).forEach((value) => {
+		value !== undefined && set_value.push(value);
+	});
+	return set_value.sort();
 };

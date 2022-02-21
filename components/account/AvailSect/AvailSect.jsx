@@ -8,6 +8,7 @@ import { useAvailabilityContext, usePropertiesContext } from "../../../context";
 import { NewsWrapper, News } from "../DashSect/style";
 import { Notification } from "../ShowingSect/style";
 import EditAvailability from "./EditAvailability";
+import { formatDate, mergeDate, get12hrs } from "../../../data";
 
 const deleteAvailability = async (id) => {
 	try {
@@ -26,7 +27,24 @@ const deleteAvailability = async (id) => {
 	}
 };
 
+const dateInPast = function (firstDate, secondDate) {
+	if (firstDate.setHours(0, 0, 0, 0) < secondDate.setHours(0, 0, 0, 0)) {
+		return true;
+	}
+	return false;
+};
+
+const currentTime = get12hrs(
+	new Date().toLocaleTimeString("en-US", {
+		hour: "numeric",
+		hour12: true,
+		minute: "numeric",
+	})
+);
+
 const AvailSect = ({ page, session }) => {
+	let n = [];
+
 	const { availability, setAvailability } = useAvailabilityContext();
 	const { allProps } = usePropertiesContext();
 	const [currentModal, setCurrentModal] = useState([]);
@@ -108,35 +126,69 @@ const AvailSect = ({ page, session }) => {
 			)}
 
 			<div className="card-wrapper">
-				{availability.map((el, i) => (
-					<div className="availability-card" key={i}>
-						{/* <Setting /> */}
-						<h3>{el.property}</h3>
-						<p>{el.duration.map((el) => `${el} min(s), `)}</p>
-						<hr />
-						<div className="link">
-							<p onClick={() => copyText(el.link, el.property)}>
-								<Copy />
-								&nbsp;Copy Link
-							</p>
-							<div className="actions">
-								<button
-									className="button"
-									onClick={() => openEdit(el.id)}
+				{availability.map((el, i) => {
+					let showExpired = false;
+					const t_data = mergeDate(
+						el.time[0],
+						el.time[1],
+						el.time[2]
+					).sort();
+					if (t_data[t_data.length - 1] <= currentTime) {
+						showExpired = true;
+					}
+					return (
+						<div className="availability-card" key={i}>
+							{el.date.filter((elem) => {
+								if (dateInPast(new Date(elem), new Date())) {
+									return true;
+								}
+							}).length == el.date.length && (
+								<div className="ribbon">
+									<span>Expired</span>
+								</div>
+							)}
+
+							{el.date.length == 1 &&
+								formatDate(new Date()) ==
+									formatDate(el.date[0]) &&
+								showExpired && (
+									<div className="ribbon">
+										<span>Expired</span>
+									</div>
+								)}
+
+							<h3>{el.property}</h3>
+
+							<p>{el.duration.map((el) => `${el} min(s), `)}</p>
+							<hr />
+							<div className="link">
+								<p
+									onClick={() =>
+										copyText(el.link, el.property)
+									}
 								>
-									<Edit />
-								</button>
-								&nbsp; &nbsp;
-								<button
-									className="color button"
-									onClick={() => delItem(el._id)}
-								>
-									<Del />
-								</button>
+									<Copy />
+									&nbsp;Copy Link
+								</p>
+								<div className="actions">
+									<button
+										className="button"
+										onClick={() => openEdit(el.id)}
+									>
+										<Edit />
+									</button>
+									&nbsp; &nbsp;
+									<button
+										className="color button"
+										onClick={() => delItem(el._id)}
+									>
+										<Del />
+									</button>
+								</div>
 							</div>
 						</div>
-					</div>
-				))}
+					);
+				})}
 			</div>
 
 			<AddProp>

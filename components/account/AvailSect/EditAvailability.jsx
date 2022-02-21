@@ -23,10 +23,11 @@ import DatePicker from "react-multi-date-picker";
 import { useState, useRef, useEffect } from "react";
 import { selectTimeTemp } from "../ShowingSect/initialState";
 import NewTimePicker from "../TimePicker/NewTimePicker";
-import { durationTemp } from "../../../data";
+import { durationTemp, mergeDate } from "../../../data";
+import moment from "moment";
 
 let setVisibility = "visible";
-
+let error = "Sorry an error occured, try again later!!";
 const updateAvailability = async (request, id) => {
 	try {
 		const res = await fetch(`/api/availability/${id}`, {
@@ -37,11 +38,18 @@ const updateAvailability = async (request, id) => {
 			},
 			body: JSON.stringify(request),
 		});
-		return true;
+
+		if (res.ok) {
+			return true;
+		} else {
+			return false;
+		}
 	} catch (error) {
 		return false;
 	}
 };
+
+const returnFirst = (arr, i) => arr.filter((el) => el.id == i);
 
 const EditAvailability = ({ displayEdit, close, currentProp, session }) => {
 	const [checkedState, setCheckedState] = useState(new Array(4).fill(false));
@@ -49,28 +57,38 @@ const EditAvailability = ({ displayEdit, close, currentProp, session }) => {
 	const { availability, setAvailability } = useAvailabilityContext();
 	const [current] = availability.filter((el) => el.id == currentProp);
 	const [value, setValue] = useState();
-	const [showSec, setShowSec] = useState(current?.time[1]?.status || false);
-	const [showThird, setShowThird] = useState(
-		current?.time[2]?.status || false
-	);
 	const [errorMsg, set_errorMsg] = useState("");
-	const [time, setTime] = useState([]);
+	const [time_one, set_time_one] = useState(...returnFirst(current?.time, 1));
 
-	const [time_one, set_time_one] = useState(current?.time[0]);
-	const [time_two, set_time_two] = useState(
-		current?.time[1] || { ...selectTimeTemp }
-	);
+	let [second] = returnFirst(current?.time, 2);
+	const [time_two, set_time_two] = useState(second || { ...selectTimeTemp });
+
+	let [third] = returnFirst(current?.time, 3);
 	const [time_three, set_time_three] = useState(
-		current?.time[2] || { ...selectTimeTemp }
+		third || { ...selectTimeTemp }
 	);
+	const add_time = [
+		time_one,
+		time_two?.id && time_two,
+		time_three?.id && time_three,
+	].filter((el) => el !== undefined);
+	const [time, setTime] = useState(add_time);
+
+	const [showSec, setShowSec] = useState(time[1]?.status || false);
+	const [showThird, setShowThird] = useState(time[2]?.status || false);
+
+	const [serverError, setServerError] = useState(false);
 
 	const mm = useRef(null);
+	const buttonRef = useRef(null);
+
 	if (mm.current) {
 		mm.current.children[0].classList.add("date-iput");
 	}
 	useEffect(() => {
+		setTime(add_time);
 		let updateDuration = checkedState;
-
+		// console.log(time_two);
 		if (Array.isArray(current.date)) {
 			setValue([...current.date]);
 		} else {
@@ -130,6 +148,7 @@ const EditAvailability = ({ displayEdit, close, currentProp, session }) => {
 		} else {
 			newArray = [newObj];
 		}
+
 		setTime(newArray);
 	};
 
@@ -147,6 +166,14 @@ const EditAvailability = ({ displayEdit, close, currentProp, session }) => {
 
 	const addShowing = async (e) => {
 		e.preventDefault();
+		buttonRef.current.disabled = true;
+		buttonRef.current.classList.add("disabled");
+		setServerError(false);
+
+		if (value.length == 0) {
+			set_errorMsg(`Please select a date from the calendar`);
+			// set = false;
+		}
 
 		if (Array.isArray(current.date)) {
 			setValue([...current.date]);
@@ -162,20 +189,69 @@ const EditAvailability = ({ displayEdit, close, currentProp, session }) => {
 				return el;
 			}
 		});
-
 		let set = true;
 		newTimeArr.map((el) => {
-			//add another condition to check if time is past and turn 12:00 from ''
-			if (el.from == el.to && el.id == 1) {
-				set_errorMsg(`The start and end time cannot be the same`);
+			if (
+				(moment(el.from, ["h:mm A"]).format("HH:mm") >
+					moment(el.to, ["h:mm A"]).format("HH:mm") ||
+					moment(el.to, ["h:mm A"]).format("HH:mm") == "23:59") &&
+				el.id == 1
+			) {
+				set_errorMsg(`The start and end time cannot be equal`);
 				set = false;
 			}
-			if (el.from == el.to && el.id == 2 && showSec == true) {
-				set_errorMsg(`The start and end time cannot be the same`);
+			if (
+				(moment(el.from, ["h:mm A"]).format("HH:mm") >
+					moment(el.to, ["h:mm A"]).format("HH:mm") ||
+					moment(el.to, ["h:mm A"]).format("HH:mm") == "23:59") &&
+				el.id == 2 &&
+				showSec == true
+			) {
+				set_errorMsg(`The start and end time cannot be equal`);
 				set = false;
 			}
-			if (el.from == el.to && el.id == 3 && showThird == true) {
-				set_errorMsg(`The start and end time cannot be the same`);
+			if (
+				(moment(el.from, ["h:mm A"]).format("HH:mm") >
+					moment(el.to, ["h:mm A"]).format("HH:mm") ||
+					moment(el.to, ["h:mm A"]).format("HH:mm") == "23:59") &&
+				el.id == 3 &&
+				showThird == true
+			) {
+				set_errorMsg(`The start and end time cannot be equal`);
+				set = false;
+			}
+
+			//check if start time is greater than end time
+			if (
+				moment(el.from, ["h:mm A"]).format("HH:mm") >
+					moment(el.to, ["h:mm A"]).format("HH:mm") &&
+				el.id == 1
+			) {
+				set_errorMsg(
+					`The start time cannot be greater than the end time or equal`
+				);
+				set = false;
+			}
+			if (
+				moment(el.from, ["h:mm A"]).format("HH:mm") >
+					moment(el.to, ["h:mm A"]).format("HH:mm") &&
+				el.id == 2 &&
+				showSec == true
+			) {
+				set_errorMsg(
+					`The start time cannot be greater than the end time or equal`
+				);
+				set = false;
+			}
+			if (
+				moment(el.from, ["h:mm A"]).format("HH:mm") >
+					moment(el.to, ["h:mm A"]).format("HH:mm") &&
+				el.id == 3 &&
+				showThird == true
+			) {
+				set_errorMsg(
+					`The start time cannot be greater than the end time or equal`
+				);
 				set = false;
 			}
 		});
@@ -190,14 +266,33 @@ const EditAvailability = ({ displayEdit, close, currentProp, session }) => {
 			const oldAvailability = availability.filter(
 				(el) => el.id !== current.id
 			);
+
+			const finalArray = newTimeArr.filter((el) => el.status == true);
 			current.date = value;
-			current.time = time;
+			current.time = finalArray;
 			current.owner = session.email;
 			current.duration = newDuration;
-
-			await updateAvailability(current, current._id);
-			setAvailability([...oldAvailability, current]);
-			reset();
+			// console.log(finalArray);
+			if (newDuration.length < 1) {
+				error = "Duration cannot be empty";
+				setServerError(true);
+				buttonRef.current.disabled = false;
+				buttonRef.current.classList.remove("disabled");
+				return;
+			}
+			const verdict = await updateAvailability(current, current._id);
+			if (verdict) {
+				setAvailability([...oldAvailability, current]);
+				reset();
+			} else {
+				buttonRef.current.disabled = false;
+				buttonRef.current.classList.remove("disabled");
+				error = "Sorry an error occured, try again later!!";
+				setServerError(true);
+			}
+		} else {
+			buttonRef.current.disabled = false;
+			buttonRef.current.classList.remove("disabled");
 		}
 	};
 
@@ -284,9 +379,9 @@ const EditAvailability = ({ displayEdit, close, currentProp, session }) => {
 										see={setVisibility}
 									/>
 								</Wrap>
-
 								{showSec && (
 									<Wrap>
+										{/* {console.log(time_two)} */}
 										<NewTimePicker
 											stp={current.duration[0]}
 											types={"from"}
@@ -303,16 +398,17 @@ const EditAvailability = ({ displayEdit, close, currentProp, session }) => {
 											fn={changeTimeArray}
 											stateFn={set_time_two}
 											state={time_two}
-											begin={time_two.from}
+											begin={time_two?.from}
 										/>
 										<RemoveTime
 											onClick={() => setShowSec(!showSec)}
 										/>
 									</Wrap>
 								)}
-
 								{showThird && (
 									<Wrap>
+										{/* {console.log(time_three)} */}
+
 										<NewTimePicker
 											stp={current.duration[0]}
 											types={"from"}
@@ -329,7 +425,7 @@ const EditAvailability = ({ displayEdit, close, currentProp, session }) => {
 											fn={changeTimeArray}
 											stateFn={set_time_three}
 											state={time_three}
-											begin={time_three.from}
+											begin={time_three?.from}
 										/>
 										<RemoveTime
 											onClick={() =>
@@ -338,7 +434,12 @@ const EditAvailability = ({ displayEdit, close, currentProp, session }) => {
 										/>
 									</Wrap>
 								)}
-								<ConfirmButton>Save</ConfirmButton>
+								<ConfirmButton ref={buttonRef}>
+									Save
+								</ConfirmButton>
+								{serverError && (
+									<p className="serverError"> {error} </p>
+								)}
 							</div>
 						</div>
 					</CalendarDiv>

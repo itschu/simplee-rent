@@ -1,4 +1,4 @@
-import {useEffect} from "react";
+import { useEffect } from "react";
 import moment from "moment";
 import { Select } from "./style";
 
@@ -22,15 +22,24 @@ const NewTimePicker = ({
 	fn,
 	types,
 	stateFn,
-	state, 
+	state,
 }) => {
 	const newFn = (s, t, v) => {
-		stateFn({ ...s, [t]: v });
+		if (t == "from") {
+			// console.log("yes");
+			if (moment(s.to, ["h:mm A"]).format("HH:mm") == "23:59") {
+				stateFn({ ...s, [t]: v, to: v });
+			} else {
+				stateFn({ ...s, [t]: v });
+			}
+		} else {
+			stateFn({ ...s, [t]: v });
+		}
 	};
 	useEffect(() => {
 		fn(id);
 	}, [state]);
-	
+
 	let timeValue = begin || "12:00AM";
 	let lastValue;
 	const endLimit = end || "11:59PM";
@@ -45,6 +54,11 @@ const NewTimePicker = ({
 			.format("h:mmA");
 		typeof timeValue !== "object" && options.push(timeValue);
 	}
+
+	if (types == "from") {
+		// console.log(state[types], state.from, id);
+	}
+
 	return (
 		<Select
 			defaultValue={defaultValue}

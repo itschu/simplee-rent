@@ -14,11 +14,13 @@ const AvailabilitySchema = new mongoose.Schema({
 
 	date: {
 		type: Array,
+		required: [true, "please select a date"],
 		trim: true,
 	},
 
 	duration: {
 		type: Array,
+		required: [true, "please select a duration"],
 		trim: true,
 	},
 
@@ -34,6 +36,7 @@ const AvailabilitySchema = new mongoose.Schema({
 
 	time: {
 		type: Array,
+		required: [true, "please select a time"],
 		trim: true,
 	},
 
