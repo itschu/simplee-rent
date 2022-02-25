@@ -24,7 +24,7 @@ import { selectTimeTemp } from "./initialState";
 import { useAvailabilityContext } from "../../../context";
 import DatePicker from "react-multi-date-picker";
 import NewTimePicker from "../TimePicker/NewTimePicker";
-import { formatDate } from "../../../data";
+import { formatDate, randomId } from "../../../data";
 import moment from "moment";
 
 let setVisibility = "visible";
@@ -66,6 +66,7 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 	const maxDay = new Date();
 	maxDay.setDate(maxDay.getDate() + 90);
 	const [selectValue, setSelectValue] = useState("");
+	const [loadingState, loadingState_fn] = useState(false);
 	const [time_one, set_time_one] = useState({ ...selectTimeTemp });
 	const [time_two, set_time_two] = useState({ ...selectTimeTemp });
 	const [time_three, set_time_three] = useState({ ...selectTimeTemp });
@@ -141,19 +142,17 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 			}
 		});
 		const userLink = `${window.location.origin}/showings/${session.email}`;
-		const randomId = (Math.random() + 1)
-			.toString(36)
-			.substring(availability.length + 1);
+		const rand = randomId(availability.length);
 
 		let addItem = {
-			id: randomId,
+			id: rand,
 			property: "",
 			duration: [selectValue],
 			date: Array.isArray(value) ? value : [value],
 			time: newTimeArr,
 			display_time: null,
 			unique: thisProp,
-			link: `${userLink}/${randomId}`,
+			link: `${userLink}/${rand}`,
 			owner: session.email,
 		};
 
@@ -196,7 +195,6 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 				set = false;
 			}
 
-			//check if start time is greater than end time
 			if (
 				moment(el.from, ["h:mm A"]).format("HH:mm") >
 					moment(el.to, ["h:mm A"]).format("HH:mm") &&
@@ -230,7 +228,9 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 				set = false;
 			}
 		});
+
 		if (set) {
+			loadingState_fn(true);
 			let itm = "";
 			let newShowing = [addItem].map((el) => {
 				if (Array.isArray(el.date)) {
@@ -250,8 +250,10 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 			});
 			await addAvailability(addItem);
 			setAvailability([...availability, addItem]);
+			loadingState_fn(false);
 			reset();
 		}
+		loadingState_fn(false);
 	};
 
 	const reset = () => {
@@ -272,6 +274,11 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 	return (
 		<AddItemOverlay show={displayOverlay}>
 			<EditWrapper>
+				{loadingState && (
+					<div className="loading">
+						<div className="loader"></div>
+					</div>
+				)}
 				<form onSubmit={(e) => addShowing(e)}>
 					<CloseBtn onClick={() => reset()} />
 
@@ -281,7 +288,7 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 						<div>
 							<Label>Select Property</Label>
 							<Select
-								onChange={(e) => set_thisProp(e.target.value)}
+								onChange={(e) => set_thisProp(e.target.value)} 
 								value={thisProp}
 								required={true}
 							>

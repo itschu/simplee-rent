@@ -81,6 +81,7 @@ export const TimePicker = styled.div`
 
 export const Time = styled.div`
 	padding: 0.5em 0;
+	font-size: 13px;
 	border: 1px solid #dcdcdc;
 	width: 100%;
 	display: flex;

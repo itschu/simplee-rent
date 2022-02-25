@@ -17,9 +17,12 @@ import {
 } from "../account/ShowingSect/style";
 import DayPicker from "react-day-picker";
 import arrow from "../../public/images/arrow.png";
+import success_img from "../../public/images/checked.png";
 import Image from "next/image";
-import { formatDate, mergeDate, get12hrs } from "../../data";
+import { formatDate, mergeDate, get12hrs, randomId } from "../../data";
 import moment from "moment";
+import { Button } from "../account/PropSect/style";
+import Link from "next/link";
 
 const isEarlierThanEndLimit = (timeValue, endLimit, lastValue) => {
 	const timeValueIsEarlier =
@@ -31,31 +34,52 @@ const isEarlierThanEndLimit = (timeValue, endLimit, lastValue) => {
 	return timeValueIsEarlier && timeValueIsLaterThanLastValue;
 };
 
-const dateInPast = function (firstDate, secondDate) {
-	if (firstDate.setHours(0, 0, 0, 0) <= secondDate.setHours(0, 0, 0, 0)) {
-		return true;
+const addShowing = async (request) => {
+	try {
+		const res = await fetch(`/api/showing`, {
+			method: "POST",
+			headers: {
+				Accept: "application/json",
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(request),
+		});
+		if (res.ok) {
+			return true;
+		} else {
+			return false;
+		}
+	} catch (error) {
+		return false;
 	}
-	return false;
 };
 
 const BookShowing = ({ info }) => {
 	const router = useRouter();
-	let { email } = router.query;
-	let time_value;
+	let { email, prop } = router.query;
 
 	const [value, setValue] = useState();
 	const [selecteDate, setSelecteDate] = useState();
 	const [selecteTime, setSelecteTime] = useState();
+	const [loading, setLoading] = useState();
 	const [tenantDetails, set_tenantDetails] = useState({
 		name: "",
 		email: "",
+		duration: "",
+		date: "",
+		time: "",
 	});
 	const [get_duration, set_get_duration] = useState("");
 	const [timeToSelect, setTimeToSelect] = useState([]);
+	const [success, set_success] = useState(false);
 
 	const mm = useRef(null);
+	const submit_btn = useRef(null);
+	const form_ref = useRef(null);
+
 	const today = new Date();
 	const [brokenLink, setBrokenLink] = useState();
+	let finalTime = "";
 
 	const getSelectedTime = (e) => {
 		if (e !== "unset") {
@@ -75,7 +99,8 @@ const BookShowing = ({ info }) => {
 			setSelecteTime();
 		}
 	};
-	const availableDates = info[0]?.date.map((el) => {
+
+	let availableDates = info[0]?.date.map((el) => {
 		let good = new Date(el);
 		const selectedDate = new Date(el);
 		const now = new Date();
@@ -91,6 +116,7 @@ const BookShowing = ({ info }) => {
 		info[0]?.time[2]
 	).sort();
 
+	if (!Array.isArray(availableDates)) availableDates = [];
 	const checkAvailableDate = availableDates.filter((el) => el !== undefined);
 
 	const modifiers = {
@@ -108,6 +134,51 @@ const BookShowing = ({ info }) => {
 			backgroundColor: "#fffdee",
 		},
 	};
+
+	useEffect(() => {
+		if (submit_btn.current) {
+			if (
+				tenantDetails.name !== "" &&
+				tenantDetails.email !== "" &&
+				get_duration !== "" &&
+				selecteDate !== undefined &&
+				selecteDate !== "" &&
+				selecteTime !== undefined &&
+				selecteTime !== ""
+			) {
+				submit_btn.current.disabled = false;
+				submit_btn.current.classList.remove("disabled");
+				finalTime = selecteTime;
+				set_tenantDetails({
+					...tenantDetails,
+					duration: get_duration,
+					date: selecteDate,
+					time: selecteTime,
+					propertyId: prop,
+				});
+			} else {
+				submit_btn.current.disabled = true;
+				submit_btn.current.classList.add("disabled");
+			}
+		} else {
+			set_tenantDetails({
+				name: "",
+				email: "",
+				duration: "",
+				date: "",
+				time: "",
+				propertyId: "",
+				owner: email,
+			});
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [
+		tenantDetails.name,
+		tenantDetails.email,
+		get_duration,
+		selecteDate,
+		selecteTime,
+	]);
 
 	useEffect(() => {
 		if (checkAvailableDate.length == "0") {
@@ -132,7 +203,8 @@ const BookShowing = ({ info }) => {
 		} else {
 			setBrokenLink(info.length ? true : false);
 		}
-	});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [checkAvailableDate, data, info.length]);
 
 	useEffect(() => {
 		if (value !== undefined) {
@@ -144,249 +216,326 @@ const BookShowing = ({ info }) => {
 			});
 			!found ? setSelecteDate() : setSelecteDate(value);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [value]);
 
 	useEffect(() => {
-		getSelectedTime("unset");
-		const options = [];
-		let [firstFrom] = info[0]?.time.filter((el) => el.id == 1);
-		let firstTo = firstFrom.to;
-		firstFrom = firstFrom.from;
+		if (availableDates.length > 0) {
+			getSelectedTime("unset");
+			const options = [];
+			let [firstFrom] = info[0]?.time.filter((el) => el.id == 1);
+			let firstTo = firstFrom.to;
+			firstFrom = firstFrom.from;
 
-		let [secFrom] = info[0]?.time.filter((el) => el.id == 2);
-		let secTo = secFrom.to;
-		secFrom = secFrom.from;
+			let [secFrom] = info[0]?.time.filter((el) => el.id == 2);
+			let secTo = secFrom?.to;
+			secFrom = secFrom?.from;
 
-		let [thirdFrom] = info[0]?.time.filter((el) => el.id == 3);
-		let thirdTo = thirdFrom.to;
-		thirdFrom = thirdFrom.from;
+			let [thirdFrom] = info[0]?.time.filter((el) => el.id == 3);
+			let thirdTo = thirdFrom?.to;
+			thirdFrom = thirdFrom?.from;
 
-		let from = firstFrom.includes("AM")
-			? firstFrom.replace("AM", "")
-			: firstFrom.replace("PM", "");
+			let from = firstFrom.includes("AM")
+				? firstFrom.replace("AM", "")
+				: firstFrom.replace("PM", "");
 
-		let to = firstTo.includes("AM")
-			? firstTo.replace("AM", "")
-			: firstTo.replace("PM", "");
+			let to = firstTo.includes("AM")
+				? firstTo.replace("AM", "")
+				: firstTo.replace("PM", "");
 
-		const today = formatDate(new Date());
+			const today = formatDate(new Date());
 
-		let lastValue;
-		const step = get_duration;
+			let lastValue;
+			const step = get_duration;
 
-		const do_loop_fn = (timeValue, endLimit) => {
-			let x = 0;
-			do {
-				if (x == 0) {
-					if (formatDate(selecteDate) == today) {
-						const currentTime = get12hrs(
-							new Date().toLocaleTimeString("en-US", {
-								hour: "numeric",
-								hour12: true,
-								minute: "numeric",
-							})
-						);
-						if (!(get12hrs(timeValue) < currentTime)) {
-							options.push(timeValue);
-						}
-					} else {
-						options.push(timeValue);
-					}
-				}
-				lastValue = timeValue;
-				timeValue = moment(timeValue, "h:mmA")
-					.add(step, "minutes")
-					.format("h:mmA");
-
-				if (typeof timeValue !== "object") {
-					if (formatDate(selecteDate) == today) {
-						const currentTime = new Date().toLocaleTimeString(
-							"en-US",
-							{
-								hour: "numeric",
-								hour12: true,
-								minute: "numeric",
+			const do_loop_fn = (timeValue, endLimit) => {
+				let x = 0;
+				do {
+					if (x == 0) {
+						if (formatDate(selecteDate) == today) {
+							const currentTime = get12hrs(
+								new Date().toLocaleTimeString("en-US", {
+									hour: "numeric",
+									hour12: true,
+									minute: "numeric",
+								})
+							);
+							if (!(get12hrs(timeValue) < currentTime)) {
+								options.push(timeValue);
 							}
-						);
-						if (!(get12hrs(timeValue) < get12hrs(currentTime))) {
+						} else {
 							options.push(timeValue);
 						}
-					} else {
-						options.push(timeValue);
 					}
+					lastValue = timeValue;
+					timeValue = moment(timeValue, "h:mmA")
+						.add(step, "minutes")
+						.format("h:mmA");
+
+					if (typeof timeValue !== "object") {
+						if (formatDate(selecteDate) == today) {
+							const currentTime = new Date().toLocaleTimeString(
+								"en-US",
+								{
+									hour: "numeric",
+									hour12: true,
+									minute: "numeric",
+								}
+							);
+							if (
+								!(get12hrs(timeValue) < get12hrs(currentTime))
+							) {
+								options.push(timeValue);
+							}
+						} else {
+							options.push(timeValue);
+						}
+					}
+					x++;
+				} while (isEarlierThanEndLimit(timeValue, endLimit, lastValue));
+			};
+
+			if (get_duration !== "") {
+				do_loop_fn(firstFrom, firstTo);
+				if (secFrom) {
+					do_loop_fn(secFrom, secTo);
 				}
-				x++;
-			} while (isEarlierThanEndLimit(timeValue, endLimit, lastValue));
-		};
+				if (thirdFrom) {
+					do_loop_fn(thirdFrom, thirdTo);
+				}
+				const arrange = [];
+				new Set(options).forEach((value) => {
+					arrange.push(value);
+				});
 
-		if (get_duration !== "") {
-			do_loop_fn(firstFrom, firstTo);
-			if (secFrom) {
-				do_loop_fn(secFrom, secTo);
+				setTimeToSelect(arrange);
 			}
-			if (thirdFrom) {
-				do_loop_fn(thirdFrom, thirdTo);
-			}
-			const arrange = [];
-			new Set(options).forEach((value) => {
-				arrange.push(value);
-			});
-
-			// console.log(arrange, options);
-			setTimeToSelect(arrange);
+		} else {
+			setBrokenLink(info.length ? true : false);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [get_duration, selecteDate]);
+
+	const submitShowing = async (e) => {
+		e.preventDefault();
+		setLoading(true);
+		//run validation on input
+		submit_btn.current.disabled = true;
+		submit_btn.current.classList.add("disabled");
+		const verdict = await addShowing(tenantDetails);
+		if (verdict) {
+			set_success(true);
+		} else {
+			setLoading(false);
+			console.log("error");
+			submit_btn.current.disabled = false;
+			submit_btn.current.classList.remove("disabled");
+		}
+	};
 
 	return (
 		<Wrap link={brokenLink}>
-			<form>
-				{brokenLink ? (
-					<>
-						<div className="duration">
-							<h3 title="Fill in your details">
-								Fill in your details
-							</h3>
-							<InputSeparator>
-								<Label>Name *</Label>
-								<Input
-									type={"text"}
-									required={true}
-									name="name"
-									value={tenantDetails.name}
-									onChange={(e) =>
-										set_tenantDetails({
-											...tenantDetails,
-											name: e.target.value,
-										})
-									}
-								/>
-								<br /> <br />
-								<Label>Email *</Label>
-								<Input
-									type={"email"}
-									required={true}
-									name="email"
-									value={tenantDetails.email}
-									onChange={(e) =>
-										set_tenantDetails({
-											...tenantDetails,
-											email: e.target.value,
-										})
-									}
-								/>
-							</InputSeparator>
-							<Label>Duration *</Label>
-							<Select
-								onChange={(e) => {
-									set_get_duration(e.target.value);
-								}}
-								value={get_duration}
-								required={true}
-							>
-								<Option value={""} disabled>
-									----- Select a duration -----
-								</Option>
-								{info[0].duration.map((duration, id) => {
-									let time = parseInt(duration);
-									let format =
-										time < 60
-											? `${time} minutes`
-											: time < 120
-											? `${time / 60} hour`
-											: `${time / 60} hours`;
-									return (
-										<Option value={time} key={id}>
-											{`${format}`}
+			{!success ? (
+				<form ref={form_ref} onSubmit={(e) => submitShowing(e)}>
+					{!success && loading && (
+						<div className="loading">
+							<div className="loader"></div>
+						</div>
+					)}
+
+					<div className="form-body">
+						{brokenLink ? (
+							<>
+								<div className="duration">
+									<h3 title="Fill in your details">
+										Fill in your details
+									</h3>
+									<InputSeparator>
+										<Label>Name *</Label>
+										<Input
+											type={"text"}
+											required={true}
+											name="name"
+											value={tenantDetails.name}
+											onChange={(e) =>
+												set_tenantDetails({
+													...tenantDetails,
+													name: e.target.value,
+												})
+											}
+										/>
+										<br /> <br />
+										<Label>Email *</Label>
+										<Input
+											type={"email"}
+											required={true}
+											name="email"
+											value={tenantDetails.email}
+											onChange={(e) =>
+												set_tenantDetails({
+													...tenantDetails,
+													email: e.target.value,
+												})
+											}
+										/>
+									</InputSeparator>
+									<Label>Duration *</Label>
+									<Select
+										onChange={(e) => {
+											set_get_duration(e.target.value);
+										}}
+										value={get_duration}
+										required={true}
+									>
+										<Option value={""} disabled>
+											----- Select a duration -----
 										</Option>
-									);
-								})}
-							</Select>
-						</div>
+										{info[0].duration.map(
+											(duration, id) => {
+												let time = parseInt(duration);
+												let format =
+													time < 60
+														? `${time} minutes`
+														: time < 120
+														? `${time / 60} hour`
+														: `${time / 60} hours`;
+												return (
+													<Option
+														value={time}
+														key={id}
+													>
+														{`${format}`}
+													</Option>
+												);
+											}
+										)}
+									</Select>
+								</div>
 
-						<div className="date">
-							{selecteDate == undefined ? (
-								<h3>Select a valid day</h3>
-							) : (
-								<h3>{formatDate(selecteDate, true)}</h3>
-							)}
-
-							<DayPicker
-								fromMonth={today}
-								toMonth={
-									new Date(
-										today.getUTCFullYear(),
-										today.getUTCMonth() + 2
-									)
-								}
-								selectedDays={value}
-								onDayClick={setValue}
-								modifiers={modifiers}
-								modifiersStyles={modifiersStyles}
-								disabledDays={[
-									new Date(2017, 3, 12),
-									new Date(2017, 3, 2),
-									{
-										after: new Date(2017, 3, 20),
-										before: new Date(),
-									},
-								]}
-							/>
-						</div>
-
-						<div className="time">
-							<TimePickerWrapper>
-								<h3>Choose a convinient time</h3>
-								<TimePicker>
-									<GoUp>
-										<div>
-											<Image src={arrow} alt="" />
-										</div>
-									</GoUp>
-									{get_duration && (
-										<div className="timeConainer">
-											{timeToSelect.map((el, i) => (
-												<Time
-													onClick={(e) => {
-														getSelectedTime(e);
-													}}
-													key={i}
-												>
-													{el}
-												</Time>
-											))}
-										</div>
-									)}
-									{!get_duration && (
-										<div className="timeConainer">
-											<Time onClick={(e) => {}}>
-												Select a duration
-											</Time>
-										</div>
+								<div className="date">
+									{selecteDate == undefined ? (
+										<h3>Select a valid day</h3>
+									) : (
+										<h3>{formatDate(selecteDate, true)}</h3>
 									)}
 
-									<GoDown>
-										<div>
-											<Image src={arrow} alt="" />
-										</div>
-									</GoDown>
-								</TimePicker>
-							</TimePickerWrapper>
-						</div>
-					</>
-				) : brokenLink == undefined ? (
-					<></>
-				) : (
-					<>
-						<h2>This link is invalid!!</h2>
-						<p>
-							Sorry it appears that it is <b>broken</b> or
-							<b>expired</b> please contact <b>{email}</b>.
-						</p>
-					</>
-				)}
-			</form>
+									<DayPicker
+										fromMonth={today}
+										toMonth={
+											new Date(
+												today.getUTCFullYear(),
+												today.getUTCMonth() + 2
+											)
+										}
+										selectedDays={value}
+										onDayClick={setValue}
+										modifiers={modifiers}
+										modifiersStyles={modifiersStyles}
+										disabledDays={[
+											new Date(2017, 3, 12),
+											new Date(2017, 3, 2),
+											{
+												after: new Date(2017, 3, 20),
+												before: new Date(),
+											},
+										]}
+									/>
+								</div>
+
+								<div className="time">
+									<TimePickerWrapper>
+										<h3>Choose a convinient time</h3>
+										<TimePicker>
+											<GoUp>
+												<div>
+													<Image src={arrow} alt="" />
+												</div>
+											</GoUp>
+											{get_duration && (
+												<div className="timeConainer">
+													{timeToSelect.map(
+														(el, i) => (
+															<Time
+																onClick={(
+																	e
+																) => {
+																	getSelectedTime(
+																		e
+																	);
+																}}
+																key={i}
+															>
+																{el}
+															</Time>
+														)
+													)}
+												</div>
+											)}
+											{!get_duration && (
+												<div className="timeConainer">
+													<Time onClick={(e) => {}}>
+														Select a duration
+													</Time>
+												</div>
+											)}
+
+											<GoDown>
+												<div>
+													<Image src={arrow} alt="" />
+												</div>
+											</GoDown>
+										</TimePicker>
+									</TimePickerWrapper>
+								</div>
+							</>
+						) : brokenLink == undefined ? (
+							<></>
+						) : (
+							<>
+								<h2>This link is invalid!!</h2>
+								<p>
+									Sorry it appears that it is <b>broken</b> or
+									<b>expired</b> please contact <b>{email}</b>
+									.
+								</p>
+							</>
+						)}
+					</div>
+					{brokenLink && (
+						<Button
+							btn_for="save"
+							ref={submit_btn}
+							type="submit"
+							disabled={true}
+							className="disabled"
+						>
+							Submit
+						</Button>
+					)}
+				</form>
+			) : (
+				<div className="success">
+					<div className="img-good">
+						<Image src={success_img} alt="success image" />
+					</div>
+
+					<h3>Congratulations</h3>
+					<p id="para">
+						You have successfully booked a showing with &nbsp;
+						<b>{email}</b> on <b>{formatDate(selecteDate, true)}</b>
+						&nbsp; for <b>{tenantDetails.time}</b>
+					</p>
+					<Link href={"/"} passHref>
+						<Button btn_for="save" type="button">
+							Back
+						</Button>
+					</Link>
+				</div>
+			)}
 		</Wrap>
 	);
 };
 
 export default BookShowing;
+
+// cursor: ${({ disabled }) => (disabled ? "auto" : "pointer")};

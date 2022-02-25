@@ -1,15 +1,15 @@
 const mongoose = require("mongoose");
 
 const ShowSchema = new mongoose.Schema({
-	tenant: {
+	name: {
 		type: String,
-		required: [true, "please add a title"],
+		required: [true, "please add a name"],
 		trim: true,
 	},
 
 	email: {
 		type: String,
-		required: [true, "please add units"],
+		required: [true, "please add an email"],
 		trim: true,
 	},
 
@@ -31,7 +31,7 @@ const ShowSchema = new mongoose.Schema({
 
 	propertyId: {
 		type: String,
-		required: [true, "please add a street"],
+		required: [true, "please add property id"],
 		trim: true,
 	},
 

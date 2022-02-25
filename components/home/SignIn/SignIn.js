@@ -5,7 +5,7 @@ import DropDown from "../DropDown/DropDown";
 import { signIn } from "next-auth/react";
 
 const SignIn = () => {
-	const [isOpen, setIsOpen] = useState(false);	
+	const [isOpen, setIsOpen] = useState(false);
 	const [formInput, setFormInput] = useState({ email: "", password: "" });
 	const toggle = () => setIsOpen(!isOpen);
 	const details = {
@@ -14,7 +14,7 @@ const SignIn = () => {
 	};
 	const action = async (e) => {
 		e.preventDefault();
-		signIn("github");
+		// signIn("google");
 	};
 	return (
 		<Wrapper>

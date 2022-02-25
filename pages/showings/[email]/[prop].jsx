@@ -25,7 +25,7 @@ const Book = ({ availability }) => {
 export default Book;
 
 export const getServerSideProps = async (context) => {
-	const res = await fetch(`${process.env.URL}api/showing`, {
+	const res = await fetch(`${process.env.URL}api/availability`, {
 		method: "Get",
 		headers: {
 			Accept: "application/json",

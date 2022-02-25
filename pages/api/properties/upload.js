@@ -9,7 +9,7 @@ export const config = {
 	},
 };
 
-export default async (req, res) => {
+const upload_api = async (req, res) => {
 	const session = await getSession({ req });
 	const { method, query } = req;
 	const key = query.authentication;
@@ -35,15 +35,20 @@ export default async (req, res) => {
 					const newpath = `${uploadFolder}/${files.file[0].originalFilename}`;
 					fs.rename(oldpath, newpath, function (err) {
 						if (err) {
+							console.log(error);
 							throw err;
 							return res.status(400).json({ success: false });
 						}
 					});
 				});
 				return res.status(200).json({ success: true });
-			} catch (error) {}
+			} catch (error) {
+				// console.log(error);
+			}
 			break;
 		default:
 			return res.status(400).json({ success: false });
 	}
 };
+
+export default upload_api;

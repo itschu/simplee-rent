@@ -3,7 +3,7 @@ import availabilityModel from "../../../models/availabilityModel";
 
 dbConnect();
 
-export default async (req, res) => {
+const availability_api = async (req, res) => {
 	const { method, query } = req;
 	const key = query.authentication;
 	switch (method) {
@@ -26,3 +26,5 @@ export default async (req, res) => {
 			}
 	}
 };
+
+export default availability_api;

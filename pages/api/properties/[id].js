@@ -3,12 +3,12 @@ import propertiesModel from "../../../models/propertiesModel";
 
 dbConnect();
 
-export default async (req, res) => {
+const properties_dynamic_route = async (req, res) => {
 	const { method, query } = req;
 	const key = query.authentication;
 	const id = query.id;
 
-    switch (method) {
+	switch (method) {
 		case "GET":
 			try {
 				const prop = await propertiesModel.findById(id);
@@ -61,3 +61,5 @@ export default async (req, res) => {
 			break;
 	}
 };
+
+export default properties_dynamic_route;

@@ -21,6 +21,7 @@ const Availability = ({ data, properties, availability }) => {
 	useEffect(() => {
 		setAllProps(userProp);
 		setAvailability(userAvailability);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	return (
 		<MenuState>

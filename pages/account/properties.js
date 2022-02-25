@@ -15,6 +15,7 @@ export default function Properties({ data, properties }) {
 	const userProp = properties.filter((el) => el.owner == user.email);
 	useEffect(() => {
 		setAllProps(userProp);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (

@@ -112,7 +112,9 @@ export const EditWrapper = styled.div`
 		width: 60vw;
 		padding: 1em 4em;
 		padding-bottom: 3em;
-		display: flex;
+		/* display: flex; */
+		display: ${({ showBlock }) => (showBlock ? "block" : "flex")};
+
 		& > div {
 			flex: 1 1 450px;
 		}

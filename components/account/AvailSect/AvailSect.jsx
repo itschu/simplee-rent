@@ -4,13 +4,18 @@ import { AddProp } from "../PropSect/style";
 import Image from "next/image";
 import addImg from "../../../public/images/add.png";
 import ShowingModal from "../ShowingSect/ShowingModal";
-import { useAvailabilityContext, usePropertiesContext } from "../../../context";
+import {
+	useAvailabilityContext,
+	usePropertiesContext,
+	useShowingsContext,
+} from "../../../context";
 import { NewsWrapper, News } from "../DashSect/style";
 import { Notification } from "../ShowingSect/style";
 import EditAvailability from "./EditAvailability";
 import { formatDate, mergeDate, get12hrs } from "../../../data";
+import { deleteShowing } from "../ShowingSect/ShowingSect";
 
-const deleteAvailability = async (id) => {
+export const deleteAvailability = async (id) => {
 	try {
 		const res = await fetch(`/api/availability/${id}`, {
 			method: "DELETE",
@@ -47,6 +52,8 @@ const AvailSect = ({ page, session }) => {
 
 	const { availability, setAvailability } = useAvailabilityContext();
 	const { allProps } = usePropertiesContext();
+	const { showings, setShowings } = useShowingsContext();
+
 	const [currentModal, setCurrentModal] = useState([]);
 	const [showOverlay, setShowOverlay] = useState(false);
 	const [displayNotify, setDisplayNotify] = useState(false);
@@ -89,8 +96,15 @@ const AvailSect = ({ page, session }) => {
 	const delItem = async (id) => {
 		setShowLoading(true);
 		const list = availability.filter((el) => el._id !== id);
+		const [list_old] = availability.filter((el) => el._id == id);
+		const new_showing_list = showings.filter(
+			(el) => list_old.id !== el.propertyId
+		);
+		// console.log(list_old.id);
 		await deleteAvailability(id);
+		await deleteShowing(list_old.id);
 		setShowLoading(false);
+		setShowings([...new_showing_list]);
 		setAvailability([...list]);
 	};
 
@@ -111,7 +125,7 @@ const AvailSect = ({ page, session }) => {
 	return (
 		<Wrapper>
 			{showLoading && (
-				<div className="loading">
+				<div className="loading-full">
 					<div className="loader"></div>
 				</div>
 			)}
@@ -131,9 +145,21 @@ const AvailSect = ({ page, session }) => {
 					const t_data = mergeDate(
 						el.time[0],
 						el.time[1],
-						el.time[2]
+						el.time[2],
+						true
 					).sort();
-					if (t_data[t_data.length - 1] <= currentTime) {
+
+					let x = 0;
+					t_data.forEach((element) => {
+						if (element === "00:00") {
+							return;
+						}
+						if (element <= currentTime) {
+							x += 1;
+						}
+					});
+
+					if (x == t_data.length) {
 						showExpired = true;
 					}
 					return (
@@ -142,10 +168,16 @@ const AvailSect = ({ page, session }) => {
 								if (dateInPast(new Date(elem), new Date())) {
 									return true;
 								}
-							}).length == el.date.length && (
+							}).length == el.date.length ? (
 								<div className="ribbon">
 									<span>Expired</span>
 								</div>
+							) : (
+								showExpired && (
+									<div className="ribbon">
+										<span>Expired</span>
+									</div>
+								)
 							)}
 
 							{el.date.length == 1 &&
@@ -208,6 +240,8 @@ const AvailSect = ({ page, session }) => {
 				curr={currentModal}
 				setCurr={setCurrentModal}
 				session={session}
+				loadingState={showLoading}
+				loadingState_fn={setShowLoading}
 			/>
 
 			{edit && (
@@ -215,6 +249,7 @@ const AvailSect = ({ page, session }) => {
 					displayEdit={edit}
 					close={closeEdit}
 					session={session}
+					loadingState={showLoading}
 					currentProp={editProp}
 				/>
 			)}

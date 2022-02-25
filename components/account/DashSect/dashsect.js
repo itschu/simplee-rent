@@ -16,11 +16,17 @@ import {
 	useAvailabilityContext,
 } from "../../../context";
 import Image from "next/image";
+import Link from "next/link";
+import { formatDate } from "../../../data";
 
 const Dash = ({ page }) => {
 	const { allProps } = usePropertiesContext();
 	const { showings } = useShowingsContext();
 	const { availability } = useAvailabilityContext();
+
+	const todayShowing = showings.filter(
+		(el) => formatDate(new Date(el.date)) == formatDate(new Date())
+	);
 
 	return (
 		<Wrapper>
@@ -55,9 +61,33 @@ const Dash = ({ page }) => {
 			</StatsWrapper>
 
 			<NewsWrapper>
-				<H3>Upcoming Showing</H3>
+				<H3>Upcoming Showings Today</H3>
 				<News>
-					<p>You currently have no upcoming showing</p>
+					{todayShowing.length < 1 ? (
+						<p>You currently have no upcoming showing</p>
+					) : (
+						todayShowing.map((el, i) => (
+							<Link href={"/account/showings"} key={i} passHref>
+								<div className="align-left">
+									<>
+										{i !== 0 && <hr />}
+										<p>
+											{`${el.name}'s ${
+												el.duration < 60
+													? `${el.duration} minutes`
+													: el.duration < 120
+													? `${el.duration / 60} hour`
+													: `${
+															el.duration / 60
+													  } hours`
+											} Showing is by `}
+											<b>{el.time}</b> today
+										</p>
+									</>
+								</div>
+							</Link>
+						))
+					)}
 				</News>
 			</NewsWrapper>
 		</Wrapper>

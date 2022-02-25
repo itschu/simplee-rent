@@ -1,4 +1,5 @@
 import moment from "moment";
+import randomstring from "randomstring";
 
 export const project = {
 	title: "Simplee Rent",
@@ -13,7 +14,7 @@ export const navItems = [
 		alias: "availability",
 		icon: "/images/calendar.png",
 	},
-	{ title: "Showings", alias: "showings", icon: "/images/calendar.png" },
+	{ title: "Showings", alias: "showings", icon: "/images/display-frame.png" },
 ];
 
 export const statistics = [
@@ -179,21 +180,49 @@ export const convertDate = (inputFormat) => {
 
 export const get12hrs = (dt) => moment(dt, ["h:mm A"]).format("HH:mm");
 
-export const mergeDate = (arrOne, arrTwo = null, arrThree = null) => {
+export const mergeDate = (
+	arrOne,
+	arrTwo = null,
+	arrThree = null,
+	onlyEnd = false
+) => {
 	let sec, secTo, third, thirdTo;
 	const set_value = [];
-	let first = get12hrs(arrOne.from);
-	let firstTo = get12hrs(arrOne.to);
+	let first = get12hrs(arrOne?.from);
+	let firstTo = get12hrs(arrOne?.to);
 	if (arrTwo) {
-		sec = get12hrs(arrTwo.from);
-		secTo = get12hrs(arrTwo.to);
+		sec = get12hrs(arrTwo?.from);
+		secTo = get12hrs(arrTwo?.to);
 	}
 	if (arrThree) {
-		third = get12hrs(arrThree.from);
-		thirdTo = get12hrs(arrThree.to);
+		third = get12hrs(arrThree?.from);
+		thirdTo = get12hrs(arrThree?.to);
 	}
-	new Set([first, firstTo, sec, secTo, third, thirdTo]).forEach((value) => {
-		value !== undefined && set_value.push(value);
-	});
+
+	if (!onlyEnd) {
+		new Set([first, firstTo, sec, secTo, third, thirdTo]).forEach(
+			(value) => {
+				value !== undefined && set_value.push(value);
+			}
+		);
+	} else {
+		new Set([firstTo, secTo, thirdTo]).forEach((value) => {
+			value !== undefined && set_value.push(value);
+		});
+	}
+
 	return set_value.sort();
+};
+
+export const dateInPast = function (firstDate, secondDate) {
+	if (firstDate.setHours(0, 0, 0, 0) <= secondDate.setHours(0, 0, 0, 0)) {
+		return true;
+	}
+	return false;
+};
+
+export const randomId = (length) => {
+	if (length > 2 || length < 0 || length == undefined) length = 0;
+	const rand = (Math.random() + 1).toString(36).substring(length + 1);
+	return `${rand}${randomstring.generate(rand)}`;
 };

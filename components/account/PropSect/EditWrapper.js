@@ -10,10 +10,15 @@ import {
 	ImgContainer,
 } from "./style";
 
-const Main = ({ propState, close, img, fn, del, add }) => {
+const Main = ({ propState, close, img, fn, del, add, loadingState }) => {
 	// console.log(propState);
 	return (
 		<EditWrapper>
+			{loadingState && (
+				<div className="loading">
+					<div className="loader"></div>
+				</div>
+			)}
 			<div>
 				<CloseBtn onClick={() => close()} />
 

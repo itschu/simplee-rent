@@ -38,7 +38,6 @@ const updateAvailability = async (request, id) => {
 			},
 			body: JSON.stringify(request),
 		});
-
 		if (res.ok) {
 			return true;
 		} else {
@@ -53,6 +52,7 @@ const returnFirst = (arr, i) => arr.filter((el) => el.id == i);
 
 const EditAvailability = ({ displayEdit, close, currentProp, session }) => {
 	const [checkedState, setCheckedState] = useState(new Array(4).fill(false));
+	const [loadingState, loadingState_fn] = useState(false);
 
 	const { availability, setAvailability } = useAvailabilityContext();
 	const [current] = availability.filter((el) => el.id == currentProp);
@@ -108,6 +108,7 @@ const EditAvailability = ({ displayEdit, close, currentProp, session }) => {
 			})(getTime.index);
 		});
 		setCheckedState(updateDuration);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const moreTime = () => {
@@ -166,6 +167,7 @@ const EditAvailability = ({ displayEdit, close, currentProp, session }) => {
 
 	const addShowing = async (e) => {
 		e.preventDefault();
+		loadingState_fn(true);
 		buttonRef.current.disabled = true;
 		buttonRef.current.classList.add("disabled");
 		setServerError(false);
@@ -272,7 +274,7 @@ const EditAvailability = ({ displayEdit, close, currentProp, session }) => {
 			current.time = finalArray;
 			current.owner = session.email;
 			current.duration = newDuration;
-			// console.log(finalArray);
+
 			if (newDuration.length < 1) {
 				error = "Duration cannot be empty";
 				setServerError(true);
@@ -280,7 +282,11 @@ const EditAvailability = ({ displayEdit, close, currentProp, session }) => {
 				buttonRef.current.classList.remove("disabled");
 				return;
 			}
-			const verdict = await updateAvailability(current, current._id);
+
+			const verdict = await updateAvailability(
+				current,
+				current._id || current.id
+			);
 			if (verdict) {
 				setAvailability([...oldAvailability, current]);
 				reset();
@@ -294,26 +300,42 @@ const EditAvailability = ({ displayEdit, close, currentProp, session }) => {
 			buttonRef.current.disabled = false;
 			buttonRef.current.classList.remove("disabled");
 		}
+		loadingState_fn(false);
 	};
 
-	// const checkDuration = (time) => current.duration.includes(time);
+	const [duration_time] = current.duration;
 	return (
 		<AddItemOverlay show={displayEdit}>
 			<EditWrapper>
+				{loadingState && (
+					<div className="loading">
+						<div className="loader"></div>
+					</div>
+				)}
 				<form onSubmit={(e) => addShowing(e)}>
 					<CloseBtn onClick={() => reset()} />
 					<H2>{`Edit ${current?.property} Availability`}</H2>
 
-					<InputSeparator checkbox={true}>
+					<InputSeparator separate={true}>
 						<div>
 							<Label>Property</Label>
 							<Input value={current.property} disabled />
 						</div>
-						<br />
+
 						<div>
 							<Label>Duration</Label>
+							<Input
+								value={
+									duration_time < 60
+										? `${duration_time} minutes`
+										: duration_time < 120
+										? `${duration_time / 60} hour`
+										: `${duration_time / 60} hours`
+								}
+								disabled
+							/>
 
-							<div>
+							{/* <div>
 								{durationTemp.map((el, i) => (
 									<span key={i}>
 										<input
@@ -326,7 +348,7 @@ const EditAvailability = ({ displayEdit, close, currentProp, session }) => {
 										<label>{el.title} &nbsp;&nbsp;</label>
 									</span>
 								))}
-							</div>
+							</div> */}
 						</div>
 					</InputSeparator>
 

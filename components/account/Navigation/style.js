@@ -26,7 +26,7 @@ export const UnOrderedList = styled.ul`
 
 export const ListItem = styled.li`
 	background: #b3daec;
-	text-align: center;
+	text-align: "left";
 	width: 100%;
 	padding: 20px 0;
 	border: 1px solid #e5e5e5;
@@ -43,7 +43,8 @@ export const ListItem = styled.li`
 
 export const Anchor = styled.a`
 	display: flex;
-	justify-content: center;
+	padding-left: 4.4em;
+	justify-content: flex-start;
 	cursor: pointer;
-	align-items: center;
+	align-items: flex-start;
 `;

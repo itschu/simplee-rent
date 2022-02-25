@@ -20,7 +20,7 @@ export const getServerSideProps = async (context) => {
 			"Content-Type": "application/json",
 		},
 	});
-	
+
 	const resAvail = await fetch(`${process.env.URL}api/availability`, {
 		method: "Get",
 		headers: {
@@ -29,13 +29,24 @@ export const getServerSideProps = async (context) => {
 		},
 	});
 
+	const resShow = await fetch(`${process.env.URL}api/showing`, {
+		method: "Get",
+		headers: {
+			Accept: "application/json",
+			"Content-Type": "application/json",
+		},
+	});
+
+	console.log(session);
 	const { data } = await res.json();
 	const avail_data = await resAvail.json();
+	const show_data = await resShow.json();
 	return {
 		props: {
 			data: session,
 			properties: data,
 			availability: avail_data.data,
+			showing: show_data.data,
 		},
 	};
 };

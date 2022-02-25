@@ -14,8 +14,15 @@ import { useState, useReducer } from "react";
 import EditWrapper from "./EditWrapper";
 import reducer, { initialState } from "./reducer";
 import { News, NewsWrapper } from "../DashSect/style";
-import { usePropertiesContext, useAvailabilityContext } from "../../../context";
+import {
+	usePropertiesContext,
+	useAvailabilityContext,
+	useShowingsContext,
+} from "../../../context";
 import axios from "axios";
+import { randomId } from "../../../data";
+import { deleteAvailability } from "../AvailSect/AvailSect";
+import { deleteShowing } from "../ShowingSect/ShowingSect";
 
 const addProperty = async (request) => {
 	try {
@@ -102,21 +109,26 @@ const updateProperty = async (request, id) => {
 
 const Prop = ({ page, user }) => {
 	const [showOverlay, setShowOverlay] = useState(false);
+	const [showLoading, setShowLoading] = useState(false);
 	const { allProps, setAllProps } = usePropertiesContext();
+	const { showings, setShowings } = useShowingsContext();
 	const { availability, setAvailability } = useAvailabilityContext();
 
-	const processInformation = (e) => {
+	const processInformation = async (e) => {
 		e.preventDefault();
+		setShowLoading(true);
 		const newList = allProps.map((el) => {
 			return propertyState.id == el.id ? { ...el, ...propertyState } : el;
 		});
 		setAllProps([...newList]);
+		await newProp();
+		setShowLoading(false);
 		closeOverlay();
-		newProp();
 	};
 
 	const deleteItem = async (e) => {
 		e.preventDefault();
+		setShowLoading(true);
 		const prompt = window.confirm(
 			"Are you sure you want to delete this property and all Showings connected to this property?"
 		);
@@ -127,15 +139,27 @@ const Prop = ({ page, user }) => {
 			const new_availability_list = availability.filter(
 				(el) => propertyState.unique !== el.unique
 			);
+			const [old_availability] = availability.filter(
+				(el) => propertyState.unique == el.unique
+			);
+			const new_showing_list = showings.filter(
+				(el) => old_availability.id !== el.propertyId
+			);
+			// console.log(old_availability._id);
+
 			await removeProp(propertyState.id);
+			await deleteAvailability(old_availability._id);
+			await deleteShowing(old_availability.id);
 			setAllProps([...newList]);
 			setAvailability([...new_availability_list]);
+			setShowings([...new_showing_list]);
+			setShowLoading(false);
 			closeOverlay();
 		}
 	};
 
 	const newProp = async () => {
-		let rand = (Math.random() + 1).toString(36).substring(7);
+		let rand = randomId(2);
 		let formData;
 		if (propertyState.src) {
 			formData = new FormData();
@@ -157,7 +181,7 @@ const Prop = ({ page, user }) => {
 	};
 
 	const editProps = async (form_obj) => {
-		// const oldProperties = allProps.filter((el) => el._id !== form_obj.id);
+		setShowLoading(true);
 		let formData;
 		if (form_obj.src) {
 			formData = new FormData();
@@ -180,6 +204,7 @@ const Prop = ({ page, user }) => {
 			}
 		});
 		setAllProps([...keep_old, newData]);
+		setShowLoading(false);
 		closeOverlay();
 	};
 
@@ -218,6 +243,7 @@ const Prop = ({ page, user }) => {
 						fn={dispatch}
 						del={deleteItem}
 						add={editProps}
+						loadingState={showLoading}
 					/>
 				</form>
 			</AddItemOverlay>

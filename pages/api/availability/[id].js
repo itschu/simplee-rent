@@ -3,7 +3,7 @@ import availabilityModel from "../../../models/availabilityModel";
 
 dbConnect();
 
-export default async (req, res) => {
+const dynamic_route = async (req, res) => {
 	const { method, query } = req;
 	const key = query.authentication;
 	const id = query.id;
@@ -62,3 +62,5 @@ export default async (req, res) => {
 			break;
 	}
 };
+
+export default dynamic_route;

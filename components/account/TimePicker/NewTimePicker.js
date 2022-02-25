@@ -38,6 +38,7 @@ const NewTimePicker = ({
 	};
 	useEffect(() => {
 		fn(id);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [state]);
 
 	let timeValue = begin || "12:00AM";

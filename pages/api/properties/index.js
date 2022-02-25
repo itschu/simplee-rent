@@ -3,7 +3,7 @@ import propertiesModel from "../../../models/propertiesModel";
 
 dbConnect();
 
-export default async (req, res) => {
+const main_api_route = async (req, res) => {
 	const { method, query } = req;
 	const key = query.authentication;
 	switch (method) {
@@ -26,3 +26,5 @@ export default async (req, res) => {
 			}
 	}
 };
+
+export default main_api_route;

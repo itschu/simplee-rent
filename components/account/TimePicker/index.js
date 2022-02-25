@@ -1,4 +1,4 @@
-import TimePicker from "./TimePicker";
-export {formatTime} from "./TimePicker";
+import NewTimePicker from "./NewTimePicker";
+export { formatTime } from "./TimePicker";
 
-export default TimePicker;
+export default NewTimePicker;
