@@ -191,7 +191,15 @@ const AvailSect = ({ page, session }) => {
 
 							<h3>{el.property}</h3>
 
-							<p>{el.duration.map((el) => `${el} min(s), `)}</p>
+							<p>
+								{el.duration.map((el) =>
+									el < 60
+										? `${el} minutes showing`
+										: el < 120
+										? `${el / 60} hour showing`
+										: `${el / 60} hours showing`
+								)}
+							</p>
 							<hr />
 							<div className="link">
 								<p

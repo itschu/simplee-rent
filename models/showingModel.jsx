@@ -13,6 +13,12 @@ const ShowSchema = new mongoose.Schema({
 		trim: true,
 	},
 
+	phone_number: {
+		type: String,
+		required: [true, "please add your phone number"],
+		trim: true,
+	},
+
 	duration: {
 		type: String,
 		trim: true,

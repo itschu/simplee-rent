@@ -97,7 +97,7 @@ const ShowingSect = ({ page }) => {
 
 	return (
 		<Wrapper>
-			<H1>All {page}. </H1>
+			<H1>{page}. </H1>
 			<FullCalendar
 				ref={calendarRef}
 				plugins={[

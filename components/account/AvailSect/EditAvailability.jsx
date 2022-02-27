@@ -20,10 +20,11 @@ import {
 } from "../ShowingSect/style";
 import { useAvailabilityContext } from "../../../context";
 import DatePicker from "react-multi-date-picker";
+import Icon from "react-multi-date-picker/components/icon";
 import { useState, useRef, useEffect } from "react";
 import { selectTimeTemp } from "../ShowingSect/initialState";
 import NewTimePicker from "../TimePicker/NewTimePicker";
-import { durationTemp, mergeDate } from "../../../data";
+import { durationTemp } from "../../../data";
 import moment from "moment";
 
 let setVisibility = "visible";
@@ -88,7 +89,6 @@ const EditAvailability = ({ displayEdit, close, currentProp, session }) => {
 	useEffect(() => {
 		setTime(add_time);
 		let updateDuration = checkedState;
-		// console.log(time_two);
 		if (Array.isArray(current.date)) {
 			setValue([...current.date]);
 		} else {
@@ -96,7 +96,7 @@ const EditAvailability = ({ displayEdit, close, currentProp, session }) => {
 		}
 
 		current.duration.map((el) => {
-			let [getTime] = durationTemp.filter(({ value, index }) => {
+			let [getTime] = durationTemp.filter(({ value }) => {
 				return value == el;
 			});
 
@@ -155,7 +155,9 @@ const EditAvailability = ({ displayEdit, close, currentProp, session }) => {
 
 	const reset = () => {
 		set_errorMsg("");
-		close();
+		setTimeout(() => {
+			close();
+		}, 100);
 	};
 
 	const checkBoxFn = (position) => {
@@ -355,13 +357,23 @@ const EditAvailability = ({ displayEdit, close, currentProp, session }) => {
 					<CalendarDiv>
 						<div>
 							<Label>Date</Label>
-							<DatePicker
-								value={value}
-								ref={mm}
-								onChange={setValue}
-								multiple={true}
-								format="YYYY-MM-DD"
-							/>
+							<div className="input-date-align">
+								<DatePicker
+									value={value}
+									ref={mm}
+									multiple={true}
+									onOpen={() => false}
+									format="YYYY-MM-DD"
+								/>
+								&nbsp;&nbsp;
+								<DatePicker
+									value={value}
+									render={<Icon />}
+									onChange={setValue}
+									multiple={true}
+									minDate={moment().toDate()}
+								/>
+							</div>
 						</div>
 
 						<div>

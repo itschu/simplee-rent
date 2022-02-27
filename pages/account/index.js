@@ -37,7 +37,6 @@ export const getServerSideProps = async (context) => {
 		},
 	});
 
-	console.log(session);
 	const { data } = await res.json();
 	const avail_data = await resAvail.json();
 	const show_data = await resShow.json();

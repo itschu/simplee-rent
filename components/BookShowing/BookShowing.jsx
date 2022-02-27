@@ -23,6 +23,7 @@ import { formatDate, mergeDate, get12hrs, randomId } from "../../data";
 import moment from "moment";
 import { Button } from "../account/PropSect/style";
 import Link from "next/link";
+import { useShowingsContext } from "../../context";
 
 const isEarlierThanEndLimit = (timeValue, endLimit, lastValue) => {
 	const timeValueIsEarlier =
@@ -54,7 +55,7 @@ const addShowing = async (request) => {
 	}
 };
 
-const BookShowing = ({ info }) => {
+const BookShowing = ({ info, bookedShowing }) => {
 	const router = useRouter();
 	let { email, prop } = router.query;
 
@@ -68,8 +69,9 @@ const BookShowing = ({ info }) => {
 		duration: "",
 		date: "",
 		time: "",
+		phone_number: "",
 	});
-	const [get_duration, set_get_duration] = useState("");
+	const [get_duration, set_get_duration] = useState(info[0]?.duration[0]);
 	const [timeToSelect, setTimeToSelect] = useState([]);
 	const [success, set_success] = useState(false);
 
@@ -126,8 +128,9 @@ const BookShowing = ({ info }) => {
 
 	const modifiersStyles = {
 		showingDate: {
-			color: "white",
-			backgroundColor: "#6969f3",
+			// color: "white",
+			borderRadius: "30px",
+			outline: " #000 solid 1px",
 		},
 		monday: {
 			color: "#ffc107",
@@ -187,13 +190,16 @@ const BookShowing = ({ info }) => {
 			checkAvailableDate.length == 1 &&
 			formatDate(new Date()) == formatDate(checkAvailableDate[0])
 		) {
+			const d = new Date();
+			d.setMinutes(d.getMinutes() + info[0].duration[0]);
 			const currentTime = get12hrs(
-				new Date().toLocaleTimeString("en-US", {
+				d.toLocaleTimeString("en-US", {
 					hour: "numeric",
 					hour12: true,
 					minute: "numeric",
 				})
 			);
+			// console.log(data[data.length - 1], d, currentTime);
 
 			if (data[data.length - 1] <= currentTime) {
 				setBrokenLink(false);
@@ -235,18 +241,18 @@ const BookShowing = ({ info }) => {
 			let thirdTo = thirdFrom?.to;
 			thirdFrom = thirdFrom?.from;
 
-			let from = firstFrom.includes("AM")
+			/** let from = firstFrom.includes("AM")
 				? firstFrom.replace("AM", "")
 				: firstFrom.replace("PM", "");
 
 			let to = firstTo.includes("AM")
 				? firstTo.replace("AM", "")
-				: firstTo.replace("PM", "");
+				: firstTo.replace("PM", ""); */
 
 			const today = formatDate(new Date());
 
 			let lastValue;
-			const step = get_duration;
+			const step = info[0].duration[0];
 
 			const do_loop_fn = (timeValue, endLimit) => {
 				let x = 0;
@@ -261,12 +267,15 @@ const BookShowing = ({ info }) => {
 								})
 							);
 							if (!(get12hrs(timeValue) < currentTime)) {
-								options.push(timeValue);
+								!bookedShowing.includes(timeValue) &&
+									options.push(timeValue);
 							}
 						} else {
-							options.push(timeValue);
+							!bookedShowing.includes(timeValue) &&
+								options.push(timeValue);
 						}
 					}
+					//bookedShowing
 					lastValue = timeValue;
 					timeValue = moment(timeValue, "h:mmA")
 						.add(step, "minutes")
@@ -285,14 +294,17 @@ const BookShowing = ({ info }) => {
 							if (
 								!(get12hrs(timeValue) < get12hrs(currentTime))
 							) {
-								options.push(timeValue);
+								!bookedShowing.includes(timeValue) &&
+									options.push(timeValue);
 							}
 						} else {
-							options.push(timeValue);
+							!bookedShowing.includes(timeValue) &&
+								options.push(timeValue);
 						}
 					}
 					x++;
 				} while (isEarlierThanEndLimit(timeValue, endLimit, lastValue));
+				options.pop();
 			};
 
 			if (get_duration !== "") {
@@ -327,7 +339,6 @@ const BookShowing = ({ info }) => {
 			set_success(true);
 		} else {
 			setLoading(false);
-			console.log("error");
 			submit_btn.current.disabled = false;
 			submit_btn.current.classList.remove("disabled");
 		}
@@ -378,38 +389,86 @@ const BookShowing = ({ info }) => {
 												})
 											}
 										/>
-									</InputSeparator>
-									<Label>Duration *</Label>
-									<Select
-										onChange={(e) => {
-											set_get_duration(e.target.value);
-										}}
-										value={get_duration}
-										required={true}
-									>
-										<Option value={""} disabled>
-											----- Select a duration -----
-										</Option>
-										{info[0].duration.map(
-											(duration, id) => {
-												let time = parseInt(duration);
-												let format =
-													time < 60
-														? `${time} minutes`
-														: time < 120
-														? `${time / 60} hour`
-														: `${time / 60} hours`;
-												return (
-													<Option
-														value={time}
-														key={id}
-													>
-														{`${format}`}
-													</Option>
-												);
+										<br /> <br />
+										<Label>Phone Number *</Label>
+										<Input
+											type={"number"}
+											required={true}
+											name="number"
+											value={tenantDetails.phone_number}
+											onChange={(e) =>
+												set_tenantDetails({
+													...tenantDetails,
+													phone_number:
+														e.target.value,
+												})
 											}
-										)}
-									</Select>
+										/>
+										{/* <br /> <br />
+										<Label>Duration</Label>
+										<Input
+											type={"text"}
+											required={true}
+											name="duration"
+											value={
+												get_duration < 60
+													? `${get_duration} minutes`
+													: get_duration < 120
+													? `${
+															get_duration / 60
+													  } hour`
+													: `${
+															get_duration / 60
+													  } hours`
+											}
+											disabled
+										/> */}
+									</InputSeparator>
+									{/**
+										<>
+											<Label>Duration *</Label>
+											<Select
+												onChange={(e) => {
+													set_get_duration(
+														e.target.value
+													);
+												}}
+												value={get_duration}
+												required={true}
+											>
+												<Option value={""} disabled>
+													----- Select a duration
+													-----
+												</Option>
+												{info[0].duration.map(
+													(duration, id) => {
+														let time =
+															parseInt(duration);
+														let format =
+															time < 60
+																? `${time} minutes`
+																: time < 120
+																? `${
+																		time /
+																		60
+																  } hour`
+																: `${
+																		time /
+																		60
+																  } hours`;
+														return (
+															<Option
+																value={time}
+																key={id}
+															>
+																{`${format}`}
+															</Option>
+														);
+													}
+												)}
+											</Select>
+										</>
+									 */}
 								</div>
 
 								<div className="date">

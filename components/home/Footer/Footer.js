@@ -49,22 +49,22 @@ const Footer = () => {
 						</li>
 						<li>
 							<Img width={"1.2em"}>
-								<Image src={mail} alt="email icon"/>
+								<Image src={mail} alt="email icon" />
 							</Img>
-							<a href="mailto:support@simpleerent.com">
-								support@simpleerent.com
+							<a href="mailto:info@simpleerent.com">
+								info@simpleerent.com
 							</a>
 						</li>
 					</ul>
 					<div>
 						<Img width={"1.6em"}>
-							<Image src={fb} alt="facebook icon"/>
+							<Image src={fb} alt="facebook icon" />
 						</Img>
 						<Img width={"1.6em"}>
-							<Image src={tweet} alt="twitter icon"/>
+							<Image src={tweet} alt="twitter icon" />
 						</Img>
 						<Img width={"1.6em"}>
-							<Image src={ig} alt="instagram icon"/>
+							<Image src={ig} alt="instagram icon" />
 						</Img>
 					</div>
 				</div>

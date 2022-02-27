@@ -19,7 +19,7 @@ const availability_api = async (req, res) => {
 			try {
 				// console.log(req.body);
 				const props = await availabilityModel.create(req.body);
-				res.status(200).json({ success: true, data: props });
+				res.status(200).json({ success: true, data: { ...props } });
 			} catch (error) {
 				// console.log(error);
 				res.status(400).json({ success: false });

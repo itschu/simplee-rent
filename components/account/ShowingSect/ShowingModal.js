@@ -23,6 +23,7 @@ import { useState, useRef, memo } from "react";
 import { selectTimeTemp } from "./initialState";
 import { useAvailabilityContext } from "../../../context";
 import DatePicker from "react-multi-date-picker";
+import Icon from "react-multi-date-picker/components/icon";
 import NewTimePicker from "../TimePicker/NewTimePicker";
 import { formatDate, randomId } from "../../../data";
 import moment from "moment";
@@ -39,8 +40,9 @@ const addAvailability = async (request) => {
 			},
 			body: JSON.stringify(request),
 		});
-		if (res.ok) {
-			return true;
+		const dataG = JSON.parse(await res.text());
+		if (res.ok && dataG.success == true) {
+			return dataG.data._doc;
 		} else {
 			return false;
 		}
@@ -248,8 +250,12 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 					};
 				}
 			});
-			await addAvailability(addItem);
-			setAvailability([...availability, addItem]);
+			const added = await addAvailability(addItem);
+			if (added) {
+				setAvailability([...availability, added]);
+			} else {
+				// set error
+			}
 			loadingState_fn(false);
 			reset();
 		}
@@ -288,7 +294,7 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 						<div>
 							<Label>Select Property</Label>
 							<Select
-								onChange={(e) => set_thisProp(e.target.value)} 
+								onChange={(e) => set_thisProp(e.target.value)}
 								value={thisProp}
 								required={true}
 							>
@@ -327,13 +333,23 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 					<CalendarDiv>
 						<div>
 							<Label>Select Date</Label>
-							<DatePicker
-								value={value}
-								ref={mm}
-								onChange={setValue}
-								multiple={true}
-								format="YYYY-MM-DD"
-							/>
+							<div className="input-date-align">
+								<DatePicker
+									value={value}
+									ref={mm}
+									multiple={true}
+									onOpen={() => false}
+									format="YYYY-MM-DD"
+								/>
+								&nbsp;&nbsp;
+								<DatePicker
+									value={value}
+									render={<Icon />}
+									onChange={setValue}
+									multiple={true}
+									minDate={moment().toDate()}
+								/>
+							</div>
 						</div>
 
 						<div>

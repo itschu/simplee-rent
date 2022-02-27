@@ -23,17 +23,32 @@ const dynamic_route = async (req, res) => {
 			break;
 		case "PUT":
 			try {
-				const prop = await availabilityModel.findByIdAndUpdate(
-					id,
-					req.body,
-					{
-						new: true,
-						runValidators: true,
-					}
-				);
+				let newId = id;
+				let prop;
+				if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+					prop = await availabilityModel.updateOne(
+						{ id: newId },
+						{
+							new: true,
+							runValidators: true,
+						}
+					);
+				} else {
+					// console.log(newId); acknowledged
+					prop = await availabilityModel.findByIdAndUpdate(
+						newId,
+						req.body,
+						{
+							new: true,
+							runValidators: true,
+						}
+					);
+				}
+
 				if (!prop) {
 					return res.status(400).json({ success: false });
 				}
+				// console.log(prop);
 				res.status(200).json({ success: true, data: prop });
 			} catch (error) {
 				// console.log(error);

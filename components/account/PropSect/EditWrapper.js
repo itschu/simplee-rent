@@ -25,7 +25,7 @@ const Main = ({ propState, close, img, fn, del, add, loadingState }) => {
 				<H2>{propState.title}</H2>
 				<br />
 				<InputSeparator>
-					<Label>Name</Label>
+					<Label>Property Address</Label>
 					<Input
 						type={"text"}
 						name="property name"
@@ -37,39 +37,20 @@ const Main = ({ propState, close, img, fn, del, add, loadingState }) => {
 					/>
 				</InputSeparator>
 
-				<InputSeparator dg={true}>
-					<div>
-						<Label>Street</Label>
-						<Input
-							type={"text"}
-							value={propState.street}
-							name="street"
-							onChange={(e) =>
-								fn({
-									type: "changestreet",
-									payload: e.target.value,
-								})
-							}
-							required={true}
-						/>
-					</div>
-
-					<div>
-						<Label>Units</Label>
-						<Input
-							type={"number"}
-							min={0}
-							name="units"
-							value={propState.units}
-							onChange={(e) =>
-								fn({
-									type: "changeunits",
-									payload: e.target.value,
-								})
-							}
-							required={true}
-						/>
-					</div>
+				<InputSeparator>
+					<Label>Street</Label>
+					<Input
+						type={"text"}
+						value={propState.street}
+						name="street"
+						onChange={(e) =>
+							fn({
+								type: "changestreet",
+								payload: e.target.value,
+							})
+						}
+						required={true}
+					/>
 				</InputSeparator>
 
 				<InputSeparator>
@@ -85,20 +66,39 @@ const Main = ({ propState, close, img, fn, del, add, loadingState }) => {
 					/>
 				</InputSeparator>
 
-				<InputSeparator>
-					<Label>Country</Label>
-					<Input
-						type={"text"}
-						value={propState.country}
-						name="country"
-						onChange={(e) =>
-							fn({
-								type: "changecountry",
-								payload: e.target.value,
-							})
-						}
-						required={true}
-					/>
+				<InputSeparator dg={true}>
+					<div>
+						<Label>Country</Label>
+						<Input
+							type={"text"}
+							value={propState.country}
+							name="country"
+							onChange={(e) =>
+								fn({
+									type: "changecountry",
+									payload: e.target.value,
+								})
+							}
+							required={true}
+						/>
+					</div>
+
+					<div>
+						<Label>Nuber of Units</Label>
+						<Input
+							type={"number"}
+							min={1}
+							name="units"
+							value={propState.units}
+							onChange={(e) =>
+								fn({
+									type: "changeunits",
+									payload: e.target.value,
+								})
+							}
+							required={true}
+						/>
+					</div>
 				</InputSeparator>
 			</div>
 

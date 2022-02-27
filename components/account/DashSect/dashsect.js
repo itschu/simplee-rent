@@ -17,16 +17,23 @@ import {
 } from "../../../context";
 import Image from "next/image";
 import Link from "next/link";
-import { formatDate } from "../../../data";
+import { formatDate, get12hrs } from "../../../data";
 
 const Dash = ({ page }) => {
 	const { allProps } = usePropertiesContext();
 	const { showings } = useShowingsContext();
 	const { availability } = useAvailabilityContext();
-
-	const todayShowing = showings.filter(
-		(el) => formatDate(new Date(el.date)) == formatDate(new Date())
+	const currentTime = get12hrs(
+		new Date().toLocaleTimeString("en-US", {
+			hour: "numeric",
+			hour12: true,
+			minute: "numeric",
+		})
 	);
+
+	const todayShowing = showings
+		.filter((el) => formatDate(new Date(el.date)) == formatDate(new Date()))
+		.filter((el) => currentTime <= get12hrs(el.time));
 
 	return (
 		<Wrapper>

@@ -132,6 +132,11 @@ export const CalendarDiv = styled.div`
 			position: relative;
 		}
 	}
+
+	& .input-date-align {
+		display: flex;
+		align-items: center;
+	}
 `;
 
 export const TimeWrapper = styled.div`

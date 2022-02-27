@@ -32,7 +32,7 @@ export const initialState = {
 	title: "",
 	name: "",
 	street: "",
-	units: 0,
+	units: 1,
 	city: "",
 	country: "",
 	img: "",

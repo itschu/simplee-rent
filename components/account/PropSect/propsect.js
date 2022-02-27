@@ -217,6 +217,7 @@ const Prop = ({ page, user }) => {
 		setShowOverlay(!showOverlay);
 	};
 	const [propertyState, dispatch] = useReducer(reducer, initialState);
+	// console.log(propertyState);
 
 	const setDetails = (obj, proptitle) => {
 		dispatch({ type: "changename", payload: obj.name });
@@ -233,7 +234,7 @@ const Prop = ({ page, user }) => {
 	const imgSrc = `/images/properties/${user.email}`;
 	return (
 		<Wrapper>
-			<H1>My {page}. </H1>
+			<H1>{page}. </H1>
 			<AddItemOverlay show={showOverlay}>
 				<form onSubmit={processInformation}>
 					<EditWrapper

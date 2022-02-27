@@ -8,10 +8,10 @@ export const project = {
 
 export const navItems = [
 	{ title: "Dashboard", alias: "dashboard", icon: "/images/layout.png" },
-	{ title: "My Properties", alias: "properties", icon: "/images/house.png" },
+	{ title: "Properties", alias: "properties", icon: "/images/house.png" },
 	{
-		title: "Availability",
-		alias: "availability",
+		title: "Availabilities",
+		alias: "availabilities",
 		icon: "/images/calendar.png",
 	},
 	{ title: "Showings", alias: "showings", icon: "/images/display-frame.png" },
@@ -83,7 +83,7 @@ export const propertiesPlaceHolder = [
 export const template = {
 	id: 0,
 	title: "",
-	units: 0,
+	units: 1,
 	src: "",
 	fileName: "",
 	name: "",
@@ -225,4 +225,13 @@ export const randomId = (length) => {
 	if (length > 2 || length < 0 || length == undefined) length = 0;
 	const rand = (Math.random() + 1).toString(36).substring(length + 1);
 	return `${rand}${randomstring.generate(rand)}`;
+};
+
+export const parseTime = (s) => {
+	return Math.floor(parseInt(s) / 60) + "." + (parseInt(s) % 60);
+};
+
+export const converToMinutes = (s) => {
+	var c = s.split(":");
+	return parseInt(c[0]) * 60 + parseInt(c[1]);
 };

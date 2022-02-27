@@ -9,7 +9,7 @@ import { useEffect } from "react";
 
 const Availability = ({ data, properties, availability }) => {
 	const { user } = data;
-	const pg = "Availability";
+	const pg = "Availabilities";
 
 	const { setAllProps } = usePropertiesContext();
 	const { setAvailability } = useAvailabilityContext();

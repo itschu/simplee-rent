@@ -9,6 +9,17 @@ dbConnect();
 const showing_main_route = async (req, res) => {
 	const { method, query } = req;
 	// const key = query.authentication;
+	const userMsg = `Congratulations ${
+		req.body.name
+	}, you have successfully booked a showing with ${req.body.owner} for ${
+		req.body.time
+	} on ${formatDate(req.body.date)}. <br /> Thank you for choosing us`;
+
+	const ownerMsg = `Congratulations, ${
+		req.body.name
+	} has booked a showing with you for ${req.body.time} on ${formatDate(
+		req.body.date
+	)}`;
 
 	switch (method) {
 		case "GET":
@@ -21,18 +32,6 @@ const showing_main_route = async (req, res) => {
 			break;
 		case "POST":
 			try {
-				const userMsg = `Congratulations ${
-					req.body.name
-				}, you have successfully booked a showing with ${
-					req.body.owner
-				} for ${req.body.time} on ${formatDate(
-					req.body.date
-				)}. <br /> Thank you for choosing us`;
-				const ownerMsg = `Congratulations, ${
-					req.body.name
-				} has booked a showing with you for ${
-					req.body.time
-				} on ${formatDate(req.body.date)}`;
 				require("dotenv").config();
 				const transporter = nodeMailer.createTransport({
 					host: "gidbox.com",
@@ -48,14 +47,14 @@ const showing_main_route = async (req, res) => {
 				});
 
 				const mailPayload = {
-					from: "chutech@gidbox.com",
+					from: '"Simpleerent Support", <chutech@gidbox.com>',
 					to: `${req.body.email}`,
 					subject: "Showing Created",
 					html: Temp(userMsg),
 				};
 
 				const OwnerMailPayload = {
-					from: "chutech@gidbox.com",
+					from: '"Simpleerent Support", <chutech@gidbox.com>',
 					to: `${req.body.owner}`,
 					subject: "Showing Created",
 					html: Temp(ownerMsg),
