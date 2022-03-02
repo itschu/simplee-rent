@@ -113,6 +113,7 @@ const Prop = ({ page, user }) => {
 	const { allProps, setAllProps } = usePropertiesContext();
 	const { showings, setShowings } = useShowingsContext();
 	const { availability, setAvailability } = useAvailabilityContext();
+	const [imgData, setImgData] = useState(null);
 
 	const processInformation = async (e) => {
 		e.preventDefault();
@@ -128,11 +129,11 @@ const Prop = ({ page, user }) => {
 
 	const deleteItem = async (e) => {
 		e.preventDefault();
-		setShowLoading(true);
 		const prompt = window.confirm(
 			"Are you sure you want to delete this property and all Showings connected to this property?"
 		);
 		if (prompt) {
+			setShowLoading(true);
 			const newList = allProps.filter(
 				(el) => propertyState.id !== el._id
 			);
@@ -148,13 +149,17 @@ const Prop = ({ page, user }) => {
 			// console.log(old_availability._id);
 
 			await removeProp(propertyState.id);
-			await deleteAvailability(old_availability._id);
-			await deleteShowing(old_availability.id);
+			old_availability &&
+				(await deleteAvailability(old_availability._id));
+			old_availability && (await deleteShowing(old_availability.id));
 			setAllProps([...newList]);
 			setAvailability([...new_availability_list]);
 			setShowings([...new_showing_list]);
 			setShowLoading(false);
 			closeOverlay();
+		} else {
+			// setShowLoading(false);
+			// closeOverlay();
 		}
 	};
 
@@ -177,7 +182,8 @@ const Prop = ({ page, user }) => {
 			src: null,
 		};
 		const add_to_database = await addProperty({ data: add, fd: formData });
-		add_to_database && setAllProps([add, ...allProps]);
+		add_to_database &&
+			setAllProps([...allProps, { ...add, tempPath: imgData }]);
 	};
 
 	const editProps = async (form_obj) => {
@@ -190,7 +196,7 @@ const Prop = ({ page, user }) => {
 		} else {
 			formData = new FormData();
 		}
-		const newData = { ...form_obj, src: null };
+		const newData = { ...form_obj, src: null, title: form_obj.name };
 		await updateProperty(
 			{ data: { ...newData }, fd: formData },
 			form_obj.id
@@ -203,7 +209,7 @@ const Prop = ({ page, user }) => {
 				return el.id !== form_obj.id;
 			}
 		});
-		setAllProps([...keep_old, newData]);
+		setAllProps([...keep_old, { ...newData, tempPath: imgData }]);
 		setShowLoading(false);
 		closeOverlay();
 	};
@@ -213,7 +219,7 @@ const Prop = ({ page, user }) => {
 		setShowOverlay(!showOverlay);
 	};
 	const closeOverlay = () => {
-		dispatch({ type: "changeimg", payload: "imageimg-icon.png" });
+		// dispatch({ type: "changeimg", payload: "imageimg-icon.svg" });
 		setShowOverlay(!showOverlay);
 	};
 	const [propertyState, dispatch] = useReducer(reducer, initialState);
@@ -231,10 +237,11 @@ const Prop = ({ page, user }) => {
 		dispatch({ type: "changeunique", payload: obj.unique });
 		toggleOverlay(proptitle);
 	};
+
 	const imgSrc = `/images/properties/${user.email}`;
 	return (
 		<Wrapper>
-			<H1>{page}. </H1>
+			<H1>{page} </H1>
 			<AddItemOverlay show={showOverlay}>
 				<form onSubmit={processInformation}>
 					<EditWrapper
@@ -245,6 +252,8 @@ const Prop = ({ page, user }) => {
 						del={deleteItem}
 						add={editProps}
 						loadingState={showLoading}
+						imgData={imgData}
+						setImgData={setImgData}
 					/>
 				</form>
 			</AddItemOverlay>
@@ -255,7 +264,10 @@ const Prop = ({ page, user }) => {
 						return (
 							<PropCards
 								key={i}
-								bgImg={`/images/properties/${user.email}/${el.fileName}`}
+								bgImg={
+									el.tempPath ||
+									`/images/properties/${user.email}/${el.fileName}`
+								}
 								onClick={() => setDetails(el, el.title)}
 							>
 								<P> {el.title} </P>

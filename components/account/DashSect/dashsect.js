@@ -37,7 +37,7 @@ const Dash = ({ page }) => {
 
 	return (
 		<Wrapper>
-			<H1> {page}. </H1>
+			<H1> {page} </H1>
 			<StatsWrapper>
 				{statistics.map((el, i) => {
 					return (

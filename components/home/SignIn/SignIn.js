@@ -3,18 +3,22 @@ import { Wrapper, Google, FormBtn } from "./style";
 import { useState } from "react";
 import DropDown from "../DropDown/DropDown";
 import { signIn } from "next-auth/react";
+import { seriliazeInput } from "../../../data";
 
 const SignIn = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [formInput, setFormInput] = useState({ email: "", password: "" });
 	const toggle = () => setIsOpen(!isOpen);
 	const details = {
-		email: formInput.email,
-		password: formInput.password,
+		email: seriliazeInput(formInput.email),
+		password: seriliazeInput(formInput.password),
 	};
 	const action = async (e) => {
 		e.preventDefault();
-		// signIn("google");
+		signIn("credentials", {
+			username: details.email,
+			password: details.password,
+		});
 	};
 	return (
 		<Wrapper>
@@ -55,9 +59,16 @@ const SignIn = () => {
 						/>
 					</div>
 					<div>
-						<FormBtn type="submit">Login</FormBtn>
-						<Google type="button" onClick={() => signIn("google")}>
-							Login with Google
+						<FormBtn type="submit">Sign In</FormBtn>
+						<Google
+							type="button"
+							onClick={() =>
+								signIn("google", {
+									callbackUrl: `${process.env.URL}signin`,
+								})
+							}
+						>
+							Sign in with Google
 						</Google>
 					</div>
 				</form>

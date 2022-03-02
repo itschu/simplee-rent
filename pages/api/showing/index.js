@@ -34,12 +34,12 @@ const showing_main_route = async (req, res) => {
 			try {
 				require("dotenv").config();
 				const transporter = nodeMailer.createTransport({
-					host: "gidbox.com",
-					port: 465,
+					host: process.env.EMAIL_SERVER_HOST,
+					port: process.env.EMAIL_SERVER_PORT,
 					secure: true, // true for 465, false for other ports
 					auth: {
-						user: "chutech@gidbox.com",
-						pass: "Thenewpass14",
+						user: process.env.EMAIL_SERVER_USER,
+						pass: process.env.EMAIL_SERVER_PASSWORD,
 					},
 					tls: {
 						ciphers: "SSLv3",
@@ -47,7 +47,7 @@ const showing_main_route = async (req, res) => {
 				});
 
 				const mailPayload = {
-					from: '"Simpleerent Support", <chutech@gidbox.com>',
+					from: `"Simpleerent Support", <${process.env.EMAIL_SERVER_USER}>`,
 					to: `${req.body.email}`,
 					subject: "Showing Created",
 					html: Temp(userMsg),

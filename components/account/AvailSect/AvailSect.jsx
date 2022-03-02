@@ -32,10 +32,17 @@ export const deleteAvailability = async (id) => {
 	}
 };
 
-const dateInPast = function (firstDate, secondDate) {
-	if (firstDate.setHours(0, 0, 0, 0) < secondDate.setHours(0, 0, 0, 0)) {
-		return true;
+export const dateInPast = function (firstDate, secondDate, addToday = false) {
+	if (addToday) {
+		if (firstDate.setHours(0, 0, 0, 0) <= secondDate.setHours(0, 0, 0, 0)) {
+			return true;
+		}
+	} else {
+		if (firstDate.setHours(0, 0, 0, 0) < secondDate.setHours(0, 0, 0, 0)) {
+			return true;
+		}
 	}
+
 	return false;
 };
 
@@ -129,7 +136,7 @@ const AvailSect = ({ page, session }) => {
 					<div className="loader"></div>
 				</div>
 			)}
-			<H1> {page}. </H1>
+			<H1> {page} </H1>
 
 			{availability.length < 1 && (
 				<NewsWrapper>
@@ -142,6 +149,22 @@ const AvailSect = ({ page, session }) => {
 			<div className="card-wrapper">
 				{availability.map((el, i) => {
 					let showExpired = false;
+					const datesPassed =
+						el.date.filter((elem) => {
+							if (dateInPast(new Date(elem), new Date())) {
+								return true;
+							}
+						}).length == el.date.length
+							? true
+							: false;
+					const todayPassed =
+						el.date.filter((elem) => {
+							if (dateInPast(new Date(elem), new Date(), true)) {
+								return true;
+							}
+						}).length == el.date.length
+							? true
+							: false;
 					const t_data = mergeDate(
 						el.time[0],
 						el.time[1],
@@ -149,17 +172,23 @@ const AvailSect = ({ page, session }) => {
 						true
 					).sort();
 
-					let x = 0;
-					t_data.forEach((element) => {
-						if (element === "00:00") {
-							return;
-						}
-						if (element <= currentTime) {
-							x += 1;
-						}
-					});
+					if (!datesPassed) {
+						if (todayPassed) {
+							let x = 0;
+							t_data.forEach((element) => {
+								if (element === "00:00") {
+									return;
+								}
+								if (element <= currentTime) {
+									x += 1;
+								}
+							});
 
-					if (x == t_data.length) {
+							if (x == t_data.length) {
+								showExpired = true;
+							}
+						}
+					} else {
 						showExpired = true;
 					}
 					return (

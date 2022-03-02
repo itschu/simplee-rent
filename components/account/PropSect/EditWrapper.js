@@ -9,9 +9,37 @@ import {
 	Button,
 	ImgContainer,
 } from "./style";
+import { useRef, useState } from "react";
+import bgImg from "/public/images/img.png";
+import Image from "next/image";
 
-const Main = ({ propState, close, img, fn, del, add, loadingState }) => {
-	// console.log(propState);
+const Main = ({
+	propState,
+	close,
+	img,
+	fn,
+	del,
+	add,
+	loadingState,
+	imgData,
+	setImgData,
+}) => {
+	const imgInput = useRef();
+	// const [imgData, setImgData] = useState(null);
+	const displayImg = (e) => {
+		const reader = new FileReader();
+		reader.addEventListener("load", () => {
+			setImgData(reader.result);
+		});
+		e.target.files[0] && reader?.readAsDataURL(e.target.files[0]);
+	};
+	const propImg = propState.fileName ? `${img}/${propState.fileName}` : bgImg;
+
+	const closeModal = () => {
+		imgInput.current.value = "";
+		setImgData(null);
+		close();
+	};
 	return (
 		<EditWrapper>
 			{loadingState && (
@@ -20,12 +48,12 @@ const Main = ({ propState, close, img, fn, del, add, loadingState }) => {
 				</div>
 			)}
 			<div>
-				<CloseBtn onClick={() => close()} />
+				<CloseBtn onClick={() => closeModal()} />
 
 				<H2>{propState.title}</H2>
 				<br />
 				<InputSeparator>
-					<Label>Property Address</Label>
+					<Label>Property Title</Label>
 					<Input
 						type={"text"}
 						name="property name"
@@ -103,23 +131,22 @@ const Main = ({ propState, close, img, fn, del, add, loadingState }) => {
 			</div>
 
 			<UploadContainer>
-				<ImgContainer
-					background={
-						propState.fileName
-							? `${img}/${propState.fileName}`
-							: "/images/img.png"
-					}
-				/>
+				<ImgContainer>
+					<Image src={imgData || propImg} layout="fill"></Image>
+				</ImgContainer>
 				<Input
 					type={"file"}
+					ref={imgInput}
 					size="sm"
 					aria-label="File browser"
-					onChange={(e) =>
+					// value={propState.src?.name}
+					onChange={(e) => {
+						displayImg(e);
 						fn({
 							type: "changesrc",
 							payload: e.target.files[0],
-						})
-					}
+						});
+					}}
 				/>
 				<br />
 

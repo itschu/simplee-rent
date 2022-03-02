@@ -9,7 +9,7 @@ const Hero = () => {
 	const toggle = () => setIsOpen(!isOpen);
 	return (
 		<>
-			<Nav toggle={toggle} />
+			<Nav toggle={toggle} addPaddinfTop={true} />
 			<DropDown status={isOpen} toggle={toggle} />
 			<Wrapper>
 				<div>

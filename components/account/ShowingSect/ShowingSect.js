@@ -46,6 +46,7 @@ const ShowingSect = ({ page }) => {
 				visitor: el.name,
 				email: el.email,
 				duration: el.duration,
+				phone_number: el.phone_number,
 			},
 		};
 	});
@@ -57,6 +58,7 @@ const ShowingSect = ({ page }) => {
 		email: "",
 		duration: "",
 		property_name: "",
+		phone_number: "",
 	};
 
 	const calendarRef = useRef();
@@ -72,9 +74,6 @@ const ShowingSect = ({ page }) => {
 	const currentDate = formatDate(new Date());
 
 	const eventClicked = (arg) => {
-		setShowInfo(true);
-		console.log(showings, availability);
-
 		const [property] = availability.filter(
 			(el) => el.id == arg.event.extendedProps.id
 		);
@@ -85,10 +84,11 @@ const ShowingSect = ({ page }) => {
 			time: arg.event.extendedProps.time,
 			email: arg.event.extendedProps.email,
 			duration: arg.event.extendedProps.duration,
-			property_name: property.property,
+			property_name: property?.property,
+			phone_number: arg.event.extendedProps.phone_number,
 		};
-		// console.log(currentDate);
 		set_showInfoDetails(DisplayInfo);
+		setShowInfo(true);
 	};
 
 	const close = () => {
@@ -97,7 +97,7 @@ const ShowingSect = ({ page }) => {
 
 	return (
 		<Wrapper>
-			<H1>{page}. </H1>
+			<H1>{page} </H1>
 			<FullCalendar
 				ref={calendarRef}
 				plugins={[
@@ -138,6 +138,9 @@ const ShowingSect = ({ page }) => {
 							<b>Time</b> : {showInfoDetails.time}
 						</p>
 						<p>
+							<b>Phone</b> : {showInfoDetails.phone_number}
+						</p>
+						<p>
 							<b>Duration</b> :&nbsp;
 							{showInfoDetails.duration < 60
 								? `${showInfoDetails.duration} minutes`
@@ -149,7 +152,7 @@ const ShowingSect = ({ page }) => {
 							<b>Property</b> : {showInfoDetails.property_name}
 						</p>
 
-						{showInfoDetails.duration <= currentDate &&
+						{showInfoDetails.date <= currentDate &&
 						get12hrs(showInfoDetails.time) < currentTime ? (
 							<div className="ribbon-down">
 								<span>Expired</span>
@@ -159,6 +162,7 @@ const ShowingSect = ({ page }) => {
 								<span>Upcoming</span>
 							</div>
 						)}
+						{/* {console.log(get12hrs(showInfoDetails.time), currentTime)} */}
 					</EditWrapper>
 				</AddItemOverlay>
 			)}

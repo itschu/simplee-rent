@@ -178,7 +178,7 @@ export const Input = styled.input`
 `;
 
 export const Label = styled.label`
-	font-weight: 600;
+	font-weight: 400;
 	margin-bottom: 6px;
 	display: block;
 	font-size: 14px;
@@ -223,6 +223,11 @@ export const InputSeparator = styled.div`
 			}
 		}};
 	}
+
+	& span.error-text {
+		padding-top: 30px;
+		color: tomato;
+	}
 `;
 
 export const UploadContainer = styled.div`
@@ -245,9 +250,10 @@ const uploadInput = `
 
 export const ImgContainer = styled.div`
 	/* background: red; */
+	position: relative;
 	width: 100%;
 	height: 210px;
-	background-image: url(${({ background }) => background});
+	/* background-image: url(${({ background }) => background}); */
 	margin-bottom: 2em;
 	background-position: center;
 	background-size: cover;

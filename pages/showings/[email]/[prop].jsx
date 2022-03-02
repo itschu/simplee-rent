@@ -4,14 +4,17 @@ import { MenuState } from "../../../context";
 import { useRouter } from "next/router";
 import Footer from "../../../components/home/Footer";
 import BookShowing from "../../../components/BookShowing/";
-
+import { formatDate } from "../../../data";
 const Book = ({ availability, showing }) => {
 	const pg = "Book Showing";
 	const router = useRouter();
 
 	let { email, prop } = router.query;
 	const thisAvailability = availability.filter((el) => el.id == prop);
-	const bookedShowing = showing.map((el) => el.time);
+	const bookedShowing = showing.map((el) => ({
+		time: el.time,
+		date: formatDate(el.date),
+	}));
 	return (
 		<MenuState>
 			<Head currentPage={`${email || ""} ${pg}`} />

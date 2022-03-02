@@ -27,8 +27,17 @@ export const Wrap = styled.div`
 	h5,
 	h6 {
 		text-align: center;
-		color: #670013;
+		color: #4e4e4e;
+		font-weight: 500;
 	}
+
+	& h1 {
+		padding-left: 1em;
+		font-weight: 400;
+		margin-bottom: 1em;
+		font-size: 1.7em;
+	}
+
 	& .duration h3 {
 		text-align: left;
 	}

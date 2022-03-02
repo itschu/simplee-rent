@@ -15,7 +15,7 @@ const ShowSchema = new mongoose.Schema({
 
 	phone_number: {
 		type: String,
-		required: [true, "please add your phone number"],
+		// required: [true, "please add your phone number"],
 		trim: true,
 	},
 

@@ -241,7 +241,8 @@ div.status > span {
 }
 
 .loading,
-.loading-full {
+.loading-full,
+.loading-offset {
 	border-radius: 15px;
 	position: absolute;
 	left: 0;
@@ -259,6 +260,10 @@ div.status > span {
 .loading-full {
 	height: 100vh;
 	border-radius: 0px;
+}
+
+.loading-offset {
+	top: -15px;
 }
 
 .loader {

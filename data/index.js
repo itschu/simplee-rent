@@ -1,5 +1,6 @@
 import moment from "moment";
 import randomstring from "randomstring";
+import validator from "validator";
 
 export const project = {
 	title: "Simplee Rent",
@@ -235,3 +236,65 @@ export const converToMinutes = (s) => {
 	var c = s.split(":");
 	return parseInt(c[0]) * 60 + parseInt(c[1]);
 };
+
+const strip_tags = (str, allow) => {
+	allow = (
+		((allow || "") + "").toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []
+	).join("");
+
+	var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi;
+	var commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+	return str.replace(commentsAndPhpTags, "").replace(tags, function ($0, $1) {
+		return allow.indexOf("<" + $1.toLowerCase() + ">") > -1 ? $0 : "";
+	});
+};
+
+const stripslashes = (str) => {
+	return str
+		.replace(/\\'/g, "'")
+		.replace(/\"/g, '"')
+		.replace(/\\\\/g, "\\")
+		.replace(/\\0/g, "\0");
+};
+
+const escapeHtml = (text) => {
+	const map = {
+		"&": "&amp;",
+		"<": "&lt;",
+		">": "&gt;",
+		'"': "&quot;",
+		"'": "&#039;",
+	};
+	return text
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;")
+		.replace(/"/g, "&quot;")
+		.replace(/'/g, "&#039;")
+		.replace(/[&<>"']/g, function (m) {
+			return map[m];
+		});
+};
+
+export const seriliazeInput = (str) => {
+	return escapeHtml(strip_tags(stripslashes(str)));
+};
+
+export const runInputValidation = (input, type, name, allowEmpty = false) => {
+	let invalid_input = false;
+	let msg = "";
+	if (input == "" && allowEmpty == false) {
+		invalid_input = true;
+		msg = `${name} cannot be empty`;
+	} else {
+		if (type == "email" && !validator.isEmail(input)) {
+			invalid_input = true;
+			msg = `${name} is not a valid email`;
+		} else {
+			msg = "";
+		}
+	}
+	return { error: invalid_input, msg };
+};
+
+//console.log(runInputValidation("", "email", "email input"));

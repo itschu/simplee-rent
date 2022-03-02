@@ -8,16 +8,20 @@ export const Navigation = styled.nav`
 	align-items: center;
 	justify-content: space-between;
 	padding: 0 1.5em;
-	padding-top: 1em;
+	padding-top: ${({ addPaddinfTop }) => (addPaddinfTop ? "1em" : 0)};
+	color: #fff;
 
 	@media screen and (min-width: 600px) {
 		padding: 0 4em;
-		padding-top: 1em;
+		padding-top: ${({ addPaddinfTop }) => (addPaddinfTop ? "1em" : 0)};
 	}
-	color: #fff;
 
 	& > div {
 		width: 2em;
+	}
+
+	& .logo-img {
+		/* width: 1em; */
 	}
 
 	& > ul {
@@ -61,6 +65,5 @@ export const Navigation = styled.nav`
 		&::after {
 			content: none;
 		}
-	
 	}
 `;

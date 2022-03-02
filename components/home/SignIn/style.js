@@ -7,6 +7,9 @@ export const Wrapper = styled.section`
 	& > div:first-child {
 		position: relative;
 		background: #023047;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 		width: 100%;
 		height: 65px;
 		@media screen and (min-width: 600px) {
@@ -31,8 +34,10 @@ export const Wrapper = styled.section`
 	& form input {
 		height: 2.8em;
 		border: none;
+		padding-left: 13px;
 		width: 23em;
 		border-radius: 5px;
+		font-family: "Montserrat", sans-serif;
 		@media screen and (min-width: 600px) {
 			min-width: 35em;
 		}
@@ -43,6 +48,7 @@ export const Wrapper = styled.section`
 	}
 
 	& form {
+		position: relative;
 		border: 1px solid #b5b5b5;
 		padding: 2em;
 		border-radius: 10px;
@@ -86,6 +92,7 @@ export const Wrapper = styled.section`
 			box-shadow: inset -3px 0px 0px transparent;
 		}
 	}
+
 `;
 
 export const Google = styled.button`

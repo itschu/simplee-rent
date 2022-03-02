@@ -23,7 +23,8 @@ import { formatDate, mergeDate, get12hrs, randomId } from "../../data";
 import moment from "moment";
 import { Button } from "../account/PropSect/style";
 import Link from "next/link";
-import { useShowingsContext } from "../../context";
+import validator from "validator";
+// import { useShowingsContext } from "../../context";
 
 const isEarlierThanEndLimit = (timeValue, endLimit, lastValue) => {
 	const timeValueIsEarlier =
@@ -58,7 +59,7 @@ const addShowing = async (request) => {
 const BookShowing = ({ info, bookedShowing }) => {
 	const router = useRouter();
 	let { email, prop } = router.query;
-
+	const alreadySeledtedDates = [];
 	const [value, setValue] = useState();
 	const [selecteDate, setSelecteDate] = useState();
 	const [selecteTime, setSelecteTime] = useState();
@@ -74,7 +75,7 @@ const BookShowing = ({ info, bookedShowing }) => {
 	const [get_duration, set_get_duration] = useState(info[0]?.duration[0]);
 	const [timeToSelect, setTimeToSelect] = useState([]);
 	const [success, set_success] = useState(false);
-
+	const [errors, setErrors] = useState({ email_error: "", number_error: "" });
 	const mm = useRef(null);
 	const submit_btn = useRef(null);
 	const form_ref = useRef(null);
@@ -83,6 +84,11 @@ const BookShowing = ({ info, bookedShowing }) => {
 	const [brokenLink, setBrokenLink] = useState();
 	let finalTime = "";
 
+	bookedShowing
+		.filter((el) => el.date == formatDate(selecteDate))
+		.forEach((el) => {
+			alreadySeledtedDates.push(el.time);
+		});
 	const getSelectedTime = (e) => {
 		if (e !== "unset") {
 			if (mm.current) {
@@ -130,13 +136,56 @@ const BookShowing = ({ info, bookedShowing }) => {
 		showingDate: {
 			// color: "white",
 			borderRadius: "30px",
-			outline: " #000 solid 1px",
+			outline: "tomato solid 1px",
 		},
 		monday: {
 			color: "#ffc107",
 			backgroundColor: "#fffdee",
 		},
 	};
+
+	useEffect(() => {
+		let newError = { ...errors };
+		if (tenantDetails.email !== "") {
+			validator.isEmail(tenantDetails.email)
+				? (newError = { ...newError, email_error: "" })
+				: (newError = {
+						...newError,
+						email_error: "Please enter a valid email address",
+				  });
+			console.log(errors);
+		} else {
+			newError = { ...newError, email_error: "" };
+		}
+		if (tenantDetails.phone_number !== "") {
+			validator.isMobilePhone(tenantDetails.phone_number, [
+				"en-NG",
+				"en-CA",
+			])
+				? (newError = { ...newError, number_error: "" })
+				: (newError = {
+						...newError,
+						number_error: "Please enter a valid mobile number",
+				  });
+		} else {
+			newError = { ...newError, number_error: "" };
+		}
+		if (
+			validator.isMobilePhone(tenantDetails.phone_number, [
+				"en-NG",
+				"en-CA",
+			]) ||
+			validator.isEmail(tenantDetails.email)
+		) {
+			submit_btn.current.disabled = true;
+			submit_btn.current.classList.add("disabled");
+		} else {
+			// tenantDetails.phone_number !== "" && submit_btn.current.disabled = false;
+			tenantDetails.phone_number !== "" &&
+				submit_btn.current.classList.remove("disabled");
+		}
+		setErrors({ ...newError });
+	}, [tenantDetails.phone_number, tenantDetails.email]);
 
 	useEffect(() => {
 		if (submit_btn.current) {
@@ -172,6 +221,7 @@ const BookShowing = ({ info, bookedShowing }) => {
 				time: "",
 				propertyId: "",
 				owner: email,
+				phone_number: "",
 			});
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -266,16 +316,17 @@ const BookShowing = ({ info, bookedShowing }) => {
 									minute: "numeric",
 								})
 							);
+
 							if (!(get12hrs(timeValue) < currentTime)) {
-								!bookedShowing.includes(timeValue) &&
+								!alreadySeledtedDates.includes(timeValue) &&
 									options.push(timeValue);
 							}
 						} else {
-							!bookedShowing.includes(timeValue) &&
+							!alreadySeledtedDates.includes(timeValue) &&
 								options.push(timeValue);
 						}
 					}
-					//bookedShowing
+					//alreadySeledtedDates
 					lastValue = timeValue;
 					timeValue = moment(timeValue, "h:mmA")
 						.add(step, "minutes")
@@ -294,11 +345,11 @@ const BookShowing = ({ info, bookedShowing }) => {
 							if (
 								!(get12hrs(timeValue) < get12hrs(currentTime))
 							) {
-								!bookedShowing.includes(timeValue) &&
+								!alreadySeledtedDates.includes(timeValue) &&
 									options.push(timeValue);
 							}
 						} else {
-							!bookedShowing.includes(timeValue) &&
+							!alreadySeledtedDates.includes(timeValue) &&
 								options.push(timeValue);
 						}
 					}
@@ -353,6 +404,21 @@ const BookShowing = ({ info, bookedShowing }) => {
 							<div className="loader"></div>
 						</div>
 					)}
+					{brokenLink && (
+						<h1>
+							{`Book a ${
+								get_duration < 60
+									? `${get_duration} minutes`
+									: get_duration < 120
+									? `${get_duration / 60} hour`
+									: `${get_duration / 60} hours`
+							} showing for ${info[0].property} `}
+
+							{selecteDate == undefined
+								? "(Select a valid day)"
+								: `(${formatDate(selecteDate, true)})`}
+						</h1>
+					)}
 
 					<div className="form-body">
 						{brokenLink ? (
@@ -366,6 +432,7 @@ const BookShowing = ({ info, bookedShowing }) => {
 										<Input
 											type={"text"}
 											required={true}
+											placeholder="Your f	ull name"
 											name="name"
 											value={tenantDetails.name}
 											onChange={(e) =>
@@ -381,6 +448,7 @@ const BookShowing = ({ info, bookedShowing }) => {
 											type={"email"}
 											required={true}
 											name="email"
+											placeholder="your_email@example.com"
 											value={tenantDetails.email}
 											onChange={(e) =>
 												set_tenantDetails({
@@ -389,11 +457,16 @@ const BookShowing = ({ info, bookedShowing }) => {
 												})
 											}
 										/>
+										<span className="error-text">
+											{errors.email_error}
+										</span>
 										<br /> <br />
 										<Label>Phone Number *</Label>
 										<Input
 											type={"number"}
 											required={true}
+											placeholder="+1 XXX XX..."
+											// pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
 											name="number"
 											value={tenantDetails.phone_number}
 											onChange={(e) =>
@@ -404,6 +477,9 @@ const BookShowing = ({ info, bookedShowing }) => {
 												})
 											}
 										/>
+										<span className="error-text">
+											{errors.number_error}
+										</span>
 										{/* <br /> <br />
 										<Label>Duration</Label>
 										<Input
@@ -472,12 +548,6 @@ const BookShowing = ({ info, bookedShowing }) => {
 								</div>
 
 								<div className="date">
-									{selecteDate == undefined ? (
-										<h3>Select a valid day</h3>
-									) : (
-										<h3>{formatDate(selecteDate, true)}</h3>
-									)}
-
 									<DayPicker
 										fromMonth={today}
 										toMonth={

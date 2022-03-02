@@ -46,7 +46,9 @@ const Header = ({ userAvatar, noProfile }) => {
 						<UserPic imgSrc={userAvatar} />
 						<BurgerMenu onClick={toggleSate} alt="burger muenu" />
 						<div className="dropdown-content">
-							<a href="#">Profile</a>
+							<Link href="/account/profile" passHref>
+								<a>Profile</a>
+							</Link>
 							<a href="#" onClick={() => signOut()}>
 								Logout
 							</a>

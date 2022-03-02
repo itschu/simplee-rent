@@ -6,13 +6,13 @@ import Link from "next/link";
 import { BurgerMenu } from "../../account/Header/style";
 import { useSession } from "next-auth/react";
 
-const Nav = ({ toggle }) => {
+const Nav = ({ toggle, addPaddinfTop }) => {
 	const { data: session } = useSession();
 	return (
-		<Navigation>
+		<Navigation addPaddinfTop={addPaddinfTop}>
 			<div>
 				<Link href={"/"} passHref>
-					<a>
+					<a className="logo-img">
 						<Image src={logo} alt="Simplee Rent logo" />
 					</a>
 				</Link>
