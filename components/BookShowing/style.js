@@ -76,7 +76,7 @@ export const Wrap = styled.div`
 	& form,
 	.success {
 		background: #fff;
-		min-height: 30vh;
+		/* min-height: 30vh; */
 		border-radius: 15px;
 		padding: 1.5em;
 		display: flex;

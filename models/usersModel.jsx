@@ -18,11 +18,6 @@ const UsersSchema = new mongoose.Schema({
 		trim: true,
 	},
 
-	password: {
-		type: String,
-		trim: true,
-	},
-
 	emailVerified: {
 		type: String,
 		trim: true,

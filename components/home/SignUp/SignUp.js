@@ -39,16 +39,16 @@ const SignUp = () => {
 			return;
 		}
 
-		if (formInput.password !== formInput.re_password) {
-			setError({ msg: "passwords do not match", status: false });
-			window.scrollTo(0, 0);
-			setShowLoading(false);
-			return;
-		}
+		// if (formInput.password !== formInput.re_password) {
+		// 	setError({ msg: "passwords do not match", status: false });
+		// 	window.scrollTo(0, 0);
+		// 	setShowLoading(false);
+		// 	return;
+		// }
 
 		const details = {
 			email: seriliazeInput(formInput.email),
-			password: formInput.password,
+			// password: formInput.password,
 			name: seriliazeInput(
 				`${formInput.first_name} ${formInput.last_name}`
 			),
@@ -68,6 +68,13 @@ const SignUp = () => {
 
 			setError({ msg: get.data, status: get.success });
 			window.scrollTo(0, 0);
+			setFormInput({
+				email: "",
+				password: "",
+				re_password: "",
+				first_name: "",
+				last_name: "",
+			});
 			setShowLoading(false);
 			return;
 		} catch (error) {
@@ -147,7 +154,7 @@ const SignUp = () => {
 							}}
 						/>
 					</div>
-					<div>
+					{/* <div>
 						<label>Password</label>
 						<input
 							required
@@ -178,7 +185,7 @@ const SignUp = () => {
 							}}
 							type={"password"}
 						/>
-					</div>
+					</div> */}
 					<div>
 						<FormBtn type="submit">Sign Up</FormBtn>
 						<Google

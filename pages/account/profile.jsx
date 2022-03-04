@@ -14,7 +14,7 @@ const Dash = ({ data }) => {
 			<Head currentPage={pg} />
 			<Header userAvatar={user.image} />
 			<Navigation page={pg.toLowerCase()} />
-			<Profile page={pg} />
+			<Profile page={pg} user={user} />
 		</MenuState>
 	);
 };

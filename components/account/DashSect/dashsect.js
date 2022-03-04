@@ -31,7 +31,11 @@ const Dash = ({ page }) => {
 		})
 	);
 
-	const todayShowing = showings
+	const availableShowing = showings.filter(
+		(el) => formatDate(new Date(el.date)) >= formatDate(new Date())
+	);
+
+	const todayShowing = availableShowing
 		.filter((el) => formatDate(new Date(el.date)) == formatDate(new Date()))
 		.filter((el) => currentTime <= get12hrs(el.time));
 
@@ -50,7 +54,7 @@ const Dash = ({ page }) => {
 										: el.title == "Availability"
 										? availability.length
 										: el.title == "Showings"
-										? showings.length
+										? availableShowing.length
 										: 0}
 								</H4>
 							</div>

@@ -3,22 +3,70 @@ import { Wrapper, Google, FormBtn } from "./style";
 import { useState } from "react";
 import DropDown from "../DropDown/DropDown";
 import { signIn } from "next-auth/react";
-import { seriliazeInput } from "../../../data";
+import { seriliazeInput, runInputValidation } from "../../../data";
+import { ErrorMessage } from "../SignUp/style";
+import { ImCancelCircle } from "react-icons/im";
 
 const SignIn = () => {
 	const [isOpen, setIsOpen] = useState(false);
+	const [error, setError] = useState({ msg: "", status: true });
 	const [formInput, setFormInput] = useState({ email: "", password: "" });
+	const [showLoading, setShowLoading] = useState(false);
+
 	const toggle = () => setIsOpen(!isOpen);
 	const details = {
 		email: seriliazeInput(formInput.email),
 		password: seriliazeInput(formInput.password),
 	};
+
 	const action = async (e) => {
 		e.preventDefault();
-		signIn("credentials", {
-			username: details.email,
-			password: details.password,
+		setShowLoading(true);
+		// signIn("credentials", {
+		// 	email: details.email,
+		// 	password: details.password,
+		// 	callbackUrl: `${window.location.origin}/account`,
+		// 	redirect: false,
+		// })
+		// 	.then((error) => console.log(error))
+		// 	.catch((error) => console.log(error));
+
+		const checkMail = runInputValidation(
+			formInput.email,
+			"email",
+			"email input"
+		);
+
+		if (checkMail.error !== false) {
+			setError({ msg: checkMail.msg, status: false });
+			window.scrollTo(0, 0);
+			setShowLoading(false);
+			return;
+		}
+
+		const res = await fetch(`/api/users/${details.email}`, {
+			method: "Get",
+			headers: {
+				Accept: "application/json",
+				"Content-Type": "application/json",
+			},
 		});
+
+		const { data, success } = await res.json();
+
+		if (success == false) {
+			setError({ msg: data, status: false });
+			window.scrollTo(0, 0);
+			setShowLoading(false);
+			return;
+		}
+
+		const message = await signIn("email", {
+			email: seriliazeInput(details.email),
+			redirect: false,
+		});
+		setError({ msg: message.status, status: message.ok });
+		setShowLoading(false);
 	};
 	return (
 		<Wrapper>
@@ -30,7 +78,25 @@ const SignIn = () => {
 			<div>
 				<h2>Login</h2>
 				<form onSubmit={(e) => action(e)}>
+					{showLoading && (
+						<div className="loading-offset">
+							<div className="loader"></div>
+						</div>
+					)}
 					<div>
+						{error.msg !== "" && (
+							<ErrorMessage status={error.status}>
+								{error.status
+									? "A sign in link has been sent to your email address"
+									: error.msg}
+								<ImCancelCircle
+									onClick={() =>
+										setError({ msg: "", status: true })
+									}
+								/>
+							</ErrorMessage>
+						)}
+
 						<label>Email</label>
 						<input
 							name="email"
@@ -42,9 +108,10 @@ const SignIn = () => {
 									email: e.target.value,
 								})
 							}
+							required
 						/>
 					</div>
-					<div>
+					{/* <div>
 						<label>Password</label>
 						<input
 							name="password"
@@ -56,8 +123,9 @@ const SignIn = () => {
 									password: e.target.value,
 								})
 							}
+							required
 						/>
-					</div>
+					</div> */}
 					<div>
 						<FormBtn type="submit">Sign In</FormBtn>
 						<Google

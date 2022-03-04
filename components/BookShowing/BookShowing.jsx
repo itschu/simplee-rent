@@ -432,7 +432,7 @@ const BookShowing = ({ info, bookedShowing }) => {
 										<Input
 											type={"text"}
 											required={true}
-											placeholder="Your f	ull name"
+											placeholder="Your full name"
 											name="name"
 											value={tenantDetails.name}
 											onChange={(e) =>
