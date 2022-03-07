@@ -9,17 +9,24 @@ dbConnect();
 const showing_main_route = async (req, res) => {
 	const { method, query } = req;
 	// const key = query.authentication;
-	const userMsg = `Congratulations ${
-		req.body.name
-	}, you have successfully booked a showing with ${req.body.owner} for ${
-		req.body.time
-	} on ${formatDate(req.body.date)}. <br /> Thank you for choosing us`;
+	// console.log(req.body.email);
+	const userMsg = {
+		msg: `Congratulations ${
+			req.body.name
+		}, you have successfully booked a showing with ${req.body.owner} for ${
+			req.body.time
+		} on ${formatDate(req.body.date)}.`,
+		url: `${process.env.URL}api/users/add_to_calendar/${req.body.email}`,
+	};
 
-	const ownerMsg = `Congratulations, ${
-		req.body.name
-	} has booked a showing with you for ${req.body.time} on ${formatDate(
-		req.body.date
-	)}`;
+	const ownerMsg = {
+		msg: `Congratulations, ${
+			req.body.name
+		} has booked a showing with you for ${req.body.time} on ${formatDate(
+			req.body.date
+		)}.`,
+		url: `${process.env.URL}api/users/add_to_calendar/${req.body.owner}`,
+	};
 
 	switch (method) {
 		case "GET":
@@ -47,20 +54,22 @@ const showing_main_route = async (req, res) => {
 				});
 
 				const mailPayload = {
-					from: `"Simpleerent Support", <${process.env.EMAIL_SERVER_USER}>`,
+					// from: `"Simpleerent Support", <${process.env.EMAIL_SERVER_USER}>`,
+					from: process.env.EMAIL_FROM,
 					to: `${req.body.email}`,
 					subject: "Showing Created",
 					html: Temp(userMsg),
 				};
 
 				const OwnerMailPayload = {
-					from: '"Simpleerent Support", <chutech@gidbox.com>',
+					// from: '"Simpleerent Support", <chutech@gidbox.com>',
+					from: process.env.EMAIL_FROM,
 					to: `${req.body.owner}`,
 					subject: "Showing Created",
 					html: Temp(ownerMsg),
 				};
 
-				transporter.sendMail(mailPayload);
+				await transporter.sendMail(mailPayload);
 				transporter.sendMail(OwnerMailPayload);
 
 				const props = await showingModel.create(req.body);

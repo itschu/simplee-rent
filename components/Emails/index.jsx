@@ -1,3 +1,107 @@
+const NewEmailTemp = (message) => {
+	const escapedHost = "Simplee Rent";
+
+	return `<div style={{ background: #f9f9f9, padding: "50px 0" }}>
+    <table
+        width="100%"
+        border="0"
+        cellspacing="0" 
+        cellpadding="0"
+        style="
+            margin: auto;
+            background: #023047;
+        "
+    >
+        <tr>
+            <td
+                align="center"
+                style="
+                    padding: ${20}px;
+                    font-size: ${22}px;
+                    font-family: Helvetica, Arial, sans-serif;
+                    color: #fff;
+                "
+            >
+                <strong>${escapedHost}</strong>
+            </td>
+        </tr>
+    </table>
+    <table
+        width="100%"
+        border="0"
+        cellspacing="20"
+        cellpadding="0"
+        style="
+            background: #ffffff,
+            max-width: 600px;
+            margin: auto;
+            border-radius: 10px;
+        "
+    >
+        <tr>
+            <td
+                align="left"
+                style="
+                    padding: ${10}px ${0}px ${0}px ${0}px;
+                    font-size: ${18}px;
+                    font-family: 'Helvetica, Arial, sans-serif';
+                    color: #444444;
+                "
+            >
+                <strong>Hello there,</strong>
+            </td>
+        </tr>
+        <tr>
+            <td
+                align="left"
+                style="
+                    padding: ${10}px ${0}px ${0}px ${0}px;
+                    font-size: ${18}px;
+                    font-family: 'Helvetica, Arial, sans-serif';
+                    color: #444444;
+                "
+            >
+                ${message}
+            </td>
+        </tr>
+        <hr />
+        <br />
+        <tr>
+            <td
+                align="center"
+                style="
+                    font-size: 14px;
+                    line-height: 22px;
+                    font-family: 'Helvetica, Arial, sans-serif';
+                    color: #444444,
+                "
+            >
+                <a href="http://www.simpleerent.com">
+                    www.simpleerent.com
+                </a>,   <a href="mailto:support@simpleerent.com">
+                    support@simpleerent.com
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td
+                align="center"
+                style="
+                    font-size: 14px;
+                    line-height: 22px;
+                    font-family: 'Helvetica, Arial, sans-serif';
+                    color: #444444,
+                "
+            >
+                <a href="http://www.simpleerent.com">
+                    +1 (613) 720-2190
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>`;
+};
+
 const emailTemp = (message) => {
 	return `<!DOCTYPE html>
     <html>
@@ -173,4 +277,189 @@ const emailTemp = (message) => {
     `;
 };
 
-export default emailTemp;
+const bestEmailTemp = (message) => {
+	let addToCalendar = message.url.toLowerCase().includes("@gmail.com")
+		? `<br />
+    <a
+        href="${message.url}"
+        target="_blank"
+        style="
+            background-color: #346df1;
+            font-size: 13px;
+            font-family: 'Montserrat', Arial, sans-serif;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            border: 1px solid #346df1;
+            display: inline-block;
+            font-weight: 500;
+        "
+        >Add to calendar</a
+    >`
+		: "";
+	return `<!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="UTF-8" />
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>Document</title>
+            <style>
+            @media screen {
+
+                @font-face {
+                  font-family: 'Lato';
+                  font-style: normal;
+                  font-weight: 400;
+                  src: local('Montserrat'), local('Montserrat'), url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800&display=swap");
+                }
+
+                tr.reduce {
+                    height: 30px;
+                }
+    
+                h4, h3, p {
+                    margin: 0;
+                }
+    
+                a.no-line {
+                    text-decoration: none;
+                }
+
+                body {
+                    font-family: 'Montserrat', Arial, sans-serif;
+                }
+            }
+            </style>
+        </head>
+    
+        <body style="background: #f9f9f9; padding: 30px;">
+            <table
+                width="100%"
+                border="0"
+                cellspacing="0"
+                cellpadding="0"
+                style="
+                    background: #023047;
+                    max-width: 600px;
+                    margin: auto;
+                    color: #ffffff;
+                "
+            >
+                <tr>
+                    <td
+                        align="center"
+                        style="
+                            padding: 30px 0px;
+                            font-size: 25px;
+                            font-family: 'Montserrat', Arial, sans-serif;
+                            color: #ffffff;
+                        "
+                    >
+                        <strong>Simplee Rent</strong>
+                    </td>
+                </tr>
+            </table>
+            <table
+                width="100%"
+                border="0"
+                cellspacing="20"
+                cellpadding="0"
+                style="
+                    background: #ffffff;
+                    max-width: 600px;
+                    margin: auto;
+                    border-radius: 10px;
+                "
+            >
+                <tr class="reduce">
+                    <td
+                        align="left"
+                        style="
+                            padding: 10px 0px 0px 0px;
+                            font-size: 18px;
+                            font-family: 'Montserrat', Arial, sans-serif;
+                            color: #444444;
+                        "
+                    >
+                        <h3>Hello there,</h3>
+                    </td>
+                </tr>
+    
+                <tr class="reduce">
+                    <td
+                        align="left"
+                        style="
+                            padding: 10px 0px 0px 0px;
+                            font-size: 16px;
+                            font-family: 'Montserrat', Arial, sans-serif;
+                            color: #444444;
+                            line-height: 190%;
+                        "
+                    >
+                        <p>
+                            ${message.msg}
+                            ${addToCalendar}
+
+                            <br /> <br /> Thank you for choosing us.
+                        </p>
+                    </td>
+                </tr>
+    
+                <tr class="reduce">
+                    <td
+                        align="center"
+                        style="
+                            padding: 10px 0px 0px 0px;
+                            font-size: 18px;
+                            font-family: 'Montserrat', Arial, sans-serif;
+                            color: #444444;
+                        "
+                    >
+                        <h4>Contact Us</h4>
+                    </td>
+                </tr>
+    
+                <tr>
+                    <td
+                        align="center"
+                        style="
+                            font-size: 15px;
+                            line-height: 22px;
+                            font-family: 'Montserrat', Arial, sans-serif;
+                            color: #444444;
+                        "
+                    >
+                        <a href="http://www.simpleerent.com" class="no-line">
+                            www.simpleerent.com
+                        </a> 
+                        <a href="mailto:support@simpleerent.com" class="no-line">
+                            support@simpleerent.com
+                        </a>
+                    </td>
+                </tr>
+    
+                <tr>
+                    <td
+                        align="center"
+                        class="no-line"
+                        style="
+                            font-size: 15px;
+                            line-height: 22px;
+                            font-family: 'Montserrat', Arial, sans-serif;
+                            color: #444444;
+                        "
+                    >
+                        <a href="tel:+1(613)720-2190" class="no-line">
+                            +1 (613) 720-2190
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </body>
+    </html>
+    `;
+};
+
+export default bestEmailTemp;

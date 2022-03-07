@@ -21,6 +21,7 @@
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.0.0",
     "formidable": "^3.2.1",
+    "googleapis": "^95.0.0",
     "moment": "^2.29.1",
     "mongodb": "^4.3.1",
     "mongoose": "^6.2.1",
