@@ -176,7 +176,7 @@ const EditAvailability = ({ displayEdit, close, currentProp, session }) => {
 
 		if (value.length == 0) {
 			set_errorMsg(`Please select a date from the calendar`);
-			// set = false;
+			set = false;
 		}
 
 		if (Array.isArray(current.date)) {

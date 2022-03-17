@@ -32,7 +32,11 @@ const upload_api = async (req, res) => {
 						fs.mkdirSync(uploadFolder);
 					}
 					const oldpath = files.file[0].filepath;
-					const newpath = `${uploadFolder}/${files.file[0].originalFilename}`;
+					const newFileName = files.file[0].originalFilename.replace(
+						/\s/g,
+						"_"
+					);
+					const newpath = `${uploadFolder}/${newFileName}`;
 					fs.rename(oldpath, newpath, function (err) {
 						if (err) {
 							console.log(error);

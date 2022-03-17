@@ -11,10 +11,13 @@ const showing_dynamic_route = async (req, res) => {
 	switch (method) {
 		case "GET":
 			try {
-				const prop = await showingModel.find({ propertyId: id });
+				let prop = await showingModel.find({ propertyId: id });
+				if (prop.length == 0) {
+					prop = await showingModel.findById(id);
 
-				if (!prop) {
-					return res.status(400).json({ success: false });
+					if (!prop) {
+						return res.status(400).json({ success: false });
+					}
 				}
 				res.status(200).json({ success: true, data: prop });
 			} catch (error) {

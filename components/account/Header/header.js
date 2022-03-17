@@ -39,7 +39,7 @@ const Header = ({ userAvatar, noProfile }) => {
 				<Link href={"/"} passHref>
 					<Logo>
 						<Image src={logoImg} priority alt="SImplee Rent logo" />
-					</Logo>
+					</Logo>	
 				</Link>
 				{noProfile == undefined && (
 					<Div>
@@ -56,7 +56,7 @@ const Header = ({ userAvatar, noProfile }) => {
 					</Div>
 				)}
 			</Wrapper>
-			<Progress isAnimating={isAnimating} />
+			{/* <Progress isAnimating={isAnimating} /> */}
 		</>
 	);
 };

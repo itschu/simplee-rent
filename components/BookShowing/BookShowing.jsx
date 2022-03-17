@@ -24,6 +24,7 @@ import moment from "moment";
 import { Button } from "../account/PropSect/style";
 import Link from "next/link";
 import validator from "validator";
+import { FaMapMarkerAlt } from "react-icons/fa";
 // import { useShowingsContext } from "../../context";
 
 const isEarlierThanEndLimit = (timeValue, endLimit, lastValue) => {
@@ -47,16 +48,17 @@ const addShowing = async (request) => {
 			body: JSON.stringify(request),
 		});
 		if (res.ok) {
-			return true;
+			return { status: true, msg: "" };
 		} else {
-			return false;
+			const response = await res.json();
+			return { ...response };
 		}
 	} catch (error) {
 		return false;
 	}
 };
 
-const BookShowing = ({ info, bookedShowing }) => {
+const BookShowing = ({ info, bookedShowing, property }) => {
 	const router = useRouter();
 	let { email, prop } = router.query;
 	const alreadySeledtedDates = [];
@@ -82,6 +84,7 @@ const BookShowing = ({ info, bookedShowing }) => {
 
 	const today = new Date();
 	const [brokenLink, setBrokenLink] = useState();
+	const [deleted, setDeleted] = useState(false);
 	let finalTime = "";
 
 	bookedShowing
@@ -153,7 +156,7 @@ const BookShowing = ({ info, bookedShowing }) => {
 						...newError,
 						email_error: "Please enter a valid email address",
 				  });
-			console.log(errors);
+			// console.log(errors);
 		} else {
 			newError = { ...newError, email_error: "" };
 		}
@@ -254,10 +257,18 @@ const BookShowing = ({ info, bookedShowing }) => {
 			if (data[data.length - 1] <= currentTime) {
 				setBrokenLink(false);
 			} else {
-				setBrokenLink(info.length ? true : false);
+				if (deleted == false) {
+					setBrokenLink(info.length ? true : false);
+				} else {
+					setBrokenLink(false);
+				}
 			}
 		} else {
-			setBrokenLink(info.length ? true : false);
+			if (deleted == false) {
+				setBrokenLink(info.length ? true : false);
+			} else {
+				setBrokenLink(false);
+			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [checkAvailableDate, data, info.length]);
@@ -374,7 +385,11 @@ const BookShowing = ({ info, bookedShowing }) => {
 				setTimeToSelect(arrange);
 			}
 		} else {
-			setBrokenLink(info.length ? true : false);
+			if (deleted == false) {
+				setBrokenLink(info.length ? true : false);
+			} else {
+				setBrokenLink(false);
+			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [get_duration, selecteDate]);
@@ -386,15 +401,19 @@ const BookShowing = ({ info, bookedShowing }) => {
 		submit_btn.current.disabled = true;
 		submit_btn.current.classList.add("disabled");
 		const verdict = await addShowing(tenantDetails);
-		if (verdict) {
+		if (verdict.status) {
 			set_success(true);
 		} else {
+			if (verdict.msg == "availability deleted") {
+				setDeleted(true);
+				setBrokenLink(false);
+			}
 			setLoading(false);
 			submit_btn.current.disabled = false;
 			submit_btn.current.classList.remove("disabled");
 		}
 	};
-
+	// console.log(brokenLink);
 	return (
 		<Wrap link={brokenLink}>
 			{!success ? (
@@ -405,19 +424,32 @@ const BookShowing = ({ info, bookedShowing }) => {
 						</div>
 					)}
 					{brokenLink && (
-						<h1>
-							{`Book a ${
-								get_duration < 60
-									? `${get_duration} minutes`
-									: get_duration < 120
-									? `${get_duration / 60} hour`
-									: `${get_duration / 60} hours`
-							} showing for ${info[0].property} `}
+						<>
+							<h1>
+								{`Book a ${
+									get_duration < 60
+										? `${get_duration} minutes`
+										: get_duration < 120
+										? `${get_duration / 60} hour`
+										: `${get_duration / 60} hours`
+								} showing for ${info[0].property} `}
 
-							{selecteDate == undefined
-								? "(Select a valid day)"
-								: `(${formatDate(selecteDate, true)})`}
-						</h1>
+								{selecteDate == undefined
+									? "(Select a valid day)"
+									: `(${formatDate(selecteDate, true)})`}
+							</h1>
+							<p
+								style={{
+									display: "flex",
+									alignItems: "center",
+									marginLeft: "20px",
+									marginTop: "-10px",
+								}}
+							>
+								<FaMapMarkerAlt /> &nbsp;&nbsp;
+								{`${property[0]?.street}, ${property[0]?.city}, ${property[0]?.country}.`}
+							</p>
+						</>
 					)}
 
 					<div className="form-body">
@@ -623,7 +655,7 @@ const BookShowing = ({ info, bookedShowing }) => {
 							<>
 								<h2>This link is invalid!!</h2>
 								<p>
-									Sorry it appears that it is <b>broken</b> or
+									Sorry it appears that it is <b>broken</b> or{" "}
 									<b>expired</b> please contact <b>{email}</b>
 									.
 								</p>

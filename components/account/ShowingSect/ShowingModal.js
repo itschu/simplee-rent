@@ -146,6 +146,13 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 		const userLink = `${window.location.origin}/showings/${session.email}`;
 		const rand = randomId(availability.length);
 
+		let set = true;
+
+		if (value.length == 0) {
+			set_errorMsg(`Please select a date from the calendar`);
+			set = false;
+		}
+
 		let addItem = {
 			id: rand,
 			property: "",
@@ -164,7 +171,6 @@ const ShowingModal = ({ displayOverlay, close, allProps, session }) => {
 		addItem = { ...addItem, property: get_current_title };
 		//const oldShowings = availability.filter(el => el.unique !== addItem.unique);
 
-		let set = true;
 		time.map((el) => {
 			//add another condition to check if time is past and turn 12:00 from ''
 			if (

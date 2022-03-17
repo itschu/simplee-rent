@@ -110,6 +110,10 @@ const updateProperty = async (request, id) => {
 const Prop = ({ page, user }) => {
 	const [showOverlay, setShowOverlay] = useState(false);
 	const [showLoading, setShowLoading] = useState(false);
+	const [error, setError] = useState({
+		msg: "Please fill out all fields.",
+		status: false,
+	});
 	const { allProps, setAllProps } = usePropertiesContext();
 	const { showings, setShowings } = useShowingsContext();
 	const { availability, setAvailability } = useAvailabilityContext();
@@ -164,12 +168,14 @@ const Prop = ({ page, user }) => {
 	};
 
 	const newProp = async () => {
+		let foundError = false;
 		let rand = randomId(2);
 		let formData;
 		if (propertyState.src) {
 			formData = new FormData();
 			formData.append("file", propertyState.src, propertyState.src?.name);
-			propertyState.fileName = propertyState.src?.name;
+			const newFileName = propertyState.src?.name.replace(/\s/g, "_");
+			propertyState.fileName = newFileName;
 		} else {
 			formData = new FormData();
 		}
@@ -181,37 +187,99 @@ const Prop = ({ page, user }) => {
 			owner: user.email,
 			src: null,
 		};
-		const add_to_database = await addProperty({ data: add, fd: formData });
-		add_to_database &&
-			setAllProps([...allProps, { ...add, tempPath: imgData }]);
+
+		if (
+			add.city == "" ||
+			add.name == "" ||
+			add.street == "" ||
+			add.country == "" ||
+			add.units == ""
+		) {
+			foundError = true;
+			setError({
+				msg: "Please fill out all fields.",
+				status: true,
+			});
+		} else {
+			if (propertyState.src?.name) {
+				const fileExtension = propertyState.src?.name.split(".").pop();
+				const validImageTypes = ["gif", "jpeg", "png"];
+				foundError = !validImageTypes.includes(fileExtension);
+				foundError &&
+					setError({
+						msg: "You can only upload images",
+						status: true,
+					});
+			}
+		}
+
+		if (foundError == false) {
+			const add_to_database = await addProperty({
+				data: add,
+				fd: formData,
+			});
+			add_to_database &&
+				setAllProps([...allProps, { ...add, tempPath: imgData }]);
+		}
 	};
 
 	const editProps = async (form_obj) => {
+		let foundError = false;
 		setShowLoading(true);
 		let formData;
 		if (form_obj.src) {
 			formData = new FormData();
 			formData.append("file", form_obj.src, form_obj.src?.name);
-			form_obj.fileName = form_obj.src?.name;
+			const newFileName = form_obj.src?.name.replace(/\s/g, "_");
+			form_obj.fileName = newFileName;
 		} else {
 			formData = new FormData();
 		}
 		const newData = { ...form_obj, src: null, title: form_obj.name };
-		await updateProperty(
-			{ data: { ...newData }, fd: formData },
-			form_obj.id
-		);
-
-		const keep_old = allProps.filter((el) => {
-			if (el._id) {
-				return el._id !== form_obj.id;
-			} else {
-				return el.id !== form_obj.id;
+		if (
+			newData.city == "" ||
+			newData.name == "" ||
+			newData.street == "" ||
+			newData.country == "" ||
+			newData.units == ""
+		) {
+			foundError = true;
+			setError({
+				msg: "Please fill out all fields.",
+				status: true,
+			});
+		} else {
+			const fileExtension = form_obj.src?.name.split(".").pop();
+			if (fileExtension) {
+				const validImageTypes = ["gif", "jpeg", "png"];
+				foundError = !validImageTypes.includes(fileExtension);
+				foundError &&
+					setError({
+						msg: "You can only upload images",
+						status: true,
+					});
 			}
-		});
-		setAllProps([...keep_old, { ...newData, tempPath: imgData }]);
-		setShowLoading(false);
-		closeOverlay();
+		}
+
+		if (foundError == false) {
+			await updateProperty(
+				{ data: { ...newData }, fd: formData },
+				form_obj.id
+			);
+
+			const keep_old = allProps.filter((el) => {
+				if (el._id) {
+					return el._id !== form_obj.id;
+				} else {
+					return el.id !== form_obj.id;
+				}
+			});
+			setAllProps([...keep_old, { ...newData, tempPath: imgData }]);
+			setShowLoading(false);
+			closeOverlay();
+		} else {
+			setShowLoading(false);
+		}
 	};
 
 	const toggleOverlay = (propname = null) => {
@@ -221,6 +289,7 @@ const Prop = ({ page, user }) => {
 	const closeOverlay = () => {
 		// dispatch({ type: "changeimg", payload: "imageimg-icon.svg" });
 		setShowOverlay(!showOverlay);
+		setError(false);
 	};
 	const [propertyState, dispatch] = useReducer(reducer, initialState);
 	// console.log(propertyState);
@@ -253,6 +322,8 @@ const Prop = ({ page, user }) => {
 						add={editProps}
 						loadingState={showLoading}
 						imgData={imgData}
+						editError={setError}
+						errorstate={error}
 						setImgData={setImgData}
 					/>
 				</form>
@@ -261,6 +332,9 @@ const Prop = ({ page, user }) => {
 			<PropCardWrapper>
 				{allProps.length > 0 ? (
 					allProps.map((el, i) => {
+						console.log(
+							`/images/properties/${user.email}/${el.fileName}`
+						);
 						return (
 							<PropCards
 								key={i}

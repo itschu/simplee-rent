@@ -334,7 +334,7 @@ const bestEmailTemp = (message) => {
             </style>
         </head>
     
-        <body style="background: #f9f9f9; padding: 30px;">
+        <body style="background: #dedede; padding: 30px;">
             <table
                 width="100%"
                 border="0"

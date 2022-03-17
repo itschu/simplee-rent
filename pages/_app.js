@@ -38,7 +38,7 @@ const App = ({ Component, pageProps: { session, ...pageProps } }) => {
 	}, [router]);
 	return (
 		<>
-			{/* <Progress isAnimating={isAnimating} /> */}
+			<Progress isAnimating={isAnimating} />
 			<SessionProvider session={session}>
 				<AllShowingsContext>
 					<AvailabilityContext>
@@ -48,6 +48,10 @@ const App = ({ Component, pageProps: { session, ...pageProps } }) => {
 					</AvailabilityContext>
 				</AllShowingsContext>
 			</SessionProvider>
+			<script
+				src="https://apis.google.com/js/api.js"
+				type="text/javascript"
+			></script>
 		</>
 	);
 };

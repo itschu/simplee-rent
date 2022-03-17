@@ -9,9 +9,10 @@ import {
 	Button,
 	ImgContainer,
 } from "./style";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import bgImg from "/public/images/img.png";
 import Image from "next/image";
+import { Error } from "../ShowingSect/style";
 
 const Main = ({
 	propState,
@@ -22,6 +23,8 @@ const Main = ({
 	add,
 	loadingState,
 	imgData,
+	errorstate,
+	editError,
 	setImgData,
 }) => {
 	const imgInput = useRef();
@@ -40,6 +43,7 @@ const Main = ({
 		setImgData(null);
 		close();
 	};
+
 	return (
 		<EditWrapper>
 			{loadingState && (
@@ -49,18 +53,25 @@ const Main = ({
 			)}
 			<div>
 				<CloseBtn onClick={() => closeModal()} />
-
 				<H2>{propState.title}</H2>
-				<br />
+
+				{errorstate.status ? <Error>{errorstate.msg}</Error> : <br />}
+
 				<InputSeparator>
 					<Label>Property Title</Label>
+
 					<Input
 						type={"text"}
 						name="property name"
 						value={propState.name}
-						onChange={(e) =>
-							fn({ type: "changename", payload: e.target.value })
-						}
+						onChange={(e) => {
+							fn({ type: "changename", payload: e.target.value });
+							errorstate &&
+								editError({
+									msg: "Please fill out all fields.",
+									status: false,
+								});
+						}}
 						required={true}
 					/>
 				</InputSeparator>
@@ -71,12 +82,17 @@ const Main = ({
 						type={"text"}
 						value={propState.street}
 						name="street"
-						onChange={(e) =>
+						onChange={(e) => {
 							fn({
 								type: "changestreet",
 								payload: e.target.value,
-							})
-						}
+							});
+							errorstate &&
+								editError({
+									msg: "Please fill out all fields.",
+									status: false,
+								});
+						}}
 						required={true}
 					/>
 				</InputSeparator>
@@ -87,9 +103,14 @@ const Main = ({
 						type={"text"}
 						value={propState.city}
 						name="city"
-						onChange={(e) =>
-							fn({ type: "changecity", payload: e.target.value })
-						}
+						onChange={(e) => {
+							fn({ type: "changecity", payload: e.target.value });
+							errorstate &&
+								editError({
+									msg: "Please fill out all fields.",
+									status: false,
+								});
+						}}
 						required={true}
 					/>
 				</InputSeparator>
@@ -101,12 +122,17 @@ const Main = ({
 							type={"text"}
 							value={propState.country}
 							name="country"
-							onChange={(e) =>
+							onChange={(e) => {
 								fn({
 									type: "changecountry",
 									payload: e.target.value,
-								})
-							}
+								});
+								errorstate &&
+									editError({
+										msg: "Please fill out all fields.",
+										status: false,
+									});
+							}}
 							required={true}
 						/>
 					</div>
@@ -118,12 +144,17 @@ const Main = ({
 							min={1}
 							name="units"
 							value={propState.units}
-							onChange={(e) =>
+							onChange={(e) => {
 								fn({
 									type: "changeunits",
 									payload: e.target.value,
-								})
-							}
+								});
+								errorstate &&
+									editError({
+										msg: "Please fill out all fields.",
+										status: false,
+									});
+							}}
 							required={true}
 						/>
 					</div>
@@ -132,7 +163,11 @@ const Main = ({
 
 			<UploadContainer>
 				<ImgContainer>
-					<Image src={imgData || propImg} layout="fill"></Image>
+					<Image
+						src={imgData || propImg}
+						layout="fill"
+						alt="property image"
+					/>
 				</ImgContainer>
 				<Input
 					type={"file"}

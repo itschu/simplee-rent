@@ -66,7 +66,19 @@ const SignUp = () => {
 				.then((response) => response.json())
 				.then((data) => data);
 
+			if (
+				get.data ==
+					"Sorry this user already exists. We will send a login link to your mail" ||
+				get.data ==
+					"Congratulations, your account was created. We will send a login link to your mail"
+			) {
+				signIn("email", {
+					email: seriliazeInput(details.email),
+					redirect: false,
+				});
+			}
 			setError({ msg: get.data, status: get.success });
+
 			window.scrollTo(0, 0);
 			setFormInput({
 				email: "",
@@ -98,7 +110,9 @@ const SignUp = () => {
 					<div>
 						{error.msg !== "" && (
 							<ErrorMessage status={error.status}>
-								{error.msg}
+								<span style={{ maxWidth: "39ch" }}>
+									{error.msg}
+								</span>
 								<ImCancelCircle
 									onClick={() =>
 										setError({ msg: "", status: true })

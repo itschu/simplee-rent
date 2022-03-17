@@ -16,7 +16,7 @@ const create_user_api_route = async (req, res) => {
 				if (check.length > 0) {
 					res.status(400).json({
 						success: false,
-						data: "Sorry this user already exists, please sign in",
+						data: "Sorry this user already exists. We will send a login link to your mail",
 					});
 					return;
 				}
@@ -28,7 +28,7 @@ const create_user_api_route = async (req, res) => {
 				});
 				return res.status(200).json({
 					success: true,
-					data: "Congratulations, your account was created, please sign in",
+					data: "Congratulations, your account was created. We will send a login link to your mail",
 					user: props,
 				});
 			} catch (error) {
