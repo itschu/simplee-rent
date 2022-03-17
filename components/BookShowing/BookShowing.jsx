@@ -188,13 +188,14 @@ const BookShowing = ({ info, bookedShowing, property }) => {
 				submit_btn.current.classList.remove("disabled");
 		}
 		setErrors({ ...newError });
-	}, [tenantDetails.phone_number, tenantDetails.email]);
+	}, [tenantDetails.phone_number, tenantDetails.email, errors]);
 
 	useEffect(() => {
 		if (submit_btn.current) {
 			if (
 				tenantDetails.name !== "" &&
 				tenantDetails.email !== "" &&
+				tenantDetails.phone_number !== "" &&
 				get_duration !== "" &&
 				selecteDate !== undefined &&
 				selecteDate !== "" &&
@@ -409,8 +410,9 @@ const BookShowing = ({ info, bookedShowing, property }) => {
 				setBrokenLink(false);
 			}
 			setLoading(false);
-			submit_btn.current.disabled = false;
-			submit_btn.current.classList.remove("disabled");
+			if (submit_btn?.current?.disabled)
+				submit_btn.current.disabled = false;
+			submit_btn?.current?.classList?.remove("disabled");
 		}
 	};
 	// console.log(brokenLink);

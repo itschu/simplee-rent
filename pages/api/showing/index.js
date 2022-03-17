@@ -17,7 +17,7 @@ const showing_main_route = async (req, res) => {
 				const props = await showingModel.find({});
 				res.status(200).json({ success: true, data: props });
 			} catch (error) {
-				res.status(400).json({ success: false });
+				res.status(400).json({ success: false, data: [] });
 			}
 			break;
 		case "POST":
@@ -55,7 +55,7 @@ const showing_main_route = async (req, res) => {
 
 				const newShowing = await showingModel.create(req.body);
 				if (!newShowing) {
-					return res.status(400).json({ success: false });
+					return res.status(400).json({ success: false, data: [] });
 				}
 
 				const userMsg = {
@@ -98,7 +98,7 @@ const showing_main_route = async (req, res) => {
 				res.status(200).json({ success: true });
 			} catch (error) {
 				console.log(error);
-				res.status(400).json({ success: false });
+				res.status(400).json({ success: false, data: [] });
 			}
 	}
 };

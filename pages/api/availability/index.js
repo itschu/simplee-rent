@@ -12,7 +12,7 @@ const availability_api = async (req, res) => {
 				const props = await availabilityModel.find({});
 				res.status(200).json({ success: true, data: props });
 			} catch (error) {
-				res.status(400).json({ success: false });
+				res.status(400).json({ success: false, data: [] });
 			}
 			break;
 		case "POST":
@@ -22,7 +22,7 @@ const availability_api = async (req, res) => {
 				res.status(200).json({ success: true, data: { ...props } });
 			} catch (error) {
 				// console.log(error);
-				res.status(400).json({ success: false });
+				res.status(400).json({ success: false, data: [] });
 			}
 	}
 };

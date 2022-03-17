@@ -23,18 +23,18 @@ const App = ({ info, showingInfo, property }) => {
 	const [eventAdded, setEventAdded] = useState(false);
 
 	const dureationNote =
-		info[0].duration < 60
-			? `${info[0].duration} minutes`
-			: info[0].duration < 120
-			? `${info[0].duration / 60} hour`
-			: `${info[0].duration / 60} hours`;
+		info[0]?.duration < 60
+			? `${info[0]?.duration} minutes`
+			: info[0]?.duration < 120
+			? `${info[0]?.duration / 60} hour`
+			: `${info[0]?.duration / 60} hours`;
 
 	const oldDateObj = new Date(
 		`${formatDate(showingInfo[0]?.date)} ${get12hrs(showingInfo[0]?.time)}`
 	);
 	const eventData = {
-		summary: `A showing by ${info[0].owner} for ${info[0].property}`,
-		description: `A ${dureationNote} showing organized by ${info[0].owner} for the property ${info[0].property}`,
+		summary: `A showing by ${info[0]?.owner} for ${info[0]?.property}`,
+		description: `A ${dureationNote} showing organized by ${info[0]?.owner} for the property ${info[0]?.property}`,
 		location: `${property[0]?.street} ${property[0]?.city}  ${property[0]?.country} `,
 		colorId: "7",
 		start: {
@@ -45,7 +45,7 @@ const App = ({ info, showingInfo, property }) => {
 			),
 		},
 		end: {
-			dateTime: moment(oldDateObj).add(info[0].duration, "m").toDate(),
+			dateTime: moment(oldDateObj).add(info[0]?.duration, "m").toDate(),
 		},
 	};
 
@@ -131,7 +131,7 @@ const App = ({ info, showingInfo, property }) => {
 									<div>
 										<p>
 											<b>Property Title</b> :&nbsp;
-											{info[0].property}
+											{info[0]?.property}
 										</p>
 										<p>
 											<b>Date</b> :{" "}

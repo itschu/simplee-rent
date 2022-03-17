@@ -48,7 +48,7 @@ export const getServerSideProps = async (context) => {
 	const { data } = await res.json();
 	const showing_data = await showing_res.json();
 
-	const thisAvailability = data.filter((el) => el.id == context.query.id);	
+	const thisAvailability = data.filter((el) => el.id == context.query.id);
 
 	const prop = await fetch(`${process.env.URL}api/properties/`, {
 		method: "Get",
@@ -58,12 +58,12 @@ export const getServerSideProps = async (context) => {
 		},
 	});
 	const thisProp = await prop.json();
-	// console.log(context.query.showingId);
+	// console.log(showing_data);
 
 	const thisProp_addr = thisProp.data.filter(
 		(el) =>
 			el.owner == context.query.owner &&
-			el.unique == thisAvailability[0].unique
+			el.unique == thisAvailability[0]?.unique
 	);
 
 	return {

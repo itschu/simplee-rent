@@ -13,12 +13,12 @@ const dynamic_route = async (req, res) => {
 			try {
 				const prop = await availabilityModel.findById(id);
 				if (!prop) {
-					return res.status(400).json({ success: false });
+					return res.status(400).json({ success: false, data: [] });
 				}
 				res.status(200).json({ success: true, data: prop });
 			} catch (error) {
 				// console.log(error);
-				res.status(400).json({ success: false });
+				res.status(400).json({ success: false, data: [] });
 			}
 			break;
 		case "PUT":
@@ -46,13 +46,13 @@ const dynamic_route = async (req, res) => {
 				}
 
 				if (!prop) {
-					return res.status(400).json({ success: false });
+					return res.status(400).json({ success: false, data: [] });
 				}
 				// console.log(prop);
 				res.status(200).json({ success: true, data: prop });
 			} catch (error) {
 				// console.log(error);
-				res.status(400).json({ success: false });
+				res.status(400).json({ success: false, data: [] });
 			}
 			break;
 		case "DELETE":
@@ -63,17 +63,17 @@ const dynamic_route = async (req, res) => {
 					});
 
 				if (!deletedavailabilityModel) {
-					return res.status(400).json({ success: false });
+					return res.status(400).json({ success: false, data: [] });
 				}
 
 				res.status(200).json({ success: true, data: {} });
 			} catch (error) {
 				// console.log(error);
-				res.status(400).json({ success: false });
+				res.status(400).json({ success: false, data: [] });
 			}
 			break;
 		default:
-			res.status(400).json({ success: false });
+			res.status(400).json({ success: false, data: [] });
 			break;
 	}
 };

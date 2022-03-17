@@ -12,6 +12,7 @@ import {
 } from "../context";
 import { SessionProvider } from "next-auth/react";
 import "../styles/calendar.css";
+import Script from "next/script";
 
 const App = ({ Component, pageProps: { session, ...pageProps } }) => {
 	const setIsAnimating = useProgressStore((state) => state.setIsAnimating);
@@ -48,10 +49,10 @@ const App = ({ Component, pageProps: { session, ...pageProps } }) => {
 					</AvailabilityContext>
 				</AllShowingsContext>
 			</SessionProvider>
-			<script
+			{/* <script
 				src="https://apis.google.com/js/api.js"
 				type="text/javascript"
-			></script>
+			></script> */}
 		</>
 	);
 };

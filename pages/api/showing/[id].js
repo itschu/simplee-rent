@@ -16,12 +16,14 @@ const showing_dynamic_route = async (req, res) => {
 					prop = await showingModel.findById(id);
 
 					if (!prop) {
-						return res.status(400).json({ success: false });
+						return res
+							.status(400)
+							.json({ success: false, data: [] });
 					}
 				}
 				res.status(200).json({ success: true, data: prop });
 			} catch (error) {
-				res.status(400).json({ success: false });
+				res.status(400).json({ success: false, data: [] });
 			}
 			break;
 		case "PUT":
@@ -35,12 +37,12 @@ const showing_dynamic_route = async (req, res) => {
 					}
 				);
 				if (!prop) {
-					return res.status(400).json({ success: false });
+					return res.status(400).json({ success: false, data: [] });
 				}
 				res.status(200).json({ success: true, data: prop });
 			} catch (error) {
 				// console.log(error);
-				res.status(400).json({ success: false });
+				res.status(400).json({ success: false, data: [] });
 			}
 			break;
 		case "DELETE":
@@ -56,11 +58,11 @@ const showing_dynamic_route = async (req, res) => {
 				res.status(200).json({ success: true, data: {} });
 			} catch (error) {
 				// console.log(error);
-				res.status(400).json({ success: false });
+				res.status(400).json({ success: false, data: [] });
 			}
 			break;
 		default:
-			res.status(400).json({ success: false });
+			res.status(400).json({ success: false, data: [] });
 			break;
 	}
 };

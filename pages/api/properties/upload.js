@@ -41,7 +41,7 @@ const upload_api = async (req, res) => {
 						if (err) {
 							console.log(error);
 							throw err;
-							return res.status(400).json({ success: false });
+							return res.status(400).json({ success: false, data: [] });
 						}
 					});
 				});
@@ -51,7 +51,7 @@ const upload_api = async (req, res) => {
 			}
 			break;
 		default:
-			return res.status(400).json({ success: false });
+			return res.status(400).json({ success: false, data: [] });
 	}
 };
 

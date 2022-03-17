@@ -39,7 +39,7 @@ const showing_dynamic_route = async (req, res) => {
 			}
 			break;
 		default:
-			res.status(400).json({ success: false });
+			res.status(400).json({ success: false, data: [] });
 			break;
 	}
 };

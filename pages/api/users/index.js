@@ -33,7 +33,7 @@ const create_user_api_route = async (req, res) => {
 				});
 			} catch (error) {
 				console.log(error);
-				res.status(400).json({ success: false });
+				res.status(400).json({ success: false, data: [] });
 			}
 		default:
 			res.status(500).json({ message: "Route not valid" });
