@@ -1,10 +1,11 @@
 import { Navigation } from "./style";
 import Image from "next/image";
-import logo from "../../../public/images/logo-icon.png";
+import logo from "../../../public/images/logo.png";
 import Button from "../Button/";
 import Link from "next/link";
 import { BurgerMenu } from "../../account/Header/style";
 import { useSession } from "next-auth/react";
+import { Logo } from "../../account/Header/style";
 
 const Nav = ({ toggle, addPaddinfTop }) => {
 	const { data: session } = useSession();
@@ -12,9 +13,9 @@ const Nav = ({ toggle, addPaddinfTop }) => {
 		<Navigation addPaddinfTop={addPaddinfTop}>
 			<div>
 				<Link href={"/"} passHref>
-					<a className="logo-img">
+					<Logo className="logo-img">
 						<Image src={logo} alt="Simplee Rent logo" />
-					</a>
+					</Logo>
 				</Link>
 			</div>
 			<ul>
