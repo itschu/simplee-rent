@@ -31,11 +31,14 @@ const Main = ({
 	// const [imgData, setImgData] = useState(null);
 	const displayImg = (e) => {
 		const reader = new FileReader();
-		reader.addEventListener("load", () => {
-			setImgData(reader.result);
-		});
+		e.target.files[0]
+			? reader.addEventListener("load", () => {
+					setImgData(reader.result);
+			  })
+			: setImgData("");
 		e.target.files[0] && reader?.readAsDataURL(e.target.files[0]);
 	};
+
 	const propImg = propState.fileName ? `${img}/${propState.fileName}` : bgImg;
 
 	const closeModal = () => {

@@ -188,7 +188,7 @@ const BookShowing = ({ info, bookedShowing, property }) => {
 				submit_btn.current.classList.remove("disabled");
 		}
 		setErrors({ ...newError });
-	}, [tenantDetails.phone_number, tenantDetails.email, errors]);
+	}, [tenantDetails.phone_number, tenantDetails.email]);
 
 	useEffect(() => {
 		if (submit_btn.current) {
@@ -449,7 +449,13 @@ const BookShowing = ({ info, bookedShowing, property }) => {
 								}}
 							>
 								<FaMapMarkerAlt /> &nbsp;&nbsp;
-								{`${property[0]?.street}, ${property[0]?.city}, ${property[0]?.country}.`}
+								{`${property[0]?.street}, ${
+									property[0]?.city
+								}, ${property[0]?.country}. [ ${
+									property[0]?.units
+								} ${
+									property[0]?.units > 1 ? "units" : "unit"
+								} available ]`}
 							</p>
 						</>
 					)}

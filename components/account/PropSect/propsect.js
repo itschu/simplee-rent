@@ -203,8 +203,9 @@ const Prop = ({ page, user }) => {
 		} else {
 			if (propertyState.src?.name) {
 				const fileExtension = propertyState.src?.name.split(".").pop();
-				const validImageTypes = ["gif", "jpeg", "png"];
+				const validImageTypes = ["gif", "jpeg", "png", "jpg", "tiff"];
 				foundError = !validImageTypes.includes(fileExtension);
+
 				foundError &&
 					setError({
 						msg: "You can only upload images",
@@ -251,8 +252,9 @@ const Prop = ({ page, user }) => {
 		} else {
 			const fileExtension = form_obj.src?.name.split(".").pop();
 			if (fileExtension) {
-				const validImageTypes = ["gif", "jpeg", "png"];
+				const validImageTypes = ["gif", "jpeg", "png", "jpg", "tiff"];
 				foundError = !validImageTypes.includes(fileExtension);
+
 				foundError &&
 					setError({
 						msg: "You can only upload images",
@@ -332,9 +334,6 @@ const Prop = ({ page, user }) => {
 			<PropCardWrapper>
 				{allProps.length > 0 ? (
 					allProps.map((el, i) => {
-						console.log(
-							`/images/properties/${user.email}/${el.fileName}`
-						);
 						return (
 							<PropCards
 								key={i}

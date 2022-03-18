@@ -13,7 +13,7 @@ const Nav = ({ toggle, addPaddinfTop }) => {
 		<Navigation addPaddinfTop={addPaddinfTop}>
 			<div>
 				<Link href={"/"} passHref>
-					<Logo className="logo-img">
+					<Logo>
 						<Image src={logo} alt="Simplee Rent logo" />
 					</Logo>
 				</Link>

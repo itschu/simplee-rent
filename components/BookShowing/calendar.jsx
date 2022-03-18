@@ -173,10 +173,12 @@ const App = ({ info, showingInfo, property }) => {
 							<>
 								<h2>This link is invalid!!</h2>
 								<p>
-									Sorry it appears that <b>{owner}</b> has
-									deleted this availability or it has &nbsp;
-									<b>expired</b> please contact <b>{owner}</b>
-									.
+									Sorry it appears that{" "}
+									{(owner && <b>{owner} </b>) || "the owner "}
+									has <b>deleted</b> this availability or it
+									has &nbsp;
+									<b>expired</b> please contact{" "}
+									{(owner && <b>{owner}</b>) || "the owner"}.
 								</p>
 							</>
 						)}
