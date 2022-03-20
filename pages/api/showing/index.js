@@ -2,7 +2,7 @@ import dbConnect from "../../../config/db";
 import showingModel from "../../../models/showingModel";
 import nodeMailer from "nodemailer";
 import Temp from "../../../components/Emails";
-import { formatDate } from "../../../data";
+import { formatDate, seriliazeInput } from "../../../data";
 
 dbConnect();
 
@@ -53,7 +53,12 @@ const showing_main_route = async (req, res) => {
 						.json({ success: false, msg: "availability deleted" });
 				}
 
-				const newShowing = await showingModel.create(req.body);
+				const newShowing = await showingModel.create({
+					...req.body,
+					name: seriliazeInput(req.body.name),
+					email: seriliazeInput(req.body.email),
+					phone_number: seriliazeInput(req.body.phone_number),
+				});
 				if (!newShowing) {
 					return res.status(400).json({ success: false, data: [] });
 				}
@@ -73,7 +78,7 @@ const showing_main_route = async (req, res) => {
 					} has booked a showing with you for ${
 						req.body.time
 					} on ${formatDate(req.body.date)}.`,
-					url: `${process.env.URL}showings/calendar/${req.body.owner}?&id=${req.body.propertyId}&showingId=${newShowing?._id}}&owner=${req.body.owner}`,
+					url: `${process.env.URL}showings/calendar/${req.body.owner}?&id=${req.body.propertyId}&showingId=${newShowing?._id}&owner=${req.body.owner}`,
 				};
 
 				const mailPayload = {

@@ -1,11 +1,12 @@
 import GoogleLogin from "react-google-login";
 import axios from "axios";
 import { Wrap } from "./style";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import success_img from "../../public/images/checked.png";
 import error_img from "../../public/images/error.png";
 import { formatDate, get12hrs, dateInPast } from "../../data";
+import { FaMapMarkerAlt } from "react-icons/fa";
 import moment from "moment";
 import Link from "next/link";
 import { Button } from "../account/PropSect/style";
@@ -71,6 +72,12 @@ const App = ({ info, showingInfo, property }) => {
 		console.log(err);
 	};
 
+	useEffect(() => {
+		if (!owner) {
+			setBrokenLink(true);
+		}
+	}, []);
+
 	return (
 		<Wrap>
 			<form>
@@ -121,11 +128,13 @@ const App = ({ info, showingInfo, property }) => {
 										lineHeight: "170%",
 									}}
 								>
-									You have successfully booked a showing with
-									&nbsp;
-									{owner} for the property below, please click
-									on the button below to authorize us to add
-									this event to your calendar.
+									{email !== owner
+										? `You have successfully booked a showing with 
+										${owner} `
+										: `A showing was booked with you `}
+									for the property below, please click on the
+									button below to authorize us to add this
+									event to your calendar.
 								</p>
 								<div className="calendar-bnt-div">
 									<div>
@@ -149,6 +158,15 @@ const App = ({ info, showingInfo, property }) => {
 									</p> */}
 										<p>
 											<b>Owner</b> : {owner}
+										</p>
+										<p
+											style={{
+												display: "flex",
+												alignItems: "center",
+											}}
+										>
+											<FaMapMarkerAlt /> &nbsp;&nbsp;
+											{`${property[0]?.street}, ${property[0]?.city}, ${property[0]?.country}.`}
 										</p>
 									</div>
 									<GoogleLogin

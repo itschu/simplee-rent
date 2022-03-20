@@ -15,6 +15,7 @@ const add_to_calendar_route = async (req, res) => {
 	switch (method) {
 		case "POST":
 			try {
+
 				const { code, eventData } = req.body;
 				const evr = await oAuth2Client.getToken(code);
 				const { tokens } = evr;
@@ -52,6 +53,8 @@ const add_to_calendar_route = async (req, res) => {
 					}
 					refresh_token = details[0].ref_token;
 				}
+
+				
 
 				oAuth2Client.setCredentials({ refresh_token });
 				const calendar = google.calendar("v3");

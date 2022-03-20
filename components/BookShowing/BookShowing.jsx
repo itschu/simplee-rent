@@ -19,12 +19,19 @@ import DayPicker from "react-day-picker";
 import arrow from "../../public/images/arrow.png";
 import success_img from "../../public/images/checked.png";
 import Image from "next/image";
-import { formatDate, mergeDate, get12hrs, randomId } from "../../data";
+import {
+	formatDate,
+	mergeDate,
+	get12hrs,
+	randomId,
+	seriliazeInput,
+} from "../../data";
 import moment from "moment";
 import { Button } from "../account/PropSect/style";
 import Link from "next/link";
 import validator from "validator";
 import { FaMapMarkerAlt } from "react-icons/fa";
+import { Error, CloseError } from "../account/ShowingSect/style";
 // import { useShowingsContext } from "../../context";
 
 const isEarlierThanEndLimit = (timeValue, endLimit, lastValue) => {
@@ -66,6 +73,7 @@ const BookShowing = ({ info, bookedShowing, property }) => {
 	const [selecteDate, setSelecteDate] = useState();
 	const [selecteTime, setSelecteTime] = useState();
 	const [loading, setLoading] = useState();
+	const [showError, setShowError] = useState(false);
 	const [tenantDetails, set_tenantDetails] = useState({
 		name: "",
 		email: "",
@@ -139,7 +147,8 @@ const BookShowing = ({ info, bookedShowing, property }) => {
 		showingDate: {
 			// color: "white",
 			borderRadius: "30px",
-			outline: "tomato solid 1px",
+			outline: "#7070ff solid 1px",
+			// backgroundColor: "#d0d0f6",
 		},
 		monday: {
 			color: "#ffc107",
@@ -398,16 +407,23 @@ const BookShowing = ({ info, bookedShowing, property }) => {
 	const submitShowing = async (e) => {
 		e.preventDefault();
 		setLoading(true);
-		//run validation on input
+
 		submit_btn.current.disabled = true;
 		submit_btn.current.classList.add("disabled");
-		const verdict = await addShowing(tenantDetails);
+		const verdict = await addShowing({
+			...tenantDetails,
+			name: seriliazeInput(tenantDetails.name),
+		});
+
 		if (verdict.status) {
 			set_success(true);
 		} else {
 			if (verdict.msg == "availability deleted") {
 				setDeleted(true);
 				setBrokenLink(false);
+			} else {
+				window.scrollTo(0, 0);
+				setShowError(true);
 			}
 			setLoading(false);
 			if (submit_btn?.current?.disabled)
@@ -427,6 +443,19 @@ const BookShowing = ({ info, bookedShowing, property }) => {
 					)}
 					{brokenLink && (
 						<>
+							{showError && (
+								<>
+									{" "}
+									<Error style={{ fontSize: "15px" }}>
+										Sorry an error occurred please try again
+										later.
+										<CloseError
+											onClick={() => setShowError(false)}
+										/>
+									</Error>
+									<br />
+								</>
+							)}
 							<h1>
 								{`Book a ${
 									get_duration < 60
