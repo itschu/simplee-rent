@@ -39,11 +39,12 @@ const Header = ({ userAvatar, noProfile }) => {
 				<Link href={"/"} passHref>
 					<Logo>
 						<Image src={logoImg} priority alt="SImplee Rent logo" />
-					</Logo>	
+					</Logo>
 				</Link>
 				{noProfile == undefined && (
 					<Div>
 						<UserPic imgSrc={userAvatar} />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<BurgerMenu onClick={toggleSate} alt="burger muenu" />
 						<div className="dropdown-content">
 							<Link href="/account/profile" passHref>

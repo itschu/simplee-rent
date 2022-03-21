@@ -39,7 +39,7 @@ export const BurgerMenu = styled(GoThreeBars)`
 	font-size: 2em;
 	display: inline-block;
 	font-weight: bold;
-	margin-left: 0.8em;
+	/* margin-left: 0.8em; */
 	@media screen and (min-width: 600px) {
 		display: none;
 	}
@@ -56,7 +56,8 @@ export const Logo = styled.div`
 `;
 
 export const Div = styled.div`
-	/* display: flex; */
+	display: flex;
+	align-items: center;
 	overflow: hidden;
 
 	.dropdown-content {

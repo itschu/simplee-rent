@@ -18,7 +18,20 @@ const App = ({ info, showingInfo, property }) => {
 	const [brokenLink, setBrokenLink] = useState(
 		dateInPast(new Date(showingInfo[0]?.date), new Date(), true)
 	);
-	// console.log(showingInfo);
+	const [ownerName, setOwnerName] = useState("");
+
+	fetch(`${process.env.NEXT_PUBLIC_URL}api/users/${owner}`, {
+		method: "POST",
+		headers: {
+			Accept: "application/json",
+			"Content-Type": "application/json",
+		},
+	})
+		.then((resp) => resp.json())
+		.then((res) => {
+			setOwnerName(res.data[0].name);
+		});
+
 	const [loading, setLoading] = useState();
 	const [eventStatus, setEventStatus] = useState(false);
 	const [eventAdded, setEventAdded] = useState(false);
@@ -130,7 +143,7 @@ const App = ({ info, showingInfo, property }) => {
 								>
 									{email !== owner
 										? `You have successfully booked a showing with 
-										${owner} `
+										${ownerName} `
 										: `A showing was booked with you `}
 									for the property below, please click on the
 									button below to authorize us to add this
@@ -157,7 +170,7 @@ const App = ({ info, showingInfo, property }) => {
 										<b>Address</b> :
 									</p> */}
 										<p>
-											<b>Owner</b> : {owner}
+											<b>Owner</b> : {ownerName}
 										</p>
 										<p
 											style={{
@@ -192,11 +205,14 @@ const App = ({ info, showingInfo, property }) => {
 								<h2>This link is invalid!!</h2>
 								<p>
 									Sorry it appears that{" "}
-									{(owner && <b>{owner} </b>) || "the owner "}
+									{(owner && <b>{ownerName} </b>) ||
+										"the owner "}
 									has <b>deleted</b> this availability or it
 									has &nbsp;
 									<b>expired</b> please contact{" "}
-									{(owner && <b>{owner}</b>) || "the owner"}.
+									{(owner && <b>{ownerName}</b>) ||
+										"the owner"}
+									.
 								</p>
 							</>
 						)}

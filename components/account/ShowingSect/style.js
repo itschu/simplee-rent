@@ -202,7 +202,7 @@ export const Separate = styled.span`
 `;
 
 export const Error = styled.div`
-	background: #cf0000;
+	background: tomato;
 	text-align: center;
 	padding: 10px 10px;
 	font-size: 11px;
@@ -211,6 +211,7 @@ export const Error = styled.div`
 	color: #fff;
 	display: flex;
 	justify-content: center;
+	align-items: center;
 	transition: 0.9s;
 `;
 

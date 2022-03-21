@@ -68,6 +68,7 @@ const addShowing = async (request) => {
 const BookShowing = ({ info, bookedShowing, property }) => {
 	const router = useRouter();
 	let { email, prop } = router.query;
+
 	const alreadySeledtedDates = [];
 	const [value, setValue] = useState();
 	const [selecteDate, setSelecteDate] = useState();
@@ -93,6 +94,20 @@ const BookShowing = ({ info, bookedShowing, property }) => {
 	const today = new Date();
 	const [brokenLink, setBrokenLink] = useState();
 	const [deleted, setDeleted] = useState(false);
+	const [ownerName, setOwnerName] = useState("");
+
+	fetch(`${process.env.NEXT_PUBLIC_URL}api/users/${owner}`, {
+		method: "POST",
+		headers: {
+			Accept: "application/json",
+			"Content-Type": "application/json",
+		},
+	})
+		.then((resp) => resp.json())
+		.then((res) => {
+			setOwnerName(res.data[0].name);
+		});
+
 	let finalTime = "";
 
 	bookedShowing
@@ -478,13 +493,7 @@ const BookShowing = ({ info, bookedShowing, property }) => {
 								}}
 							>
 								<FaMapMarkerAlt /> &nbsp;&nbsp;
-								{`${property[0]?.street}, ${
-									property[0]?.city
-								}, ${property[0]?.country}. [ ${
-									property[0]?.units
-								} ${
-									property[0]?.units > 1 ? "units" : "unit"
-								} available ]`}
+								{`${property[0]?.street}, ${property[0]?.city}, ${property[0]?.country}. [ ${property[0]?.units} available ]`}
 							</p>
 						</>
 					)}
@@ -693,8 +702,8 @@ const BookShowing = ({ info, bookedShowing, property }) => {
 								<h2>This link is invalid!!</h2>
 								<p>
 									Sorry it appears that it is <b>broken</b> or{" "}
-									<b>expired</b> please contact <b>{email}</b>
-									.
+									<b>expired</b> please contact{" "}
+									<b>{ownerName}</b>.
 								</p>
 							</>
 						)}
@@ -720,7 +729,8 @@ const BookShowing = ({ info, bookedShowing, property }) => {
 					<h3>Congratulations</h3>
 					<p id="para">
 						You have successfully booked a showing with &nbsp;
-						<b>{email}</b> on <b>{formatDate(selecteDate, true)}</b>
+						<b>{ownerName}</b> on{" "}
+						<b>{formatDate(selecteDate, true)}</b>
 						&nbsp; for <b>{tenantDetails.time}</b>
 					</p>
 					<Link href={"/"} passHref>

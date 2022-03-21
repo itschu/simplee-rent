@@ -11,4 +11,8 @@ export const ErrorMessage = styled.div`
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+
+	& > span {
+		max-width: 35ch;
+	}
 `;

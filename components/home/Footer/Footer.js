@@ -45,14 +45,19 @@ const Footer = () => {
 							<Img width={"1.2em"}>
 								<Image src={phone} alt="phone icon" />
 							</Img>
-							<a href="tel:+1(613)720-2190">+1 (613) 720-2190</a>
+							<a href={`tel:${process.env.NEXT_PUBLIC_PHONE}`}>
+								&nbsp;
+								{process.env.NEXT_PUBLIC_PHONE}
+							</a>
 						</li>
 						<li>
 							<Img width={"1.2em"}>
 								<Image src={mail} alt="email icon" />
 							</Img>
-							<a href="mailto:info@simpleerent.com">
-								info@simpleerent.com
+							<a
+								href={`mailto:info@${process.env.NEXT_PUBLIC_DOMAIN}`}
+							>
+								info@{process.env.NEXT_PUBLIC_DOMAIN}
 							</a>
 						</li>
 					</ul>
@@ -70,8 +75,8 @@ const Footer = () => {
 				</div>
 			</div>
 			<span>
-				&copy; simpleerent.com {year.getUTCFullYear()} | All rights
-				reserved.
+				&copy; {process.env.NEXT_PUBLIC_DOMAIN} {year.getUTCFullYear()}{" "}
+				| All rights reserved.
 			</span>
 		</Wrapper>
 	);

@@ -141,7 +141,7 @@ const Main = ({
 					</div>
 
 					<div>
-						<Label>Nuber of Units</Label>
+						<Label>Number of Units</Label>
 						<Input
 							type={"number"}
 							min={1}

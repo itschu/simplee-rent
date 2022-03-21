@@ -1,6 +1,5 @@
 import dbConnect from "../../../config/db";
 import usersModel from "../../../models/usersModel";
-import { hash } from "bcryptjs";
 import { seriliazeInput } from "../../../data";
 
 dbConnect();
@@ -33,6 +32,28 @@ const create_user_api_route = async (req, res) => {
 				});
 			} catch (error) {
 				console.log(error);
+				res.status(400).json({ success: false, data: [] });
+			}
+			break;
+		case "PUT":
+			try {
+				const prop = await usersModel.findByIdAndUpdate(
+					req.body.id,
+					{
+						name: seriliazeInput(req.body.name),
+						image: req.body.image,
+					},
+					{
+						new: true,
+						runValidators: true,
+					}
+				);
+				if (!prop) {
+					return res.status(400).json({ success: false, data: [] });
+				}
+				return res.status(200).json({ success: true, data: prop });
+			} catch (error) {
+				// console.log(error);
 				res.status(400).json({ success: false, data: [] });
 			}
 		default:

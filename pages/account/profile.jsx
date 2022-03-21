@@ -5,8 +5,8 @@ import Profile from "../../components/account/Profile";
 import { MenuState } from "../../context";
 import { getSession } from "next-auth/react";
 
-const Dash = ({ data }) => {
-	const { user } = data;
+const UserProfile = ({ data }) => {
+	const [user] = data;
 	const pg = "My Profile";
 
 	return (
@@ -29,11 +29,23 @@ export const getServerSideProps = async (context) => {
 			},
 		};
 	}
+	const res = await fetch(
+		`${process.env.URL}api/users/${session.user.email}`,
+		{
+			method: "POST",
+			headers: {
+				Accept: "application/json",
+				"Content-Type": "application/json",
+			},
+		}
+	);
+	const { data } = await res.json();
+
 	return {
 		props: {
-			data: session,
+			data,
 		},
 	};
 };
 
-export default Dash;
+export default UserProfile;

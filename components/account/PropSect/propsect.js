@@ -339,7 +339,7 @@ const Prop = ({ page, user }) => {
 								key={i}
 								bgImg={
 									el.tempPath ||
-									`/images/properties/${user.email}/${el.fileName}`
+									`${process.env.NEXT_PUBLIC_URL}images/properties/${user.email}/${el.fileName}`
 								}
 								onClick={() => setDetails(el, el.title)}
 							>

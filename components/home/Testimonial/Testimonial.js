@@ -24,7 +24,7 @@ const Testimonial = () => {
 					<UserImg bg_img={"testimony3.jpg"} />
 					<p>
 						Saved me a lot of back and forth with landlords. I was
-						able to just chose the time that worked for.
+						able to just choose the time that worked for me.
 					</p>
 					<span>
 						<b>James</b>
@@ -36,7 +36,7 @@ const Testimonial = () => {
 					<p>
 						Simplee Rent saved me a lot of time, I dont need to jump
 						through multiple platforms to see what time works for
-						which viewers.
+						which potential tenant.
 					</p>
 					<span>
 						<b>Pascal</b>

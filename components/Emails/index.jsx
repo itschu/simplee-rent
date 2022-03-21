@@ -431,11 +431,11 @@ const bestEmailTemp = (message) => {
                             color: #444444;
                         "
                     >
-                        <a href="http://www.simpleerent.com" class="no-line">
-                            www.simpleerent.com
+                        <a href="http://www.${process.env.NEXT_PUBLIC_DOMAIN}" class="no-line">
+                            www.${process.env.NEXT_PUBLIC_DOMAIN}
                         </a> 
-                        <a href="mailto:support@simpleerent.com" class="no-line">
-                            support@simpleerent.com
+                        <a href="mailto:${process.env.EMAIL_SERVER_USER}" class="no-line">
+                            ${process.env.EMAIL_SERVER_USER}
                         </a>
                     </td>
                 </tr>
@@ -451,8 +451,8 @@ const bestEmailTemp = (message) => {
                             color: #444444;
                         "
                     >
-                        <a href="tel:+1(613)720-2190" class="no-line">
-                            +1 (613) 720-2190
+                        <a href="tel:${process.env.NEXT_PUBLIC_PHONE}" class="no-line">
+                            ${process.env.NEXT_PUBLIC_PHONE}
                         </a>
                     </td>
                 </tr>
@@ -595,11 +595,11 @@ export const deleted_showing = (message) => {
                             color: #444444;
                         "
                     >
-                        <a href="http://www.simpleerent.com" class="no-line">
-                            www.simpleerent.com
+                        <a href="http://www.${process.env.NEXT_PUBLIC_DOMAIN}" class="no-line">
+                            www.${process.env.NEXT_PUBLIC_DOMAIN}
                         </a> 
-                        <a href="mailto:support@simpleerent.com" class="no-line">
-                            support@simpleerent.com
+                        <a href="mailto:${process.env.EMAIL_SERVER_USER}" class="no-line">
+                            ${process.env.EMAIL_SERVER_USER}
                         </a>
                     </td>
                 </tr>
@@ -615,8 +615,8 @@ export const deleted_showing = (message) => {
                             color: #444444;
                         "
                     >
-                        <a href="tel:+1(613)720-2190" class="no-line">
-                            +1 (613) 720-2190
+                        <a href="tel:${process.env.NEXT_PUBLIC_PHONE}" class="no-line">
+                            ${process.env.NEXT_PUBLIC_PHONE}
                         </a>
                     </td>
                 </tr>

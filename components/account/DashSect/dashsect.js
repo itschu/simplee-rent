@@ -72,7 +72,7 @@ const Dash = ({ page }) => {
 			</StatsWrapper>
 
 			<NewsWrapper>
-				<H3>Upcoming Showings Today</H3>
+				<H3>Upcoming Showings </H3>
 				<News>
 					{todayShowing.length < 1 ? (
 						<p>You currently have no upcoming showing</p>
@@ -91,7 +91,7 @@ const Dash = ({ page }) => {
 													: `${
 															el.duration / 60
 													  } hours`
-											} Showing is by `}
+											} Showing is at `}
 											<b>{el.time}</b> today
 										</p>
 									</>

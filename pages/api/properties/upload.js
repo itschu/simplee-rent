@@ -12,18 +12,27 @@ export const config = {
 const upload_api = async (req, res) => {
 	const session = await getSession({ req });
 	const { method, query } = req;
-	const key = query.authentication;
-	const id = query.id;
+	const more = query.more;
 	const form = new IncomingForm();
 	const base = process.cwd();
 
-	const uploadFolder = path.join(
-		base,
-		"public",
-		"images",
-		"properties",
-		session.user.email
-	);
+	const uploadFolder =
+		more == "profile"
+			? path.join(
+					base,
+					"public",
+					"images",
+					"properties",
+					session.user.email,
+					"profile"
+			  )
+			: path.join(
+					base,
+					"public",
+					"images",
+					"properties",
+					session.user.email
+			  );
 	switch (method) {
 		case "POST":
 			try {
@@ -37,14 +46,26 @@ const upload_api = async (req, res) => {
 						"_"
 					);
 					const newpath = `${uploadFolder}/${newFileName}`;
+
+					fs.readdir(uploadFolder, (err, files) => {
+						for (const file of files) {
+							fs.unlink(
+								path.join(uploadFolder, file),
+								(err) => {}
+							);
+						}
+					});
+
 					fs.rename(oldpath, newpath, function (err) {
 						if (err) {
-							console.log(error);
 							throw err;
-							return res.status(400).json({ success: false, data: [] });
+							return res
+								.status(400)
+								.json({ success: false, data: [] });
 						}
 					});
 				});
+
 				return res.status(200).json({ success: true });
 			} catch (error) {
 				// console.log(error);

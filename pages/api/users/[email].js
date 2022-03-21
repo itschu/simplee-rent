@@ -38,6 +38,23 @@ const showing_dynamic_route = async (req, res) => {
 				});
 			}
 			break;
+
+		case "POST":
+			try {
+				const user = await usersModel.find({ email: id });
+
+				res.status(200).json({
+					success: true,
+					data: user,
+				});
+			} catch (error) {
+				res.status(400).json({
+					success: false,
+					data: "Sorry an error occurred, please try again later",
+				});
+			}
+			break;
+
 		default:
 			res.status(400).json({ success: false, data: [] });
 			break;

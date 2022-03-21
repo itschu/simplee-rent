@@ -1,11 +1,12 @@
 import Nav from "../Nav";
 import { Wrapper, Google, FormBtn } from "./style";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DropDown from "../DropDown/DropDown";
 import { signIn } from "next-auth/react";
 import { seriliazeInput, runInputValidation } from "../../../data";
 import { ErrorMessage } from "../SignUp/style";
 import { ImCancelCircle } from "react-icons/im";
+import Router from "next/router";
 
 const SignIn = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -18,6 +19,18 @@ const SignIn = () => {
 		email: seriliazeInput(formInput.email),
 		password: seriliazeInput(formInput.password),
 	};
+	useEffect(() => {
+		if (
+			Router.query.error == "OAuthAccountNotLinked" &&
+			Router.query.callbackUrl == "/account/"
+		) {
+			setError({
+				msg: "Please use the appropraite sign in method for the account ",
+				status: false,
+			});
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const action = async (e) => {
 		e.preventDefault();
@@ -86,9 +99,12 @@ const SignIn = () => {
 					<div>
 						{error.msg !== "" && (
 							<ErrorMessage status={error.status}>
-								{error.status
-									? "A sign in link has been sent to your email address"
-									: error.msg}
+								<span>
+									{error.status
+										? "A sign in link has been sent to your email address"
+										: error.msg}
+								</span>
+								&nbsp;
 								<ImCancelCircle
 									onClick={() =>
 										setError({ msg: "", status: true })
