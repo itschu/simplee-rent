@@ -1,6 +1,6 @@
 import Head from "../components/Head";
 import Hero from "../components/home/Hero";
-import How from "../components/home/How";
+import How from "../components/home/How/How";
 import About from "../components/home/About";
 import Testimonial from "../components/home/Testimonial";
 import CTA from "../components/home/CTA";
