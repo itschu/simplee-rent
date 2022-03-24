@@ -1,4 +1,4 @@
-import Button from "../Button/";
+import Button from "../Button";
 import Link from "next/link";
 import { Wrapper, Icon } from "./style";
 import { useSession } from "next-auth/react";

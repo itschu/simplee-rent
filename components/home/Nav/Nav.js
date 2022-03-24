@@ -1,7 +1,7 @@
 import { Navigation } from "./style";
 import Image from "next/image";
 import logo from "../../../public/images/logo.png";
-import Button from "../Button/";
+import Button from "../Button";
 import Link from "next/link";
 import { BurgerMenu } from "../../account/Header/style";
 import { useSession } from "next-auth/react";
